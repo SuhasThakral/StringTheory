@@ -3551,7 +3551,7 @@ function buildLocalAnalysis() {
 async function callAI(messages, opts = {}) {
   // All AI calls proxied through /api/ai — key stays server-side
   // Caller sets opts.heavy=true for JSON/structured generation, light model for prose/chat
-  const model = opts.heavy ? 'openai/gpt-oss-120b' : 'openai/gpt-oss-20b';
+  const model = opts.heavy ? 'llama-3.3-70b-versatile' : 'llama-3.1-8b-instant';
   const max_tokens = opts.max_tokens || 350;
   const res = await fetch('/api/ai', {
     method: 'POST',
@@ -3675,7 +3675,7 @@ async function sendChat() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-20b',
+        model: 'llama-3.1-8b-instant',
         messages,
         max_tokens: 280,
         temperature: 0.9,

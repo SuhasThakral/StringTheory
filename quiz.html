@@ -1666,8 +1666,8 @@ Generate a JSON array of 12-16 life events. RULES:
 async function callAI(messages) {
   const firstContent = messages[0]?.content || '';
   const model = (firstContent.includes('biographer') || firstContent.includes('timeline') || firstContent.includes('TIMELINE'))
-    ? 'openai/gpt-oss-120b'
-    : 'openai/gpt-oss-20b';
+    ? 'llama-3.3-70b-versatile'
+    : 'llama-3.1-8b-instant';
   const res = await fetch('/api/ai', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>STRING THEORY — Build Your Timeline — DYSTOPIC LABS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:  #020202;
+  --bg:     #0a0a0f;
+  --amber:  #ffb800;
+  --cyan:   #00f0ff;
+  --green:  #00ff41;
+  --red:    #ff2222;
+  --purple: #b87fff;
+  --white:  #e8e8e0;
+  --dim:    rgba(232,232,224,0.4);
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-m: 'Share Tech Mono', monospace;
+  --font-b: 'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-b);
+  cursor: crosshair;
+}
+/* Scanline overlay */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
+  pointer-events:none; z-index:9999;
+}
+
+/* PROGRESS BAR */
+#progressBar {
+  position:fixed; top:0; left:0; right:0; height:2px;
+  background: rgba(255,255,255,0.04); z-index:200;
+}
+#progressFill {
+  height:100%; background:var(--amber);
+  transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 0 8px rgba(255,184,0,0.5);
+  width:0%;
+}
+
+/* BACK BUTTON */
+#backBtn {
+  position:fixed; top:14px; left:18px; z-index:200;
+  background:none; border:none; cursor:crosshair;
+  font-family:var(--font-m); font-size:10px; letter-spacing:2px;
+  color:rgba(232,232,224,0.3);
+  display:none; align-items:center; gap:8px; padding:8px 10px;
+  transition:color 0.2s;
+}
+#backBtn.visible { display:flex; }
+#backBtn:hover { color:rgba(232,232,224,0.65); }
+
+/* NAV CORNER */
+#navCorner {
+  position:fixed; top:16px; right:18px; z-index:200;
+  font-family:var(--font-m); font-size:9px; letter-spacing:3px;
+  color:rgba(255,184,0,0.2);
+}
+
+/* BACKGROUND CANVAS */
+#bgCanvas {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+}
+
+/* SCREEN SYSTEM */
+#quizWrap {
+  position:fixed; inset:0; z-index:10; overflow:hidden;
+}
+.screen {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-start;
+  padding:72px 24px 100px;
+  opacity:0; transform:translateY(18px);
+  pointer-events:none;
+  transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+/* Center content vertically only when it fits — otherwise top-align and scroll */
+.screen .screen-inner {
+  margin-top:auto;
+  margin-bottom:auto;
+}
+.screen.active { opacity:1; transform:translateY(0); pointer-events:all; }
+.screen.exit { opacity:0; transform:translateY(-12px); transition:opacity 0.2s ease,transform 0.2s ease; pointer-events:none; }
+
+/* RESUME OVERLAY */
+#resumeOverlay {
+  display:none;
+  position:fixed; inset:0; z-index:500;
+  background:rgba(2,2,2,0.96);
+  flex-direction:column; align-items:center; justify-content:center;
+  padding:24px;
+}
+#resumeOverlay.show { display:flex; }
+.resume-tag { font-family:var(--font-m); font-size:9px; letter-spacing:3px; color:rgba(0,240,255,0.6); margin-bottom:16px; }
+.resume-title { font-family:var(--font-d); font-size:36px; letter-spacing:4px; color:var(--white); margin-bottom:6px; text-align:center; }
+.resume-sub { font-family:var(--font-b); font-size:12px; color:rgba(232,232,224,0.4); margin-bottom:32px; text-align:center; line-height:1.6; }
+.resume-meta { font-family:var(--font-m); font-size:10px; letter-spacing:2px; color:rgba(255,184,0,0.5); margin-bottom:32px; text-align:center; }
+.resume-btns { display:flex; flex-direction:column; gap:12px; width:100%; max-width:320px; }
+.btn-resume-continue {
+  font-family:var(--font-m); font-size:11px; letter-spacing:3px;
+  background:rgba(255,184,0,0.15); border:1px solid rgba(255,184,0,0.5);
+  color:var(--amber); padding:16px 20px; cursor:pointer; width:100%;
+  transition:all 0.2s;
+}
+.btn-resume-continue:hover { background:rgba(255,184,0,0.25); }
+.btn-resume-fresh {
+  font-family:var(--font-m); font-size:11px; letter-spacing:3px;
+  background:transparent; border:1px solid rgba(232,232,224,0.12);
+  color:rgba(232,232,224,0.35); padding:14px 20px; cursor:pointer; width:100%;
+  transition:all 0.2s;
+}
+.btn-resume-fresh:hover { border-color:rgba(255,34,34,0.4); color:rgba(255,100,100,0.7); }
+
+.screen-inner { width:100%; max-width:560px; position:relative; }
+
+/* QUESTION TEXT */
+.q-tag {
+  font-family:var(--font-m); font-size:9px; letter-spacing:4px;
+  color:rgba(255,184,0,0.35); text-transform:uppercase; margin-bottom:16px;
+}
+.q-text {
+  font-family:var(--font-d);
+  font-size:clamp(28px,5.5vw,48px);
+  letter-spacing:1.5px; line-height:1.05;
+  color:var(--white); margin-bottom:18px;
+}
+.q-sub {
+  font-family:var(--font-b); font-style:italic;
+  font-size:13px; line-height:1.75;
+  color:rgba(232,232,224,0.38); margin-bottom:28px; margin-top:-8px;
+}
+
+/* INPUTS */
+.q-input {
+  width:100%;
+  background:transparent;
+  border:none; border-bottom:1px solid rgba(255,184,0,0.2);
+  padding:12px 4px;
+  color:var(--white); font-family:var(--font-b); font-size:16px; line-height:1.6;
+  outline:none; transition:border-color 0.2s; margin-bottom:24px; display:block;
+}
+.q-input:focus { border-color:rgba(255,184,0,0.6); }
+.q-input::placeholder { color:rgba(232,232,224,0.18); }
+textarea.q-input { resize:none; min-height:72px; font-size:15px; }
+.q-input.sm { font-size:14px; }
+.q-field-label {
+  font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+  color:rgba(255,255,255,0.2); text-transform:uppercase; margin-bottom:6px;
+}
+.q-row { display:flex; gap:16px; align-items:flex-end; margin-bottom:24px; }
+.q-row .q-input { margin-bottom:0; }
+.q-row .q-input.year { flex:0 0 120px; text-align:center; }
+
+/* CHOICES */
+.q-choices { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+.q-choices.row { flex-direction:row; flex-wrap:wrap; }
+.q-choice {
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.07);
+  padding:14px 20px; cursor:crosshair;
+  font-family:var(--font-m); font-size:12px; letter-spacing:0.5px;
+  color:rgba(232,232,224,0.5);
+  transition:all 0.15s;
+}
+.q-choices.row .q-choice { padding:10px 16px; font-size:11px; }
+.q-choice:hover { border-color:rgba(255,184,0,0.3); color:var(--white); background:rgba(255,184,0,0.03); }
+.q-choice.sel { border-color:var(--amber); color:var(--amber); background:rgba(255,184,0,0.07); }
+
+/* SLIDERS */
+.slider-block { margin-bottom:32px; }
+.slider-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.slider-name { font-family:var(--font-m); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; }
+.slider-val { font-family:var(--font-d); font-size:26px; color:var(--amber); letter-spacing:1px; }
+input[type=range].q-slider {
+  width:100%; accent-color:var(--amber); cursor:crosshair;
+  -webkit-appearance:none; height:3px; background:rgba(255,255,255,0.07); border-radius:2px;
+}
+input[type=range].q-slider::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+  background:var(--amber); cursor:crosshair; border:none;
+}
+.slider-ends { display:flex; justify-content:space-between; font-family:var(--font-m); font-size:9px; letter-spacing:1px; color:rgba(232,232,224,0.22); margin-top:6px; }
+
+/* BUTTONS */
+.btn-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+.btn-go {
+  font-family:var(--font-m); font-size:11px; letter-spacing:3px; text-transform:uppercase;
+  background:var(--amber); color:var(--black); border:none; padding:13px 28px;
+  cursor:crosshair; transition:all 0.2s;
+}
+.btn-go:hover:not(:disabled) { box-shadow:0 0 20px rgba(255,184,0,0.35); }
+.btn-go:disabled { opacity:0.22; cursor:not-allowed; }
+.btn-upload-json {
+  font-family:var(--font-m); font-size:10px; letter-spacing:2px;
+  background:transparent; color:rgba(0,240,255,0.45);
+  border:1px solid rgba(0,240,255,0.2); padding:11px 20px;
+  cursor:crosshair; transition:all 0.2s; white-space:nowrap;
+}
+.btn-upload-json:hover { color:var(--cyan); border-color:rgba(0,240,255,0.5); }
+.upload-error {
+  font-family:var(--font-m); font-size:10px; color:var(--red);
+  letter-spacing:1px; margin-top:10px; min-height:16px;
+}
+.btn-skip {
+  font-family:var(--font-m); font-size:10px; letter-spacing:2px;
+  background:transparent; border:none; color:rgba(232,232,224,0.22);
+  text-decoration:underline; text-underline-offset:4px;
+  padding:13px 0; cursor:crosshair; transition:color 0.2s;
+}
+.btn-skip:hover { color:rgba(232,232,224,0.5); }
+
+/* PERSISTENT EXAMPLE LINE */
+.q-example {
+  font-family:var(--font-b); font-style:italic;
+  font-size:12px; line-height:1.65; letter-spacing:0.2px;
+  color:rgba(255,184,0,0.4);
+  border-left:1px solid rgba(255,184,0,0.18);
+  padding:6px 0 6px 12px;
+  margin-bottom:12px;
+}
+.q-example::before {
+  content:'// e.g.  ';
+  font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+  color:rgba(255,184,0,0.25); font-style:normal;
+}
+
+/* PROVIDER CHIPS */
+.chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.chip {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  padding:7px 14px; border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.02); color:rgba(232,232,224,0.38);
+  cursor:crosshair; transition:all 0.15s;
+}
+.chip:hover { border-color:rgba(0,240,255,0.3); color:var(--cyan); }
+.chip.sel { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,0.06); }
+
+/* FLOATING SAVE PILL */
+#floatSave {
+  display:none;
+  position:fixed; bottom:20px; right:16px; z-index:400;
+  font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+  background:rgba(0,255,65,0.1); border:1px solid rgba(0,255,65,0.3);
+  color:rgba(0,255,65,0.7); padding:9px 14px; cursor:pointer;
+  transition:all 0.2s;
+}
+#floatSave:hover { background:rgba(0,255,65,0.18); }
+#floatSave.visible { display:block; }
+
+/* SAVE PILL MODAL */
+#floatSaveModal {
+  display:none;
+  position:fixed; inset:0; z-index:500;
+  background:rgba(2,2,2,0.95);
+  flex-direction:column; align-items:center; justify-content:center; padding:24px;
+}
+#floatSaveModal.open { display:flex; }
+
+/* DONE SCREEN */
+.done-wrap { text-align:center; }
+.done-icon { font-family:var(--font-m); font-size:10px; letter-spacing:3px; color:var(--green); display:block; margin-bottom:16px; }
+.done-title { font-family:var(--font-d); font-size:clamp(44px,8vw,72px); letter-spacing:3px; color:var(--amber); margin-bottom:14px; }
+.done-status { font-family:var(--font-m); font-size:10px; letter-spacing:2px; color:rgba(255,184,0,0.45); margin-bottom:20px; min-height:16px; }
+.done-sub { font-family:var(--font-b); font-size:12px; line-height:1.9; color:rgba(232,232,224,0.3); margin-bottom:32px; }
+
+/* RESPONSIVE */
+@media (max-width:600px) {
+  .q-text { font-size:clamp(26px,9vw,38px); }
+  .q-row { flex-direction:column; }
+  .q-row .q-input.year { flex:1 1 auto; width:100%; }
+  .btn-go { flex:1; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div id="progressBar"><div id="progressFill"></div></div>
+<button id="backBtn" onclick="goBack()">← BACK</button>
+<div id="navCorner">// STRING_THEORY · DYSTOPIC LABS</div>
+<canvas id="bgCanvas"></canvas>
+
+<div id="quizWrap">
+
+  <!-- INTRO -->
+  <div class="screen active" id="sc-intro">
+    <div class="screen-inner">
+      <div class="q-tag">// EXP-002 — STRING_THEORY / QUESTIONNAIRE</div>
+      <div class="q-text">READY TO MEET<br>YOUR ALTERNATE<br>SELF?</div>
+      <div class="q-sub">8 questions. 3 minutes. The more honest you are,<br>the more accurate the simulation.</div>
+      <div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:rgba(255,184,0,0.22);margin-bottom:32px">// EVERYTHING STAYS IN YOUR BROWSER</div>
+      <div class="btn-row">
+        <button class="btn-go" onclick="goTo('routing_age')">BEGIN →</button>
+        <button class="btn-upload-json" onclick="document.getElementById('jsonUploadInput').click()">↑ LOAD JSON</button>
+      </div>
+      <input type="file" id="jsonUploadInput" accept=".json,application/json" style="display:none" onchange="handleJSONUpload(this)">
+      <div class="upload-error" id="uploadError"></div>
+    </div>
+  </div>
+
+  <!-- JSON LOADED CONFIRMATION -->
+  <div class="screen" id="sc-json_loaded">
+    <div class="screen-inner">
+      <div class="q-tag">// TIMELINE LOADED</div>
+      <div class="q-text" style="font-size:clamp(22px,5vw,38px)" id="jl_name">—</div>
+      <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:rgba(255,184,0,0.45);margin:4px 0 20px">
+        <span id="jl_city">—</span> · born <span id="jl_year">—</span> · <span id="jl_events">0</span> events
+      </div>
+      <div id="jl_sentence" style="font-family:var(--font-m);font-size:11px;color:rgba(232,232,224,0.5);line-height:1.6;max-width:340px;margin:0 auto 32px;font-style:italic">—</div>
+      <div class="btn-row" style="flex-direction:column;gap:12px;align-items:stretch;max-width:280px;margin:0 auto">
+        <button class="btn-go" onclick="jsonLoadedGoViz()" style="font-size:13px;padding:16px 24px">GO TO VIZ →</button>
+        <button class="btn-upload-json" onclick="window.location.href='review.html'" style="padding:14px 24px;font-size:10px">✎ REVIEW &amp; EDIT ALL ANSWERS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTING: AGE -->
+  <div class="screen" id="sc-routing_age">
+    <div class="screen-inner">
+      <div class="q-tag">// CALIBRATING</div>
+      <div class="q-text">WHERE ARE YOU<br>RIGHT NOW?</div>
+      <div class="q-choices">
+        <div class="q-choice" data-v="early20s" onclick="pickAge(this)">Early 20s</div>
+        <div class="q-choice" data-v="late20s"  onclick="pickAge(this)">Late 20s</div>
+        <div class="q-choice" data-v="early30s" onclick="pickAge(this)">Early 30s</div>
+        <div class="q-choice" data-v="mid30s"   onclick="pickAge(this)">Mid 30s</div>
+        <div class="q-choice" data-v="40s"      onclick="pickAge(this)">40s</div>
+        <div class="q-choice" data-v="50s+"     onclick="pickAge(this)">50s+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTING: SENTENCE -->
+  <div class="screen" id="sc-routing_sentence">
+    <div class="screen-inner">
+      <div class="q-tag">// LOCATE</div>
+      <div class="q-text">WHERE ARE YOU<br>IN LIFE RIGHT NOW?</div>
+      <div class="q-sub">One sentence. No filter.</div>
+      <div class="q-example">I'm in a city I can't leave, doing work I don't hate enough to quit.</div>
+      <textarea class="q-input" id="inp_sentence" rows="3"
+        placeholder="your answer…"
+        oninput="document.getElementById('btnSentence').disabled=this.value.trim().length<4"></textarea>
+      <div class="btn-row">
+        <button class="btn-go" id="btnSentence" onclick="saveSentence()" disabled>Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTING: EMOTION -->
+  <div class="screen" id="sc-routing_emotion">
+    <div class="screen-inner">
+      <div class="q-tag">// SIGNAL</div>
+      <div class="q-text">HOW DOES IT<br>ACTUALLY FEEL?</div>
+      <div class="q-choices">
+        <div class="q-choice" data-v="restless"   onclick="pickEmotion(this)">Restless</div>
+        <div class="q-choice" data-v="stuck"      onclick="pickEmotion(this)">Stuck</div>
+        <div class="q-choice" data-v="curious"    onclick="pickEmotion(this)">Curious</div>
+        <div class="q-choice" data-v="regretful"  onclick="pickEmotion(this)">Regretful</div>
+        <div class="q-choice" data-v="rebuilding" onclick="pickEmotion(this)">Rebuilding</div>
+        <div class="q-choice" data-v="settled"    onclick="pickEmotion(this)">Settled</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDENTITY -->
+  <div class="screen" id="sc-identity">
+    <div class="screen-inner">
+      <div class="q-tag">// COORDINATES</div>
+      <div class="q-text">A FEW FACTS<br>TO ANCHOR YOU.</div>
+      <div class="q-sub">These fix your string in time and space.</div>
+      <div class="q-field-label">// FIRST NAME</div>
+      <input class="q-input" type="text" id="inp_name" placeholder="What people call you" autocomplete="off" oninput="checkIdentity()">
+      <div class="q-row">
+        <div style="flex:1">
+          <div class="q-field-label">// BIRTH YEAR</div>
+          <input class="q-input year" type="number" id="inp_birthYear" placeholder="e.g. 1990" min="1940" max="2006" oninput="checkIdentity()">
+        </div>
+        <div style="flex:2">
+          <div class="q-field-label">// CURRENT CITY</div>
+          <input class="q-input" type="text" id="inp_city" placeholder="Where you live now" autocomplete="off" oninput="checkIdentity()">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-go" id="btnIdentity" onclick="saveIdentity()" disabled>Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q1: ANCHOR -->
+  <div class="screen" id="sc-q1">
+    <div class="screen-inner">
+      <div class="q-tag">// ANCHOR</div>
+      <div class="q-text">WHAT'S KEEPING<br>YOU WHERE YOU<br>ARE RIGHT NOW?</div>
+      <div class="q-sub">City, job, relationship — whatever holds the centre.</div>
+      <div class="q-example">My mortgage, mostly. And honestly, my team at work — I'd feel guilty leaving them.</div>
+      <textarea class="q-input" id="inp_q1" rows="3" placeholder="your answer…"></textarea>
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveQ('anchor','inp_q1','q2')">Continue →</button>
+        <button class="btn-skip" onclick="skipTo('q2')">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: ALMOST (required) -->
+  <div class="screen" id="sc-q2">
+    <div class="screen-inner">
+      <div class="q-tag">// THE FORK</div>
+      <div class="q-text">WHAT'S THE THING<br>YOU MOST NEARLY<br>DID DIFFERENTLY?</div>
+      <div class="q-sub">The fork you still think about. Why didn't you?</div>
+      <div class="q-example">Almost moved to Berlin in 2019. Had a job offer. Said no because of a relationship that didn't last anyway.</div>
+      <textarea class="q-input" id="inp_q2" rows="3"
+        placeholder="your answer…"
+        oninput="document.getElementById('btnQ2').disabled=this.value.trim().length<3"></textarea>
+      <div class="q-row" style="margin-bottom:28px">
+        <div>
+          <div class="q-field-label">// YEAR (optional)</div>
+          <input class="q-input year sm" type="number" id="inp_q2yr" placeholder="e.g. 2021" min="1970" max="2026">
+        </div>
+        <div style="flex:1"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-go" id="btnQ2" onclick="saveAlmost()" disabled>Continue →</button>
+        <span style="font-family:var(--font-m);font-size:9px;color:rgba(255,184,0,0.3);letter-spacing:1px">// required</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3: RELATIONSHIP (text varies by segment) -->
+  <div class="screen" id="sc-q3">
+    <div class="screen-inner">
+      <div class="q-tag">// RELATIONSHIPS</div>
+      <div class="q-text" id="q3text"></div>
+      <div class="q-sub" id="q3sub"></div>
+      <div class="q-example" id="q3example"></div>
+      <textarea class="q-input" id="inp_q3" rows="3" placeholder="your answer…"></textarea>
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveQ('relationship','inp_q3','q4')">Continue →</button>
+        <button class="btn-skip" onclick="skipTo('q4')">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4: HEALTH -->
+  <div class="screen" id="sc-q4">
+    <div class="screen-inner">
+      <div class="q-tag">// HEALTH</div>
+      <div class="q-text">HOW ARE YOU<br>TREATING YOUR<br>HEALTH?</div>
+      <div class="q-sub">The gym you joined, the weight you gained, the sleep you sacrificed. And when did that pattern start?</div>
+      <div class="q-example">Stopped running in 2022 when work got crazy. Gained 8kg. Started again last January — inconsistently.</div>
+      <textarea class="q-input" id="inp_q4" rows="3" placeholder="your answer…"></textarea>
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveQ('health','inp_q4','q5')">Continue →</button>
+        <button class="btn-skip" onclick="skipTo('q5')">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5: SECRET (text varies by segment) -->
+  <div class="screen" id="sc-q5">
+    <div class="screen-inner">
+      <div class="q-tag">// THE REAL ONE</div>
+      <div class="q-text" id="q5text"></div>
+      <div class="q-sub" id="q5sub"></div>
+      <div class="q-example" id="q5example"></div>
+      <textarea class="q-input" id="inp_q5" rows="3" placeholder="your answer…"></textarea>
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveQ('secret','inp_q5','q6')">Continue →</button>
+        <button class="btn-skip" onclick="skipTo('q6')">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6: LOCATION -->
+  <div class="screen" id="sc-q6">
+    <div class="screen-inner">
+      <div class="q-tag">// ELSEWHERE</div>
+      <div class="q-text">NAME A CITY YOU'VE<br>SERIOUSLY THOUGHT<br>ABOUT LIVING IN.</div>
+      <div class="q-sub">One you haven't moved to. One is enough.</div>
+      <div class="q-example">Lisbon. Tokyo. Anywhere with a slower pace and cheaper rent.</div>
+      <input class="q-input" type="text" id="inp_q6" placeholder="city name…" autocomplete="off">
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveQ('location','inp_q6','q7')">Continue →</button>
+        <button class="btn-skip" onclick="skipTo('q7')">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7: HOBBY -->
+  <div class="screen" id="sc-q7">
+    <div class="screen-inner">
+      <div class="q-tag">// OUTSIDE WORK</div>
+      <div class="q-text">WHAT DO YOU DO<br>THAT HAS NOTHING<br>TO DO WITH WORK?</div>
+      <div class="q-sub">Even badly, even occasionally. This matters more than you think.</div>
+      <div class="q-example">Climbing on weekends. Was doing ceramics for a while. Badly. Loved it.</div>
+      <input class="q-input" type="text" id="inp_q7" placeholder="your answer…" autocomplete="off">
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveQ('hobby','inp_q7','q8')">Continue →</button>
+        <button class="btn-skip" onclick="skipTo('q8')">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8: MONEY -->
+  <div class="screen" id="sc-q8">
+    <div class="screen-inner">
+      <div class="q-tag">// MONEY</div>
+      <div class="q-text">FINANCIALLY —<br>WHERE ARE YOU<br>VERSUS WHERE YOU<br>EXPECTED TO BE?</div>
+      <div class="q-choices row" id="moneyChoices">
+        <div class="q-choice" data-v="behind"      onclick="pickMoney(this)">Behind</div>
+        <div class="q-choice" data-v="ontrack"     onclick="pickMoney(this)">On track</div>
+        <div class="q-choice" data-v="ahead"       onclick="pickMoney(this)">Ahead</div>
+        <div class="q-choice" data-v="complicated" onclick="pickMoney(this)">It's complicated</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDERS -->
+  <div class="screen" id="sc-sliders">
+    <div class="screen-inner">
+      <div class="q-tag">// CALIBRATION</div>
+      <div class="q-text">HOW SHOULD WE<br>RENDER YOUR<br>ALTERNATE?</div>
+      <div class="q-sub" style="margin-bottom:32px">These shape how your alternate timeline is written.</div>
+
+      <div class="slider-block">
+        <div class="slider-head">
+          <span class="slider-name">CREATIVITY</span>
+          <span class="slider-val" id="valCreativity">50</span>
+        </div>
+        <input type="range" class="q-slider" id="sliderCreativity" min="0" max="100" value="50"
+          oninput="document.getElementById('valCreativity').textContent=this.value">
+        <div class="slider-ends"><span>Realistic</span><span>Ridiculous</span></div>
+      </div>
+
+      <div class="slider-block">
+        <div class="slider-head">
+          <span class="slider-name">OPTIMISM</span>
+          <span class="slider-val" id="valOptimism">0</span>
+        </div>
+        <input type="range" class="q-slider" id="sliderOptimism" min="-2" max="2" value="0" step="1"
+          oninput="document.getElementById('valOptimism').textContent=this.value">
+        <div class="slider-ends"><span>Brutally honest</span><span>Dream version</span></div>
+      </div>
+
+      <div class="btn-row" style="margin-top:8px">
+        <button class="btn-go" onclick="saveSliders()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API KEY -->
+  <div class="screen" id="sc-api_key">
+    <div class="screen-inner">
+      <div class="q-tag">// AI ENGINE</div>
+      <div class="q-text">ONE LAST THING.<br>HOW SHOULD<br>WE RUN AI?</div>
+      <div class="q-sub" style="margin-bottom:22px">Optional. Skip to use the Dystopic Labs free tier (3 pulls/day).</div>
+      <div class="chips" id="providerChips">
+        <div class="chip" id="chip-groq"      onclick="selProvider('groq')">Groq <span style="opacity:0.35;font-size:9px">gsk_ · free</span></div>
+        <div class="chip" id="chip-gemini"    onclick="selProvider('gemini')">Gemini <span style="opacity:0.35;font-size:9px">AIza</span></div>
+        <div class="chip" id="chip-openai"    onclick="selProvider('openai')">OpenAI <span style="opacity:0.35;font-size:9px">sk-</span></div>
+        <div class="chip" id="chip-anthropic" onclick="selProvider('anthropic')">Anthropic <span style="opacity:0.35;font-size:9px">sk-ant-</span></div>
+      </div>
+      <input class="q-input" type="password" id="inp_apiKey"
+        placeholder="Paste key — or skip to use free tier"
+        autocomplete="off" oninput="autoDetectProvider(this.value)">
+      <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.14);margin-top:-16px;margin-bottom:28px;line-height:1.7">
+        // Stays in your browser only. Free keys: console.groq.com · aistudio.google.com
+      </div>
+      <div class="btn-row">
+        <button class="btn-go" onclick="saveKeyAndFinish()">BUILD MY TIMELINE →</button>
+        <button class="btn-skip" onclick="skipKeyAndFinish()">Skip — use free tier →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOLLOW-UP QUESTIONS -->
+  <div class="screen" id="sc-followups">
+    <div class="screen-inner">
+      <div class="q-tag">// ALMOST THERE</div>
+      <div class="q-text">3 QUICK<br>ONES.</div>
+      <div class="q-sub" id="fuSub">The AI read your answers and spotted 3 gaps. These directly shape how precise your timeline is.</div>
+      <div id="fuLoading" style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:rgba(255,184,0,0.4);margin-bottom:28px">// ONE MOMENT…</div>
+      <div id="fuQuestions" style="display:none"></div>
+      <div class="btn-row" id="fuBtns" style="display:none">
+        <button class="btn-go" onclick="saveFollowUps()">BUILD MY TIMELINE →</button>
+        <button class="btn-skip" onclick="saveFollowUps()">Skip — build anyway →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONE -->
+  <div class="screen" id="sc-done">
+    <div class="screen-inner done-wrap">
+      <span class="done-icon">// TIMELINE_COMPILED ✓</span>
+      <div class="done-title">YOUR STRING<br>IS READY.</div>
+      <div class="done-status" id="doneStatus">Running AI passes…</div>
+      <div class="done-sub">Your timeline is being written in the background.<br>You can open the visualization now.</div>
+
+      <!-- EMAIL SAVE -->
+      <div id="emailSaveWrap" style="margin:20px 0;padding:16px;border:1px solid rgba(255,184,0,0.2);background:rgba(255,184,0,0.04);">
+        <div style="font-family:monospace;font-size:9px;letter-spacing:2px;color:rgba(255,184,0,0.5);margin-bottom:10px;">// SAVE YOUR TIMELINE</div>
+        <div style="font-family:var(--font-b);font-size:12px;color:rgba(232,232,224,0.6);margin-bottom:12px;line-height:1.5;">Enter your email to save your timeline and return to it on any device.</div>
+        <input id="doneEmail" type="email" placeholder="your@email.com" autocomplete="email"
+          style="width:100%;box-sizing:border-box;background:transparent;border:none;border-bottom:1px solid rgba(255,184,0,0.4);color:#e8e8e0;font-family:monospace;font-size:14px;padding:8px 0;margin-bottom:14px;outline:none;">
+        <!-- CONSENT -->
+        <label id="consentLabel" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;cursor:pointer;">
+          <input type="checkbox" id="consentCheck" onchange="updateSaveBtn()"
+            style="margin-top:2px;flex-shrink:0;accent-color:#ffb800;width:14px;height:14px;cursor:pointer;">
+          <span style="font-family:monospace;font-size:10px;line-height:1.6;color:rgba(232,232,224,0.45);">
+            I agree to my email and timeline data being stored by Dystopic Labs to restore my timeline on future visits.
+            I can request deletion at any time. See our
+            <a href="/privacy.html" target="_blank" style="color:rgba(255,184,0,0.7);text-decoration:none;border-bottom:1px solid rgba(255,184,0,0.3);">Privacy Policy</a>.
+          </span>
+        </label>
+        <button onclick="saveTimeline()" id="saveEmailBtn" disabled
+          style="font-family:monospace;font-size:10px;letter-spacing:2px;background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);color:rgba(255,184,0,0.4);padding:10px 20px;cursor:not-allowed;width:100%;transition:all 0.2s;">
+          SAVE MY TIMELINE →
+        </button>
+        <div id="saveEmailStatus" style="font-family:monospace;font-size:9px;letter-spacing:1px;color:rgba(255,184,0,0.5);margin-top:8px;min-height:16px;text-align:center;"></div>
+      </div>
+
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn-go" onclick="launchViz()" style="font-size:13px;padding:16px 40px">OPEN MY TIMELINE →</button>
+      </div>
+      <div style="margin-top:16px;text-align:center">
+        <button onclick="rerunEnrichment()" id="rerunBtn" style="font-family:monospace;font-size:9px;letter-spacing:2px;background:transparent;border:1px solid rgba(255,184,0,0.25);color:rgba(255,184,0,0.5);padding:8px 16px;cursor:pointer;">↺ RE-RUN AI ENRICHMENT</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /quizWrap -->
+
+<!-- FLOATING SAVE PILL -->
+<button id="floatSave" onclick="openFloatSaveModal()">↓ SAVE PROGRESS</button>
+
+<!-- FLOAT SAVE MODAL -->
+<div id="floatSaveModal">
+  <div style="width:100%;max-width:360px;" id="floatModalBody">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(0,255,65,0.6);margin-bottom:12px;">// SAVE PROGRESS</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:#e8e8e0;margin-bottom:8px;">GET YOUR LINK</div>
+    <div style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(232,232,224,0.4);margin-bottom:20px;line-height:1.7;">Enter your email. We'll save your progress so you can return to this quiz anytime.</div>
+    <input id="floatEmail" type="email" placeholder="your@email.com" autocomplete="email"
+      style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(0,255,65,0.3);color:#e8e8e0;font-family:monospace;font-size:14px;padding:8px 0;margin-bottom:16px;outline:none;">
+    <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer;">
+      <input type="checkbox" id="floatConsent" onchange="updateFloatBtn()"
+        style="margin-top:2px;flex-shrink:0;accent-color:#00ff41;width:14px;height:14px;cursor:pointer;">
+      <span style="font-family:monospace;font-size:10px;line-height:1.6;color:rgba(232,232,224,0.35);">
+        I agree to my progress being stored to restore this session.
+        <a href="/privacy.html" target="_blank" style="color:rgba(0,255,65,0.5);text-decoration:none;">Privacy Policy</a>
+      </span>
+    </label>
+    <button id="floatSaveBtn" onclick="doFloatSave()" disabled
+      style="width:100%;font-family:monospace;font-size:10px;letter-spacing:2px;background:rgba(0,255,65,0.05);border:1px solid rgba(0,255,65,0.15);color:rgba(0,255,65,0.3);padding:12px;cursor:not-allowed;transition:all 0.2s;">
+      SAVE & CONTINUE →
+    </button>
+    <div id="floatStatus" style="font-family:monospace;font-size:9px;letter-spacing:1px;color:rgba(0,255,65,0.5);margin-top:10px;min-height:16px;text-align:center;"></div>
+    <button onclick="closeFloatSaveModal()" style="margin-top:16px;width:100%;font-family:monospace;font-size:9px;letter-spacing:2px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:rgba(232,232,224,0.2);padding:10px;cursor:pointer;">CLOSE</button>
+  </div>
+</div>
+
+<!-- DEV JUMP NAV — localhost only -->
+<div id="devJumpNav" style="position:fixed;bottom:16px;right:16px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+  <div id="devJumpPanel" style="display:none;background:rgba(20,20,18,0.97);border:1px solid rgba(255,184,0,0.3);padding:12px;min-width:200px;max-height:70vh;overflow-y:auto;">
+    <div style="font-family:monospace;font-size:9px;letter-spacing:2px;color:rgba(255,184,0,0.5);margin-bottom:8px;">// JUMP TO SCREEN</div>
+    <div id="devJumpList"></div>
+  </div>
+  <button onclick="toggleDevJump()" style="font-family:monospace;font-size:9px;letter-spacing:1px;background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.3);color:rgba(255,184,0,0.6);padding:6px 10px;cursor:pointer;">⟳ DEV NAV</button>
+</div>
+
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════
+const HOSTED_ENDPOINT = '/api/ai';
+
+// Hide DEV NAV on production
+(function() {
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  if (!isLocal) {
+    const el = document.getElementById('devJumpNav');
+    if (el) el.style.display = 'none';
+  }
+})();
+
+const FLOW = [
+  'intro','routing_age','routing_sentence','routing_emotion',
+  'identity','q1','q2','q3','q4','q5','q6','q7','q8',
+  'sliders','followups','done'
+];
+const PROGRESS_TOTAL = FLOW.indexOf('done'); // 15
+
+// ─── JSON UPLOAD ───────────────────────────────────────────────────────────────
+let _loadedJSONData = null;
+
+function showJSONLoaded(data) {
+  _loadedJSONData = data;
+  // Fill in the preview card
+  document.getElementById('jl_name').textContent    = data.name || '—';
+  document.getElementById('jl_city').textContent    = data.city || '—';
+  document.getElementById('jl_year').textContent    = data.birthYear || '—';
+  document.getElementById('jl_events').textContent  =
+    (data.biographerEvents||[]).length + (data.customEvents||[]).length;
+  document.getElementById('jl_sentence').textContent = data.lifeSentence
+    ? '"' + data.lifeSentence.slice(0, 120) + (data.lifeSentence.length > 120 ? '…' : '') + '"'
+    : '—';
+  // Navigate to the confirmation screen
+  const prev = document.getElementById('sc-intro');
+  if (prev) { prev.classList.remove('active'); }
+  currentSc = 'json_loaded';
+  navHistory.push('json_loaded');
+  const sc = document.getElementById('sc-json_loaded');
+  if (sc) setTimeout(() => sc.classList.add('active'), 30);
+}
+
+function jsonLoadedGoViz() {
+  window.location.href = 'viz.html';
+}
+
+function jsonLoadedReview() {
+  const d = _loadedJSONData;
+  if (!d) { window.location.href = 'viz.html'; return; }
+  const a = d.answers || {};
+  const b = d.bonusAnswers || {};
+  // Populate state fully from the JSON
+  state.name           = d.name        || state.name;
+  state.birthYear      = d.birthYear   || state.birthYear;
+  state.city           = d.city        || state.city;
+  state.lifeSentence   = d.lifeSentence|| state.lifeSentence;
+  state.segment        = d.segment     || state.segment;
+  state.ageBracket     = d.ageBracket  || state.ageBracket;
+  state.creativity     = d.creativity  ?? state.creativity;
+  state.optimism       = d.optimism    ?? state.optimism;
+  state.emotionalState = b.emotion     || state.emotionalState;
+  state.answers.anchor       = b.anchor       || a.anchor       || '';
+  state.answers.almost       = a.forkMoment   || b.almostDid    || '';
+  state.answers.almostYear   = a.forkYear     || null;
+  state.answers.relationship = b.relationship || '';
+  state.answers.health       = b.health       || '';
+  state.answers.secret       = b.happinessWish|| '';
+  state.answers.location     = a.altCityPath  || '';
+  state.answers.hobby        = b.hobby        || '';
+  state.answers.money        = b.money        || null;
+  saveState();
+  // Go to routing_age — from here the user can step through every screen
+  // (all inputs will be pre-filled via fillScreenFromState on onEnter)
+  // The dev ⟳ DEV NAV lets them jump directly to any screen
+  goTo('routing_age');
+}
+
+function handleJSONUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const errEl = document.getElementById('uploadError');
+  errEl.textContent = '';
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Minimal validation — must have name and birthYear
+      if (!data.name || !data.birthYear) {
+        errEl.textContent = '// invalid file — missing name or birthYear';
+        input.value = '';
+        return;
+      }
+      localStorage.setItem('st_timeline_data', JSON.stringify(data));
+      if (data.ai && data.ai.key) localStorage.setItem('st_api_key', data.ai.key);
+      // Show the loaded-JSON confirmation screen instead of jumping straight to viz
+      showJSONLoaded(data);
+    } catch {
+      errEl.textContent = '// could not parse — not valid JSON';
+      input.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let state = {
+  ageBracket:     null,
+  lifeSentence:   '',
+  emotionalState: null,
+  segment:        'establishing',   // 'establishing' | 'reassessing'
+  name:        '',
+  birthYear:   null,
+  city:        '',
+  answers: {
+    anchor:       '',
+    almost:       '',
+    almostYear:   null,
+    relationship: '',
+    health:       '',
+    secret:       '',
+    location:     '',
+    hobby:        '',
+    money:        null,
+  },
+  creativity:  50,
+  optimism:    0,
+  ai: { key:'', tier:'hosted', provider:'hosted' },
+};
+
+state.ai.tier     = 'hosted';
+state.ai.provider = 'hosted';
+
+let navHistory   = ['intro'];
+let currentSc    = 'intro';
+let answeredCount = 0;
+
+// Restore from localStorage (new format only)
+(function restore() {
+  // Clear all state if coming from landing as a fresh start
+  if (new URLSearchParams(location.search).get('new') === '1') {
+    localStorage.removeItem('st_quiz_v2');
+    localStorage.removeItem('st_timeline_data');
+    localStorage.removeItem('st_email');
+    localStorage.removeItem('st_token');
+    return;
+  }
+  try {
+    const s = JSON.parse(localStorage.getItem('st_quiz_v2') || 'null');
+    if (s && s.name && s._v === 2) {
+      state = Object.assign(state, s);
+      if (!state.answers) state.answers = {};
+      if (!state.ai) state.ai = { key:'', tier:'hosted', provider:'hosted' };
+    }
+  } catch(e) {}
+  const k = localStorage.getItem('st_api_key') || '';
+  if (k) state.ai.key = k;
+})();
+
+function saveState() {
+  try {
+    const toSave = JSON.parse(JSON.stringify(state));
+    toSave._v = 2;
+    toSave._savedAt = Date.now();
+    toSave.ai.key = '';
+    localStorage.setItem('st_quiz_v2', JSON.stringify(toSave));
+    if (state.ai.key) localStorage.setItem('st_api_key', state.ai.key);
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goTo(id) {
+  const prev = currentSc;
+  const prevEl = document.getElementById('sc-' + prev);
+  if (prevEl) {
+    prevEl.classList.remove('active');
+    prevEl.classList.add('exit');
+    setTimeout(() => prevEl.classList.remove('exit'), 250);
+  }
+  currentSc = id;
+  navHistory.push(id);
+  const newEl = document.getElementById('sc-' + id);
+  if (newEl) setTimeout(() => newEl.classList.add('active'), 30);
+  updateProgress();
+  updateBack();
+  updateBgString();
+  saveState();
+  onEnter(id);
+}
+
+function goBack() {
+  if (navHistory.length <= 1) return;
+  navHistory.pop();
+  const prev = navHistory[navHistory.length - 1];
+  const currEl = document.getElementById('sc-' + currentSc);
+  if (currEl) { currEl.classList.remove('active'); }
+  currentSc = prev;
+  const prevEl = document.getElementById('sc-' + prev);
+  if (prevEl) setTimeout(() => prevEl.classList.add('active'), 30);
+  updateProgress();
+  updateBack();
+}
+
+function onEnter(id) {
+  if (id === 'q3') setupQ3();
+  if (id === 'q5') setupQ5();
+  if (id === 'followups') generateFollowUps();
+  fillScreenFromState(id);
+}
+
+// Pre-fill each screen's inputs from current state so review mode works
+function fillScreenFromState(id) {
+  const a = state.answers;
+  const setVal = (elId, val) => {
+    const el = document.getElementById(elId);
+    if (el && val !== undefined && val !== null) el.value = val;
+  };
+  const setChoice = (screenId, dataKey, val) => {
+    if (!val) return;
+    document.querySelectorAll('#sc-' + screenId + ' .q-choice').forEach(c => {
+      c.classList.toggle('sel', c.dataset.v === val);
+    });
+  };
+  if (id === 'routing_age')      setChoice('routing_age', 'v', state.ageBracket);
+  if (id === 'routing_sentence') { setVal('inp_sentence', state.lifeSentence);
+    const btn = document.getElementById('btnSentence');
+    if (btn) btn.disabled = !(state.lifeSentence && state.lifeSentence.length >= 4); }
+  if (id === 'routing_emotion')  setChoice('routing_emotion', 'v', state.emotionalState);
+  if (id === 'identity') {
+    setVal('inp_name', state.name);
+    setVal('inp_birthYear', state.birthYear);
+    setVal('inp_city', state.city);
+    const btn = document.getElementById('btnIdentity');
+    if (btn) btn.disabled = !(state.name && state.birthYear && state.city);
+  }
+  if (id === 'q1') { setVal('inp_q1', a.anchor); }
+  if (id === 'q2') {
+    setVal('inp_q2', a.almost);
+    setVal('inp_q2yr', a.almostYear);
+    const btn = document.getElementById('btnQ2');
+    if (btn) btn.disabled = !(a.almost && a.almost.length >= 3);
+  }
+  if (id === 'q3') setVal('inp_q3', a.relationship);
+  if (id === 'q4') setVal('inp_q4', a.health);
+  if (id === 'q5') setVal('inp_q5', a.secret);
+  if (id === 'q6') setVal('inp_q6', a.location);
+  if (id === 'q7') setVal('inp_q7', a.hobby);
+  if (id === 'q8') setChoice('q8', 'v', a.money);
+  if (id === 'sliders') {
+    const sc = document.getElementById('sliderCreativity');
+    const so = document.getElementById('sliderOptimism');
+    const vc = document.getElementById('valCreativity');
+    const vo = document.getElementById('valOptimism');
+    if (sc) { sc.value = state.creativity; if (vc) vc.textContent = state.creativity; }
+    if (so) { so.value = state.optimism;   if (vo) vo.textContent = state.optimism;   }
+  }
+}
+
+function updateProgress() {
+  const idx = FLOW.indexOf(currentSc);
+  const pct = Math.max(0, (idx / PROGRESS_TOTAL)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateBack() {
+  const btn = document.getElementById('backBtn');
+  const show = navHistory.length > 1 && currentSc !== 'intro' && currentSc !== 'done';
+  btn.classList.toggle('visible', show);
+}
+
+// ═══════════════════════════════════════════════════════
+// ROUTING SCREENS
+// ═══════════════════════════════════════════════════════
+function pickAge(el) {
+  document.querySelectorAll('#sc-routing_age .q-choice').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  state.ageBracket = el.dataset.v;
+  state.segment = ['40s','50s+'].includes(state.ageBracket) ? 'reassessing' : 'establishing';
+  setTimeout(() => goTo('routing_sentence'), 200);
+}
+
+function saveSentence() {
+  const v = document.getElementById('inp_sentence').value.trim();
+  if (v.length < 4) return;
+  state.lifeSentence = v;
+  goTo('routing_emotion');
+}
+
+function pickEmotion(el) {
+  document.querySelectorAll('#sc-routing_emotion .q-choice').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  state.emotionalState = el.dataset.v;
+  setTimeout(() => goTo('identity'), 200);
+}
+
+// ═══════════════════════════════════════════════════════
+// IDENTITY
+// ═══════════════════════════════════════════════════════
+function checkIdentity() {
+  const n = document.getElementById('inp_name').value.trim();
+  const y = parseInt(document.getElementById('inp_birthYear').value);
+  const c = document.getElementById('inp_city').value.trim();
+  document.getElementById('btnIdentity').disabled = !(n && y >= 1940 && y <= 2006 && c);
+}
+
+function saveIdentity() {
+  const n = document.getElementById('inp_name').value.trim();
+  const y = parseInt(document.getElementById('inp_birthYear').value);
+  const c = document.getElementById('inp_city').value.trim();
+  if (!n || !y || !c) return;
+  state.name = n; state.birthYear = y; state.city = c;
+  answeredCount++;
+  maybeShowFloatSave();
+  goTo('q1');
+}
+
+// ═══════════════════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════════════════
+function saveQ(key, inputId, next) {
+  const el = document.getElementById(inputId);
+  state.answers[key] = el ? el.value.trim() : '';
+  answeredCount++;
+  goTo(next);
+}
+
+function skipTo(next) {
+  answeredCount++;
+  goTo(next);
+}
+
+function saveAlmost() {
+  const txt = document.getElementById('inp_q2').value.trim();
+  if (txt.length < 3) return;
+  state.answers.almost    = txt;
+  state.answers.almostYear = parseInt(document.getElementById('inp_q2yr').value) || null;
+  answeredCount++;
+  goTo('q3');
+}
+
+function pickMoney(el) {
+  document.querySelectorAll('#moneyChoices .q-choice').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  state.answers.money = el.dataset.v;
+  setTimeout(() => { answeredCount++; goTo('sliders'); }, 200);
+}
+
+function setupQ3() {
+  const r = state.segment === 'reassessing';
+  document.getElementById('q3text').innerHTML = r
+    ? 'HAVE YOU THOUGHT<br>ABOUT KIDS?'
+    : 'WHERE ARE YOU<br>WITH THE RELATIONSHIP<br>QUESTION?';
+  document.getElementById('q3sub').textContent = r
+    ? 'Not whether you want them — whether the timeline is starting to feel like a decision.'
+    : 'Not just status. Where you thought you\'d be by now versus where you are. No filter needed.';
+  document.getElementById('inp_q3').placeholder = 'your answer…';
+  document.getElementById('q3example').textContent = r
+    ? 'I want them but haven\'t said it out loud to my partner. The clock feels real now.'
+    : 'Thought I\'d be married by 32. I\'m 35, still figuring it out. Not sad, just surprised.';
+}
+
+function setupQ5() {
+  const r = state.segment === 'reassessing';
+  document.getElementById('q5text').innerHTML = r
+    ? 'WHAT DID YOU<br>PUT ON HOLD?'
+    : 'WHAT WOULD YOU DO<br>IF YOU KNEW IT<br>WOULDN\'T FAIL?';
+  document.getElementById('q5sub').textContent = r
+    ? 'And when did you stop counting on it?'
+    : 'The thing you don\'t say at dinner. Nobody\'s judging here.';
+  document.getElementById('inp_q5').placeholder = 'your answer…';
+  document.getElementById('q5example').textContent = r
+    ? 'Writing. I\'ve been "about to start" a book for six years. Every year I say next year.'
+    : 'I\'d open a small restaurant. Or move back to my home country. Something smaller, slower, mine.';
+}
+
+// ═══════════════════════════════════════════════════════
+// SLIDERS
+// ═══════════════════════════════════════════════════════
+function saveSliders() {
+  state.creativity = parseInt(document.getElementById('sliderCreativity').value);
+  state.optimism   = parseInt(document.getElementById('sliderOptimism').value);
+  prefetchFollowUps(); // start generating in background while user transitions
+  goTo('followups');
+}
+
+// ═══════════════════════════════════════════════════════
+// API KEY
+// ═══════════════════════════════════════════════════════
+let byokProvider = '';
+
+function selProvider(p) {
+  byokProvider = p;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+  const chip = document.getElementById('chip-' + p);
+  if (chip) chip.classList.add('sel');
+  const ph = { groq:'gsk_...', openai:'sk-...', anthropic:'sk-ant-...', gemini:'AIzaSy...' };
+  document.getElementById('inp_apiKey').placeholder = ph[p] || 'Paste key...';
+}
+
+function autoDetectProvider(v) {
+  if (v.startsWith('gsk_'))        selProvider('groq');
+  else if (v.startsWith('AIza'))   selProvider('gemini');
+  else if (v.startsWith('sk-ant')) selProvider('anthropic');
+  else if (v.startsWith('sk-'))    selProvider('openai');
+}
+
+function detectProvider(k) {
+  if (k.startsWith('gsk_'))   return 'groq';
+  if (k.startsWith('sk-ant')) return 'anthropic';
+  if (k.startsWith('AIza'))   return 'gemini';
+  return 'openai';
+}
+
+function saveKeyAndFinish() {
+  const k = document.getElementById('inp_apiKey').value.trim();
+  if (k) {
+    state.ai.key      = k;
+    state.ai.provider = detectProvider(k) || byokProvider || 'groq';
+    state.ai.tier     = 'byok';
+    localStorage.setItem('st_api_key', k);
+  } else {
+    state.ai.tier = 'hosted'; state.ai.provider = 'hosted';
+  }
+  goTo('followups');
+}
+
+function skipKeyAndFinish() {
+  state.ai.tier = 'hosted'; state.ai.provider = 'hosted';
+  goTo('followups');
+}
+
+// ═══════════════════════════════════════════════════════
+// FOLLOW-UP QUESTIONS
+// ═══════════════════════════════════════════════════════
+let _fuQuestions      = [];
+let _fuPrefetched     = false;
+let _fuPrefetchPromise = null;
+
+// Fires during saveSliders() — gives ~1-2s head start before screen appears
+function prefetchFollowUps() {
+  if (_fuPrefetched) return;
+  if (state.ai.followUpQuestions && state.ai.followUpQuestions.length > 0) {
+    _fuQuestions  = state.ai.followUpQuestions;
+    _fuPrefetched = true;
+    return;
+  }
+  _fuPrefetchPromise = fetchFollowUpQuestions().then(qs => {
+    if (qs) { _fuQuestions = qs; _fuPrefetched = true; }
+  });
+}
+
+async function fetchFollowUpQuestions() {
+  const a = state.answers;
+  const ctx = [
+    `Person: ${state.name || '?'}, born ${state.birthYear || '?'}, lives in ${state.city || '?'}.`,
+    state.lifeSentence   ? `In their own words: "${state.lifeSentence}"` : '',
+    state.emotionalState ? `Feels: ${state.emotionalState}` : '',
+    a.anchor             ? `Anchor: "${a.anchor}"` : '',
+    a.almost             ? `Fork moment: "${a.almost}"${a.almostYear ? ` (~${a.almostYear})` : ''}` : '',
+    a.relationship       ? `Relationship: "${a.relationship}"` : '',
+    a.health             ? `Health: "${a.health}"` : '',
+    a.secret             ? `Ambition: "${a.secret}"` : '',
+    a.location           ? `Dream city: "${a.location}"` : '',
+    a.hobby              ? `Hobby: "${a.hobby}"` : '',
+    a.money              ? `Financial: ${a.money}` : '',
+  ].filter(Boolean).join('\n');
+
+  const prompt = `You are helping build a precise personal timeline visualization. Based on the answers below, generate EXACTLY 3 targeted follow-up questions that would place key events on a timeline more accurately.
+
+PERSON'S ANSWERS:
+${ctx}
+
+Rules:
+- Each question must be SPECIFIC to this person's actual answers — reference their exact words
+- Every question should invite a YEAR as part of the answer
+- Focus on the biggest gaps: undated career start, undated relationship moment, undated fork or move
+- Do NOT ask what they already answered
+- Tone: direct, like a smart friend who read everything and spotted the gaps
+- Exactly 3 questions — no more, no less
+
+Return ONLY a valid JSON array, no markdown:
+[{"key":"camelCaseKey","question":"Your specific question?","hint":"One short line on why this helps your timeline"}, ...]`;
+
+  try {
+    const raw = await callAI([{role:'user', content:prompt}]);
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (match) {
+      const parsed = JSON.parse(match[0]);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const qs = parsed.slice(0, 3);
+        state.ai.followUpQuestions = qs;
+        return qs;
+      }
+    }
+  } catch(e) { console.warn('[followups prefetch]', e); }
+  return null;
+}
+
+async function generateFollowUps() {
+  const loadEl = document.getElementById('fuLoading');
+  const qEl    = document.getElementById('fuQuestions');
+  const btnsEl = document.getElementById('fuBtns');
+  const subEl  = document.getElementById('fuSub');
+
+  // Already ready from prefetch — show immediately, no spinner
+  if (_fuPrefetched && _fuQuestions.length > 0) {
+    renderFollowUps(qEl, btnsEl, loadEl, subEl);
+    return;
+  }
+  // Still in flight — wait for it (usually only ~200-400ms left)
+  if (_fuPrefetchPromise) {
+    try { await _fuPrefetchPromise; } catch(e) {}
+    if (_fuQuestions.length > 0) {
+      renderFollowUps(qEl, btnsEl, loadEl, subEl);
+      return;
+    }
+  }
+  // Fallback: fetch now
+  const qs = await fetchFollowUpQuestions();
+  if (qs && qs.length > 0) {
+    _fuQuestions = qs;
+    renderFollowUps(qEl, btnsEl, loadEl, subEl);
+    return;
+  }
+  // Total fallback: skip silently
+  loadEl.textContent = '// building your timeline…';
+  setTimeout(() => finish(), 600);
+}
+
+function renderFollowUps(qEl, btnsEl, loadEl, subEl) {
+  loadEl.style.display = 'none';
+  subEl.textContent = 'Answer what you can. Add a year wherever possible — then your timeline is done.';
+  qEl.innerHTML = _fuQuestions.map((q, i) => `
+    <div style="margin-bottom:28px">
+      <div class="q-field-label" style="margin-bottom:6px">${String(i+1).padStart(2,'0')} — ${q.question}</div>
+      ${q.hint ? `<div style="font-family:var(--font-b);font-style:italic;font-size:11px;color:rgba(232,232,224,0.25);margin-bottom:8px">${q.hint}</div>` : ''}
+      <div style="display:flex;gap:12px;align-items:flex-end">
+        <textarea class="q-input" id="fu_ans_${i}" rows="2" style="margin-bottom:0;flex:1"
+          placeholder="Your answer…"></textarea>
+        <div style="flex:0 0 96px">
+          <div class="q-field-label" style="margin-bottom:4px">// YEAR</div>
+          <input class="q-input year sm" type="number" id="fu_yr_${i}"
+            placeholder="e.g. 2019" min="1970" max="2026" style="margin-bottom:0">
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Pre-fill if re-entering with existing answers
+  const existing = state.ai.followUpAnswers || {};
+  _fuQuestions.forEach((q, i) => {
+    const val = existing[q.key];
+    if (val) {
+      const anEl = document.getElementById('fu_ans_' + i);
+      if (anEl) anEl.value = val;
+      const yrMatch = String(val).match(/\b(19|20)\d{2}\b/);
+      if (yrMatch) {
+        const yrEl = document.getElementById('fu_yr_' + i);
+        if (yrEl) yrEl.value = yrMatch[0];
+      }
+    }
+  });
+
+  qEl.style.display = 'block';
+  btnsEl.style.display = 'flex';
+}
+
+function saveFollowUps() {
+  const answers = state.ai.followUpAnswers || {};
+  _fuQuestions.forEach((q, i) => {
+    const ans = (document.getElementById('fu_ans_' + i) || {}).value || '';
+    const yr  = (document.getElementById('fu_yr_'  + i) || {}).value || '';
+    if (ans.trim()) {
+      answers[q.key] = yr.trim() ? ans.trim() + ' (' + yr.trim() + ')' : ans.trim();
+      // Also store year separately under a year key if provided
+      if (yr.trim()) answers[q.key + '_year'] = yr.trim();
+    }
+  });
+  state.ai.followUpAnswers = answers;
+  finish();
+}
+
+// ═══════════════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════════════
+async function finish() {
+  buildAndSaveJSON();
+  goTo('done');
+  const st = document.getElementById('doneStatus');
+  try {
+    st.textContent = '// enriching timeline…';
+    await runTimelineEnricher();
+    st.textContent = '// writing your story…';
+    await runBiographerPass();
+    st.textContent = '// timeline ready ✓';
+  } catch(e) {
+    st.textContent = '// timeline ready';
+  }
+}
+
+async function rerunEnrichment() {
+  const btn = document.getElementById('rerunBtn');
+  const st  = document.getElementById('doneStatus');
+  btn.disabled = true;
+  btn.textContent = '↺ RUNNING…';
+  try {
+    st.textContent = '// re-enriching timeline…';
+    await runTimelineEnricher();
+    st.textContent = '// rewriting your story…';
+    await runBiographerPass();
+    st.textContent = '// timeline updated ✓';
+  } catch(e) {
+    st.textContent = '// enrichment failed — check key';
+  }
+  btn.disabled = false;
+  btn.textContent = '↺ RE-RUN AI ENRICHMENT';
+}
+
+function buildAndSaveJSON() {
+  const a = state.answers;
+  const output = {
+    name:            state.name,
+    birthYear:       state.birthYear,
+    city:            state.city,
+    birthCity:       state.city,
+    currentCityYear: null,
+    segment:         state.segment,
+    ageBracket:      state.ageBracket,
+    creativity:      state.creativity,
+    optimism:        state.optimism,
+    lifeSentence:    state.lifeSentence,
+    answers: {
+      education:        null,
+      eduField:         null,
+      eduText:          null,
+      cityHistory:      null,
+      career:           null,
+      careerField:      null,
+      careerStartYear:  null,
+      relationships:    null,
+      relationshipYear: null,
+      locations:        'samecity',
+      moveYear:         null,
+      assets:           [],
+      forkMoment:       a.almost   || null,
+      forkYear:         a.almostYear || null,
+      forkCategory:     null,
+      companyName:      null,
+      altCityPath:      a.location || null,
+    },
+    bonusAnswers: {
+      emotion:         state.emotionalState,
+      almostDid:       a.almost       || null,
+      messageTo:       null,
+      childhood:       null,
+      childhoodAge:    null,
+      hadKid:          null,
+      happinessScore:  null,
+      happinessWish:   a.secret       || null,
+      anchor:          a.anchor       || null,
+      relationship:    a.relationship || null,
+      health:          a.health       || null,
+      hobby:           a.hobby        || null,
+      money:           a.money        || null,
+    },
+    ai: {
+      provider:          state.ai.provider || 'hosted',
+      tier:              state.ai.tier     || 'hosted',
+      inferredYears:     {},
+      followUpQuestions: [],
+      followUpAnswers:   {},
+    },
+    worldEventImpacts: [],
+    customEvents:      [],
+    biographerEvents:  [],
+    savedAt: new Date().toISOString(),
+  };
+  localStorage.setItem('st_timeline_data', JSON.stringify(output));
+  return output;
+}
+
+function launchViz() {
+  window.location.href = 'viz.html';
+}
+
+function updateSaveBtn() {
+  const checked = document.getElementById('consentCheck').checked;
+  const btn = document.getElementById('saveEmailBtn');
+  btn.disabled = !checked;
+  btn.style.background = checked ? 'rgba(255,184,0,0.15)' : 'rgba(255,184,0,0.08)';
+  btn.style.borderColor = checked ? 'rgba(255,184,0,0.4)' : 'rgba(255,184,0,0.2)';
+  btn.style.color = checked ? 'rgba(255,184,0,0.9)' : 'rgba(255,184,0,0.4)';
+  btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+}
+
+async function saveTimeline() {
+  const email = document.getElementById('doneEmail').value.trim();
+  const status = document.getElementById('saveEmailStatus');
+  if (!document.getElementById('consentCheck').checked) {
+    status.textContent = '// please check the consent box above'; return;
+  }
+  if (!email || !email.includes('@')) {
+    status.textContent = '// enter a valid email'; return;
+  }
+  const data = JSON.parse(localStorage.getItem('st_timeline_data') || 'null');
+  if (!data) { status.textContent = '// no timeline data found'; return; }
+  status.textContent = '// saving…';
+  document.getElementById('saveEmailBtn').disabled = true;
+  try {
+    const res = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, data, consent: true }),
+    });
+    const d = await res.json();
+    if (d.ok) {
+      localStorage.setItem('st_email', email);
+      if (d.token) localStorage.setItem('st_token', d.token);
+      const link = `${location.origin}/viz.html?t=${d.token}`;
+      const wrap = document.getElementById('emailSaveWrap');
+      wrap.style.borderColor = 'rgba(0,255,65,0.4)';
+      wrap.innerHTML = `
+        <div style="font-family:monospace;font-size:9px;letter-spacing:2px;color:rgba(0,255,65,0.6);margin-bottom:10px;">// SAVED ✓ — YOUR UNIQUE LINK</div>
+        <div style="font-family:monospace;font-size:11px;color:#e8e8e0;word-break:break-all;background:rgba(0,255,65,0.05);border:1px solid rgba(0,255,65,0.2);padding:10px;margin-bottom:12px;line-height:1.6;">${link}</div>
+        <div style="font-family:monospace;font-size:9px;color:rgba(232,232,224,0.4);line-height:1.7;">Bookmark this link to return to your timeline on any device.<br>Lost it? Just complete the quiz again with the same email.</div>
+        <button onclick="navigator.clipboard.writeText('${link}').then(()=>{ this.textContent='COPIED ✓'; setTimeout(()=>this.textContent='COPY LINK',2000); })"
+          style="margin-top:12px;font-family:monospace;font-size:10px;letter-spacing:2px;background:transparent;border:1px solid rgba(0,255,65,0.3);color:rgba(0,255,65,0.7);padding:8px 16px;cursor:pointer;width:100%;">
+          COPY LINK
+        </button>
+      `;
+    } else {
+      status.textContent = '// error: ' + (d.error || 'try again');
+      document.getElementById('saveEmailBtn').disabled = false;
+    }
+  } catch (err) {
+    status.textContent = '// network error — try again';
+    document.getElementById('saveEmailBtn').disabled = false;
+  }
+}
+
+// ─── DEV JUMP NAV ───────────────────────────────────────────────────────────────
+function toggleDevJump() {
+  const panel = document.getElementById('devJumpPanel');
+  const list  = document.getElementById('devJumpList');
+  if (panel.style.display === 'none') {
+    list.innerHTML = FLOW.map(id => {
+      const isCurrent = id === currentSc;
+      return `<div onclick="devJumpTo('${id}')" style="font-family:monospace;font-size:10px;letter-spacing:1px;padding:5px 8px;cursor:pointer;color:${isCurrent?'rgba(255,184,0,1)':'rgba(232,232,224,0.7)'};background:${isCurrent?'rgba(255,184,0,0.08)':'transparent'};border-bottom:1px solid rgba(255,184,0,0.08);">
+        ${isCurrent ? '▸ ' : '  '}${id}
+      </div>`;
+    }).join('');
+    panel.style.display = 'block';
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function devJumpTo(id) {
+  document.getElementById('devJumpPanel').style.display = 'none';
+  goTo(id);
+}
+
+// ═══════════════════════════════════════════════════════
+// BACKGROUND STRING (canvas animation)
+// ═══════════════════════════════════════════════════════
+const bgCanvas = document.getElementById('bgCanvas');
+const bgCtx    = bgCanvas.getContext('2d');
+let bgT = 0;
+
+function resizeBg() {
+  bgCanvas.width  = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
+}
+resizeBg();
+window.addEventListener('resize', resizeBg);
+
+function drawBg() {
+  bgT++;
+  const W = bgCanvas.width, H = bgCanvas.height;
+  bgCtx.clearRect(0, 0, W, H);
+  const cx = W * 0.5;
+
+  // Vertical string
+  bgCtx.save();
+  bgCtx.strokeStyle = 'rgba(255,184,0,0.06)';
+  bgCtx.lineWidth = 1;
+  bgCtx.setLineDash([3, 14]);
+  bgCtx.beginPath();
+  bgCtx.moveTo(cx, 0);
+  bgCtx.lineTo(cx, H);
+  bgCtx.stroke();
+  bgCtx.setLineDash([]);
+  bgCtx.restore();
+
+  // Nodes — one per answered question, spaced down the string
+  const maxNodes = 10;
+  const count = Math.min(answeredCount, maxNodes);
+  const spacing = H / (maxNodes + 1);
+  for (let i = 0; i < count; i++) {
+    const y = spacing * (i + 1);
+    const pulse = 0.1 + 0.1 * Math.sin(bgT * 0.025 + i * 0.9);
+    bgCtx.save();
+    bgCtx.fillStyle = `rgba(255,184,0,${pulse})`;
+    bgCtx.shadowColor = 'rgba(255,184,0,0.4)';
+    bgCtx.shadowBlur = 6;
+    bgCtx.beginPath();
+    bgCtx.arc(cx, y, 3.5, 0, Math.PI * 2);
+    bgCtx.fill();
+    bgCtx.restore();
+  }
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+function updateBgString() { /* answeredCount already updated before goTo */ }
+
+// ═══════════════════════════════════════════════════════
+// AI PASS 1 — TIMELINE ENRICHER
+// Infers 3-5 additional events from quiz answers
+// ═══════════════════════════════════════════════════════
+async function runTimelineEnricher() {
+  try {
+    const a = state.answers;
+    const by = state.birthYear || 1990;
+    const ctxLines = [
+      `Person: ${state.name}, born ${by}, lives in ${state.city}.`,
+      state.lifeSentence   ? `In their own words: "${state.lifeSentence}"` : '',
+      state.emotionalState ? `Emotional state: ${state.emotionalState}` : '',
+      `Segment: ${state.segment}`,
+      a.anchor       ? `What keeps them here: "${a.anchor}"` : '',
+      a.almost       ? `Fork moment: "${a.almost}"${a.almostYear ? ` (${a.almostYear})` : ''}` : '',
+      a.relationship ? `Relationship context: "${a.relationship}"` : '',
+      a.health       ? `Health context: "${a.health}"` : '',
+      a.secret       ? `Hidden aspiration: "${a.secret}"` : '',
+      a.location     ? `Dream city: "${a.location}"` : '',
+      a.hobby        ? `Hobby: "${a.hobby}"` : '',
+      a.money        ? `Financial self-assessment: ${a.money}` : '',
+    ].filter(Boolean).join('\n');
+
+    const prompt = `You are building a life timeline visualization. Given the context below, infer 3-5 SPECIFIC personal events that would logically exist in this person's life — milestones, setbacks, turning points implied by but not stated in the context.
+
+CONTEXT:
+${ctxLines}
+
+Rules:
+- Events must be SPECIFIC to this person (use their actual words, city, career hints)
+- Include events across different years — not all clustered
+- Categories: career, relationship, location, identity, finance, health
+- Birth year is ${by} — infer realistic years
+- Do NOT add generic placeholder events
+- Respond ONLY with a valid JSON array, no explanation, no markdown:
+[{"year": 2019, "cat": "career", "title": "Specific Title", "desc": "One concrete sentence"}, ...]`;
+
+    const raw = await callAI([{ role:'user', content:prompt }], state.ai.key, state.ai.provider, state.ai.tier);
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (!match) return;
+    const events = JSON.parse(match[0]);
+    if (!Array.isArray(events) || events.length === 0) return;
+    const saved = JSON.parse(localStorage.getItem('st_timeline_data') || '{}');
+    saved.customEvents = events
+      .filter(e => e.year && e.title && e.year > 1940 && e.year < 2035)
+      .map(e => ({
+        year:  parseInt(e.year),
+        cat:   e.cat || 'identity',
+        title: String(e.title).slice(0, 60),
+        desc:  e.desc ? String(e.desc).slice(0, 150) : '',
+        isEnriched: true,
+      }));
+    localStorage.setItem('st_timeline_data', JSON.stringify(saved));
+  } catch(e) {
+    console.warn('[enricher]', e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// AI PASS 2 — BIOGRAPHER
+// Generates full prime timeline in biographer-quality JSON
+// ═══════════════════════════════════════════════════════
+async function runBiographerPass() {
+  try {
+    const a = state.answers;
+    const by = state.birthYear || 1990;
+    const name = state.name || 'unknown';
+    const city = state.city || 'unknown';
+    const data = state;
+    const b = {
+      anchor:         a.anchor       || '',
+      relationship:   a.relationship || '',
+      health:         a.health       || '',
+      hobby:          a.hobby        || '',
+      money:          a.money        || '',
+      happinessWish:  a.secret       || '',
+      almostDid:      a.almost       || '',
+      messageTo:      null, biggestFailure: null, healthEvent: null,
+      careerEvent:    null, financeEvent:   null, firstLove:   null,
+      childhood:      null, childhoodAge:   null, happinessScore: null,
+    };
+    const fa = {};
+    const ctxLines = [
+      data.lifeSentence   ? `Life right now: "${data.lifeSentence}"` : '',
+      data.segment        ? `Life stage: ${data.segment}` : '',
+      b.anchor            ? `What's keeping them here: "${b.anchor}"` : '',
+      b.relationship      ? `Relationship situation: "${b.relationship}"` : '',
+      b.health            ? `Health: "${b.health}"` : '',
+      b.hobby             ? `Hobbies / passions: "${b.hobby}"` : '',
+      b.money             ? `Financial feeling: ${b.money}` : '',
+      b.happinessWish     ? `Secret ambition: "${b.happinessWish}"` : '',
+      a.eduText           ? `Education: "${a.eduText}"`
+        : a.education     ? `Education: ${a.education}${a.eduField ? ` in ${a.eduField}` : ''}` : '',
+      a.cityHistory       ? `Cities lived: ${a.cityHistory}` : '',
+      a.careerField       ? `Career field: ${a.careerField}` : '',
+      a.companyName       ? `Current company: "${a.companyName}"` : '',
+      a.careerStartYear   ? `Career started: ${a.careerStartYear}` : '',
+      a.forkMoment        ? `Fork moment: "${a.forkMoment}" (~${a.forkYear || 'unknown year'})` : '',
+      b.almostDid         ? `Almost did: "${b.almostDid}"` : '',
+      b.messageTo         ? `Message to past self: "${b.messageTo}"` : '',
+      b.biggestFailure    ? `Biggest failure: "${b.biggestFailure}"` : '',
+      b.healthEvent       ? `Health chapter: "${b.healthEvent}"` : '',
+      b.careerEvent       ? `Career milestone: "${b.careerEvent}"` : '',
+      b.financeEvent      ? `Finance event: "${b.financeEvent}"` : '',
+      b.firstLove         ? `First love: "${b.firstLove}"` : '',
+      b.childhood         ? `Childhood: "${b.childhood}" at age ${b.childhoodAge || '?'}` : '',
+      b.happinessScore    ? `Self-reported happiness: ${b.happinessScore}/10` : '',
+      (data.worldEventImpacts||[]).length
+        ? 'World event impacts: ' + data.worldEventImpacts
+            .map(w => `${w.title} (${w.year}): "${w.impact}"`).join('; ')
+        : '',
+      ...Object.entries(fa)
+        .filter(([k, v]) => v && !['forkYear','targetCity','careerStartYear','relationshipYear','moveYear'].includes(k))
+        .map(([k, v]) => `${k}: "${v}"`),
+    ].filter(Boolean).join('\n');
+
+    const prompt =
+`You are writing the life timeline of a real person as a precise, honest biographer. Every event must be SPECIFIC — real years, real decisions, real consequences. No generic phrases like "Career Begins" or "Moved to a New City".
+
+PERSON: ${name}, born ${by}, lives in ${city}.
+
+THEIR STORY:
+${ctxLines}
+
+Generate a JSON array of 12-16 life events. RULES:
+- Titles must name real places, real roles, real decisions — never abstract
+- Descriptions causally link each event to the previous
+- Use their actual words above wherever possible
+- Include the fork moment ("${a.almost || 'key decision'}") as a pivotal event
+- Infer years from context — birth ${by}, career likely starts ~${by + 22}
+- Categories: career | relationship | location | identity | finance | health
+- Return raw JSON only, no markdown, no code fences:
+[
+  {"year": ${by}, "cat": "identity", "title": "Born — ${city}", "desc": "One causally linked sentence."},
+  ...
+]`;
+
+    const raw = await callAI([{ role:'user', content:prompt }], state.ai.key, state.ai.provider, state.ai.tier);
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (!match) return;
+    const events = JSON.parse(match[0]);
+    if (!Array.isArray(events) || events.length < 5) return;
+    const cleaned = events
+      .filter(e => e.year && e.title && e.year > 1930 && e.year < 2035)
+      .map(e => ({
+        year:  parseInt(e.year),
+        cat:   e.cat || 'identity',
+        title: String(e.title).slice(0, 80),
+        desc:  e.desc ? String(e.desc).slice(0, 200) : '',
+      }));
+    const saved = JSON.parse(localStorage.getItem('st_timeline_data') || '{}');
+    saved.biographerEvents = cleaned;
+    localStorage.setItem('st_timeline_data', JSON.stringify(saved));
+  } catch(e) {
+    console.warn('[biographer]', e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// callAI — proxied through /api/ai (key stays server-side)
+// ═══════════════════════════════════════════════════════
+async function callAI(messages) {
+  const firstContent = messages[0]?.content || '';
+  const model = (firstContent.includes('biographer') || firstContent.includes('timeline') || firstContent.includes('TIMELINE'))
+    ? 'openai/gpt-oss-120b'
+    : 'openai/gpt-oss-20b';
+  const res = await fetch('/api/ai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model, messages, max_tokens: 1200, temperature: 0.4 }),
+  });
+  const d = await res.json();
+  if (d.error) throw new Error(d.error.message || d.error);
+  return d.choices?.[0]?.message?.content || '';
+}
+
+// ─── FLOATING SAVE PILL ──────────────────────────────────────────────────────
+// Show after first question answered
+function maybeShowFloatSave() {
+  if (state.name || state.birthYear) {
+    document.getElementById('floatSave')?.classList.add('visible');
+  }
+}
+
+function openFloatSaveModal() {
+  document.getElementById('floatSaveModal').classList.add('open');
+  const savedEmail = localStorage.getItem('st_email');
+  if (savedEmail) {
+    document.getElementById('floatEmail').value = savedEmail;
+    document.getElementById('floatConsent').checked = true;
+    updateFloatBtn();
+  }
+}
+function closeFloatSaveModal() {
+  document.getElementById('floatSaveModal').classList.remove('open');
+}
+function updateFloatBtn() {
+  const checked = document.getElementById('floatConsent').checked;
+  const btn = document.getElementById('floatSaveBtn');
+  btn.disabled = !checked;
+  btn.style.background = checked ? 'rgba(0,255,65,0.15)' : 'rgba(0,255,65,0.05)';
+  btn.style.borderColor = checked ? 'rgba(0,255,65,0.4)' : 'rgba(0,255,65,0.15)';
+  btn.style.color = checked ? 'rgba(0,255,65,0.9)' : 'rgba(0,255,65,0.3)';
+  btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+}
+async function doFloatSave() {
+  const email = document.getElementById('floatEmail').value.trim();
+  const status = document.getElementById('floatStatus');
+  if (!email || !email.includes('@')) { status.textContent = '// enter a valid email'; return; }
+  // Save quiz state as partial data
+  const data = JSON.parse(localStorage.getItem('st_timeline_data') || 'null')
+    || { name: state.name, birthYear: state.birthYear, partial: true, answers: state.answers };
+  status.textContent = '// saving…';
+  document.getElementById('floatSaveBtn').disabled = true;
+  try {
+    const res = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, data, consent: true }),
+    });
+    const d = await res.json();
+    if (d.ok && d.token) {
+      localStorage.setItem('st_email', email);
+      localStorage.setItem('st_token', d.token);
+      const link = `${location.origin}/quiz.html`;
+      document.getElementById('floatModalBody').innerHTML = `
+        <div style="font-family:monospace;font-size:9px;letter-spacing:2px;color:rgba(0,255,65,0.7);margin-bottom:12px;">// PROGRESS SAVED ✓</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#e8e8e0;margin-bottom:12px;">BOOKMARK THIS PAGE</div>
+        <div style="font-family:monospace;font-size:10px;color:rgba(232,232,224,0.4);line-height:1.7;margin-bottom:16px;">Your progress is saved. Return to this page anytime — your answers will be waiting.</div>
+        <button onclick="closeFloatSaveModal()"
+          style="width:100%;font-family:monospace;font-size:10px;letter-spacing:2px;background:rgba(0,255,65,0.1);border:1px solid rgba(0,255,65,0.3);color:rgba(0,255,65,0.7);padding:12px;cursor:pointer;">
+          CONTINUE QUIZ →
+        </button>
+      `;
+    } else {
+      status.textContent = '// error: ' + (d.error || 'try again');
+      document.getElementById('floatSaveBtn').disabled = false;
+    }
+  } catch(err) {
+    status.textContent = '// network error';
+    document.getElementById('floatSaveBtn').disabled = false;
+  }
+}
+
+// ─── RESUME OVERLAY ──────────────────────────────────────────────────────────
+(function initResumeOverlay() {
+  // Don't show if this is a fresh start
+  if (new URLSearchParams(location.search).get('new') === '1') return;
+
+  try {
+    const s = JSON.parse(localStorage.getItem('st_quiz_v2') || 'null');
+    if (!s || !s.name || s._v !== 2) return;
+
+    // Has a real session — show overlay
+    const name = s.name || 'Your';
+    const born = s.birthYear ? ` · Born ${s.birthYear}` : '';
+
+    // Time since last save
+    let timeAgo = '';
+    if (s._savedAt) {
+      const mins = Math.round((Date.now() - s._savedAt) / 60000);
+      if (mins < 60) timeAgo = `${mins} minute${mins !== 1 ? 's' : ''} ago`;
+      else if (mins < 1440) timeAgo = `${Math.round(mins/60)} hour${Math.round(mins/60) !== 1 ? 's' : ''} ago`;
+      else timeAgo = `${Math.round(mins/1440)} day${Math.round(mins/1440) !== 1 ? 's' : ''} ago`;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'resumeOverlay';
+    overlay.className = 'show';
+    overlay.innerHTML = `
+      <div class="resume-tag">// ACTIVE SESSION FOUND</div>
+      <div class="resume-title">${name.toUpperCase()}'S<br>TIMELINE</div>
+      <div class="resume-meta">${born.trim()}${timeAgo ? ' · Last updated ' + timeAgo : ''}</div>
+      <div class="resume-sub">You have an unfinished timeline.<br>Continue where you left off, or start fresh.</div>
+      <div class="resume-btns">
+        <button class="btn-resume-continue" onclick="resumeContinue()">CONTINUE MY TIMELINE →</button>
+        <button class="btn-resume-fresh" onclick="resumeFresh()">START FRESH — CLEAR EVERYTHING</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  } catch(e) {}
+})();
+
+function resumeContinue() {
+  document.getElementById('resumeOverlay')?.remove();
+  // State already restored by the restore() function — just go to first question
+  if (state.name) goTo('routing_age');
+}
+
+function resumeFresh() {
+  localStorage.removeItem('st_quiz_v2');
+  localStorage.removeItem('st_timeline_data');
+  localStorage.removeItem('st_email');
+  localStorage.removeItem('st_token');
+  document.getElementById('resumeOverlay')?.remove();
+  // State is already loaded — reset it in place
+  location.replace(location.pathname + '?new=1');
+}
+</script>
+</body>
+</html>

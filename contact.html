@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — STRING THEORY · DYSTOPIC LABS</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --amber: #ffb800;
+  --cyan: #00f0ff;
+  --green: #00ff41;
+  --red: #ff2222;
+  --white: #e8e8e0;
+  --dim: rgba(232,232,224,0.45);
+  --dim2: rgba(232,232,224,0.2);
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-m: 'Share Tech Mono', monospace;
+  --font-b: 'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background:var(--bg); color:var(--white); font-family:var(--font-b); }
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
+  pointer-events:none; z-index:9999;
+}
+
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px;
+  border-bottom:1px solid rgba(255,184,0,0.15);
+  background:rgba(10,10,15,0.97);
+  position:sticky; top:0; z-index:100;
+}
+.topbar-logo { font-family:var(--font-d); font-size:20px; letter-spacing:4px; color:var(--green); text-decoration:none; }
+.topbar-logo span { color:var(--red); }
+.topbar-sub { font-family:var(--font-m); font-size:9px; letter-spacing:3px; color:var(--dim2); }
+
+.wrap { max-width:560px; margin:0 auto; padding:48px 24px 80px; }
+
+.page-eyebrow { font-family:var(--font-m); font-size:9px; letter-spacing:3px; color:rgba(0,240,255,0.6); margin-bottom:10px; }
+.page-title { font-family:var(--font-d); font-size:42px; letter-spacing:4px; color:var(--white); margin-bottom:8px; }
+.page-sub { font-family:var(--font-b); font-size:12px; color:var(--dim); line-height:1.7; margin-bottom:36px; font-weight:300; }
+
+/* FORM */
+.form-field { margin-bottom:24px; }
+.field-label {
+  display:block; font-family:var(--font-m); font-size:9px; letter-spacing:3px;
+  color:rgba(255,184,0,0.6); margin-bottom:8px;
+}
+.field-input {
+  width:100%; background:transparent;
+  border:none; border-bottom:1px solid rgba(255,184,0,0.25);
+  color:var(--white); font-family:var(--font-b); font-size:14px;
+  padding:8px 0; outline:none; transition:border-color 0.2s;
+}
+.field-input:focus { border-color:rgba(255,184,0,0.6); }
+.field-input::placeholder { color:rgba(232,232,224,0.2); }
+
+.field-select {
+  width:100%; background:#0f0f18;
+  border:1px solid rgba(255,184,0,0.25);
+  color:var(--white); font-family:var(--font-b); font-size:13px;
+  padding:10px 12px; outline:none; cursor:pointer;
+  transition:border-color 0.2s; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,184,0,0.5)'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.field-select:focus { border-color:rgba(255,184,0,0.6); }
+.field-select option { background:#0f0f18; color:var(--white); }
+
+.field-textarea {
+  width:100%; background:transparent;
+  border:1px solid rgba(255,184,0,0.15);
+  color:var(--white); font-family:var(--font-b); font-size:13px;
+  padding:12px; outline:none; resize:vertical; min-height:100px;
+  line-height:1.7; transition:border-color 0.2s;
+}
+.field-textarea:focus { border-color:rgba(255,184,0,0.4); }
+.field-textarea::placeholder { color:rgba(232,232,224,0.2); }
+
+/* deletion warning */
+#deletionWarning {
+  display:none;
+  background:rgba(255,34,34,0.06); border:1px solid rgba(255,34,34,0.25);
+  padding:14px 16px; margin-bottom:20px;
+}
+#deletionWarning p {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  color:rgba(255,80,80,0.8); line-height:1.7;
+}
+
+.submit-btn {
+  width:100%; font-family:var(--font-m); font-size:11px; letter-spacing:3px;
+  background:rgba(255,184,0,0.12); border:1px solid rgba(255,184,0,0.35);
+  color:rgba(255,184,0,0.9); padding:14px 20px; cursor:pointer;
+  transition:all 0.2s;
+}
+.submit-btn:hover { background:rgba(255,184,0,0.2); border-color:var(--amber); }
+.submit-btn:disabled { opacity:0.35; cursor:not-allowed; }
+
+#formStatus {
+  font-family:var(--font-m); font-size:10px; letter-spacing:2px;
+  margin-top:16px; min-height:20px; text-align:center;
+}
+#formStatus.ok  { color:var(--green); }
+#formStatus.err { color:var(--red); }
+
+/* success state */
+#successState { display:none; text-align:center; padding:40px 0; }
+.success-icon { font-family:var(--font-m); font-size:11px; letter-spacing:3px; color:var(--green); margin-bottom:16px; }
+.success-title { font-family:var(--font-d); font-size:32px; letter-spacing:3px; margin-bottom:12px; }
+.success-body { font-family:var(--font-b); font-size:12px; color:var(--dim); line-height:1.7; font-weight:300; }
+
+.page-footer {
+  margin-top:60px; padding-top:20px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+}
+.footer-brand { font-family:var(--font-m); font-size:9px; letter-spacing:2px; color:var(--dim2); }
+.footer-links a { font-family:var(--font-m); font-size:9px; letter-spacing:2px; color:var(--dim); text-decoration:none; margin-left:16px; }
+.footer-links a:hover { color:var(--amber); }
+
+@media (max-width:600px) {
+  .page-title { font-size:30px; }
+  .wrap { padding:32px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">STRING<span>.</span>THEORY</a>
+  <span class="topbar-sub">// DYSTOPIC LABS</span>
+</div>
+
+<div class="wrap">
+
+  <div id="formState">
+    <div class="page-eyebrow">// REACH OUT</div>
+    <h1 class="page-title">CONTACT</h1>
+    <p class="page-sub">Questions, data requests, or just want to say something — we read every message.</p>
+
+    <form id="contactForm" onsubmit="submitForm(event)">
+
+      <div class="form-field">
+        <label class="field-label" for="reqType">// REQUEST TYPE</label>
+        <select id="reqType" class="field-select" onchange="onTypeChange()" required>
+          <option value="">— select one —</option>
+          <option value="general">General question</option>
+          <option value="deletion">Delete my data</option>
+          <option value="data_request">Export / access my data</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div id="deletionWarning">
+        <p>// WARNING: selecting this will permanently delete your timeline and email from our database. This cannot be undone. Include the email address you used to save your timeline in the message below.</p>
+      </div>
+
+      <div class="form-field">
+        <label class="field-label" for="reqName">// YOUR NAME</label>
+        <input id="reqName" type="text" class="field-input" placeholder="Optional" autocomplete="name">
+      </div>
+
+      <div class="form-field">
+        <label class="field-label" for="reqEmail">// YOUR EMAIL <span style="color:rgba(255,34,34,0.6);">*</span></label>
+        <input id="reqEmail" type="email" class="field-input" placeholder="required" autocomplete="email" required>
+      </div>
+
+      <div class="form-field">
+        <label class="field-label" for="reqMessage">// MESSAGE <span style="color:rgba(255,34,34,0.6);">*</span></label>
+        <textarea id="reqMessage" class="field-textarea" placeholder="Tell us what you need…" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">SEND MESSAGE →</button>
+      <div id="formStatus"></div>
+
+    </form>
+  </div>
+
+  <div id="successState">
+    <div class="success-icon">// RECEIVED ✓</div>
+    <div class="success-title">MESSAGE SENT.</div>
+    <p class="success-body" id="successBody">We'll get back to you shortly.</p>
+    <div style="margin-top:28px;">
+      <a href="/" style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(255,184,0,0.7);text-decoration:none;">← BACK TO HOME</a>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-brand">© 2025 DYSTOPIC LABS</span>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function onTypeChange() {
+  const type = document.getElementById('reqType').value;
+  const warn = document.getElementById('deletionWarning');
+  warn.style.display = type === 'deletion' ? 'block' : 'none';
+}
+
+async function submitForm(e) {
+  e.preventDefault();
+  const btn    = document.getElementById('submitBtn');
+  const status = document.getElementById('formStatus');
+  status.textContent = '';
+  status.className   = '';
+
+  const type    = document.getElementById('reqType').value;
+  const name    = document.getElementById('reqName').value.trim();
+  const email   = document.getElementById('reqEmail').value.trim();
+  const message = document.getElementById('reqMessage').value.trim();
+
+  if (!type) { status.textContent = '// please select a request type'; status.className='err'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'SENDING…';
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, name, email, message }),
+    });
+    const d = await res.json();
+    if (!res.ok || d.error) throw new Error(d.error || 'server error');
+
+    // show success
+    document.getElementById('formState').style.display = 'none';
+    const successBody = document.getElementById('successBody');
+    if (type === 'deletion') {
+      successBody.textContent = 'Your deletion request has been received and processed. Your data has been removed.';
+    } else if (type === 'data_request') {
+      successBody.textContent = 'Your data request has been received. We\'ll send your data to the email provided within 30 days.';
+    } else {
+      successBody.textContent = 'We\'ll get back to you shortly.';
+    }
+    document.getElementById('successState').style.display = 'block';
+
+  } catch (err) {
+    status.textContent = '// error: ' + err.message;
+    status.className = 'err';
+    btn.disabled = false;
+    btn.textContent = 'SEND MESSAGE →';
+  }
+}
+</script>
+</body>
+</html>

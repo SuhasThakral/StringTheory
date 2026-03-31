@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — STRING THEORY · DYSTOPIC LABS</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --amber: #ffb800;
+  --cyan: #00f0ff;
+  --green: #00ff41;
+  --white: #e8e8e0;
+  --dim: rgba(232,232,224,0.45);
+  --dim2: rgba(232,232,224,0.2);
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-m: 'Share Tech Mono', monospace;
+  --font-b: 'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background: var(--bg); color: var(--white); font-family: var(--font-b); }
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
+  pointer-events:none; z-index:9999;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px;
+  border-bottom:1px solid rgba(255,184,0,0.15);
+  background:rgba(10,10,15,0.97);
+  position:sticky; top:0; z-index:100;
+}
+.topbar-logo { font-family:var(--font-d); font-size:20px; letter-spacing:4px; color:var(--green); text-decoration:none; }
+.topbar-logo span { color:#ff2222; }
+.topbar-sub { font-family:var(--font-m); font-size:9px; letter-spacing:3px; color:var(--dim); }
+
+/* ── CONTENT ── */
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.page-eyebrow {
+  font-family:var(--font-m); font-size:9px; letter-spacing:3px;
+  color:rgba(0,240,255,0.6); margin-bottom:10px;
+}
+
+.page-title {
+  font-family:var(--font-d); font-size:42px; letter-spacing:4px;
+  color:var(--white); margin-bottom:6px;
+}
+
+.page-date {
+  font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+  color:var(--dim); margin-bottom:40px;
+}
+
+.section {
+  margin-bottom:36px;
+  border-left:2px solid rgba(255,184,0,0.2);
+  padding-left:20px;
+}
+
+.section-label {
+  font-family:var(--font-m); font-size:9px; letter-spacing:3px;
+  color:var(--amber); margin-bottom:10px;
+  opacity:0.7;
+}
+
+.section-title {
+  font-family:var(--font-d); font-size:22px; letter-spacing:2px;
+  color:var(--white); margin-bottom:10px;
+}
+
+.body-text {
+  font-family:var(--font-b); font-size:13px; line-height:1.8;
+  color:var(--dim); font-weight:300;
+}
+
+.body-text + .body-text { margin-top:12px; }
+
+ul.privacy-list {
+  list-style:none; padding:0; margin:10px 0;
+}
+ul.privacy-list li {
+  font-family:var(--font-b); font-size:13px; line-height:1.8;
+  color:var(--dim); font-weight:300;
+  padding-left:16px; position:relative;
+}
+ul.privacy-list li::before {
+  content:'→'; position:absolute; left:0;
+  color:rgba(255,184,0,0.4); font-size:11px;
+}
+
+a.inline-link {
+  color:var(--amber); text-decoration:none;
+  border-bottom:1px solid rgba(255,184,0,0.3);
+}
+a.inline-link:hover { border-color:var(--amber); }
+
+.highlight-box {
+  background:rgba(255,184,0,0.04);
+  border:1px solid rgba(255,184,0,0.15);
+  padding:16px 20px;
+  margin:16px 0;
+}
+.highlight-box .body-text { color:rgba(232,232,224,0.7); }
+
+/* ── FOOTER ── */
+.page-footer {
+  margin-top:60px;
+  padding-top:24px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px;
+}
+.footer-brand { font-family:var(--font-m); font-size:9px; letter-spacing:2px; color:var(--dim2); }
+.footer-links { display:flex; gap:20px; }
+.footer-links a { font-family:var(--font-m); font-size:9px; letter-spacing:2px; color:var(--dim); text-decoration:none; }
+.footer-links a:hover { color:var(--amber); }
+
+@media (max-width:600px) {
+  .page-title { font-size:30px; }
+  .wrap { padding:32px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">STRING<span>.</span>THEORY</a>
+  <span class="topbar-sub">// DYSTOPIC LABS</span>
+</div>
+
+<div class="wrap">
+
+  <div class="page-eyebrow">// LEGAL · DATA</div>
+  <h1 class="page-title">PRIVACY POLICY</h1>
+  <div class="page-date">Effective: March 2025 &nbsp;·&nbsp; Last updated: March 2025</div>
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-label">// 01</div>
+    <div class="section-title">WHO WE ARE</div>
+    <p class="body-text">
+      String Theory is a product by <strong>Dystopic Labs</strong>. We built this tool to help you map the pivotal events of your life onto a visual timeline and explore how your path might have unfolded differently.
+    </p>
+    <p class="body-text">
+      Contact: <a href="/contact" class="inline-link">Contact form →</a>
+    </p>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-label">// 02</div>
+    <div class="section-title">WHAT WE COLLECT</div>
+    <p class="body-text">We only collect what is necessary to provide the service:</p>
+    <ul class="privacy-list">
+      <li><strong>Email address</strong> — only if you choose to save your timeline. Used solely to retrieve your data on future visits.</li>
+      <li><strong>Timeline data</strong> — your quiz answers, life events, AI-enriched descriptions, and visualisation settings. Stored as a single JSON record linked to your email.</li>
+    </ul>
+    <p class="body-text" style="margin-top:12px;">
+      We do <strong>not</strong> collect names, payment information, device identifiers, or behavioural/tracking data. We do not use cookies for advertising.
+    </p>
+  </div>
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-label">// 03</div>
+    <div class="section-title">HOW WE USE IT</div>
+    <ul class="privacy-list">
+      <li>To save and restore your timeline when you return.</li>
+      <li>To send you a return link if you request one.</li>
+      <li>We do <strong>not</strong> sell, rent, or share your data with third parties for marketing.</li>
+      <li>We do <strong>not</strong> use your data to train AI models.</li>
+    </ul>
+  </div>
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-label">// 04</div>
+    <div class="section-title">AI PROCESSING</div>
+    <p class="body-text">
+      When you complete the quiz, your answers are sent to an AI model (via Groq) to enrich your timeline descriptions. This processing happens in real time and is not retained by the AI provider beyond the immediate API call, per their data processing terms.
+    </p>
+    <p class="body-text">
+      The AI provider is <strong>Groq, Inc.</strong> — see their privacy policy at <a href="https://groq.com/privacy-policy/" class="inline-link" target="_blank" rel="noopener">groq.com/privacy-policy</a>.
+    </p>
+  </div>
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-label">// 05</div>
+    <div class="section-title">DATA STORAGE</div>
+    <p class="body-text">
+      Your timeline data is stored in a secure PostgreSQL database hosted by <strong>Neon</strong> (neon.tech), which operates on AWS infrastructure in the US. Data is encrypted at rest and in transit.
+    </p>
+  </div>
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-label">// 06</div>
+    <div class="section-title">YOUR RIGHTS</div>
+    <p class="body-text">You have the right to:</p>
+    <ul class="privacy-list">
+      <li><strong>Access</strong> — request a copy of all data we hold about you.</li>
+      <li><strong>Correction</strong> — ask us to correct inaccurate data.</li>
+      <li><strong>Deletion</strong> — ask us to delete your timeline and email from our database at any time.</li>
+      <li><strong>Portability</strong> — request your data in a machine-readable format.</li>
+      <li><strong>Withdraw consent</strong> — stop us from holding your data at any time with no penalty.</li>
+    </ul>
+    <div class="highlight-box">
+      <p class="body-text">
+        To exercise any of these rights, use our <a href="/contact" class="inline-link">contact form</a> and select the relevant request type. We will respond within 30 days.
+      </p>
+    </div>
+    <p class="body-text">
+      If you are in the EU/EEA, these rights are provided under the General Data Protection Regulation (GDPR). If you are in California, these rights are provided under the California Consumer Privacy Act (CCPA).
+    </p>
+  </div>
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-label">// 07</div>
+    <div class="section-title">CHILDREN</div>
+    <p class="body-text">
+      String Theory is not directed at children under 13. We do not knowingly collect data from anyone under 13. If you believe a child has submitted data to us, please contact us and we will delete it promptly.
+    </p>
+  </div>
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-label">// 08</div>
+    <div class="section-title">CHANGES TO THIS POLICY</div>
+    <p class="body-text">
+      If we make material changes to this policy, we will update the "Last updated" date at the top. Continued use of the service after a change constitutes acceptance of the new terms.
+    </p>
+  </div>
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-label">// 09</div>
+    <div class="section-title">CONTACT</div>
+    <p class="body-text">
+      Questions? Concerns? We're a small team and we read every email.
+    </p>
+    <p class="body-text">
+      <a href="/contact" class="inline-link">Contact form →</a>
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-brand">© 2025 DYSTOPIC LABS</span>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/quiz.html">Build Your Timeline</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

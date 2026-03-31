@@ -1,0 +1,4250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>STRING THEORY — TIMELINE — DYSTOPIC LABS</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a12; --bg2: #12121e; --panel: #16162a;
+  --amber: #ffb800; --cyan: #00f0ff; --green: #00ff41;
+  --red: #ff2222; --purple: #b87fff; --white: #e8e8e0;
+  --dim: rgba(232,232,224,0.4);
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-m: 'Share Tech Mono', monospace;
+  --font-b: 'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { height:100%; }
+body {
+  min-height:100%; height:auto;
+  background:var(--bg); color:var(--white);
+  font-family:var(--font-b); overflow-x:hidden; cursor:crosshair;
+}
+body::before {
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
+  pointer-events:none; z-index:9999;
+}
+
+/* TOPBAR */
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 24px;
+  background:rgba(10,10,18,0.96);
+  border-bottom:1px solid rgba(255,184,0,0.15);
+  backdrop-filter:blur(8px);
+  position:sticky; top:0; z-index:100;
+}
+.topbar-logo { font-family:var(--font-d); font-size:19px; letter-spacing:3px; color:var(--green); }
+.topbar-logo span { color:var(--red); }
+.dim-badge {
+  font-family:var(--font-m); font-size:11px;
+  background:rgba(184,127,255,0.1); border:1px solid rgba(184,127,255,0.3);
+  color:var(--purple); padding:4px 12px; letter-spacing:2px; transition:all 0.4s;
+}
+.dim-badge.alt { background:rgba(0,240,255,0.1); border-color:rgba(0,240,255,0.4); color:var(--cyan); }
+.topbar-right { display:flex; gap:8px; align-items:center; }
+.topbar-name { font-family:var(--font-m); font-size:11px; color:var(--dim); letter-spacing:1px; }
+.btn-topbar {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  padding:5px 11px; background:transparent; cursor:pointer; transition:all 0.2s;
+}
+.btn-back { color:rgba(255,184,0,0.5); border:1px solid rgba(255,184,0,0.2); }
+.btn-back:hover { color:var(--amber); border-color:rgba(255,184,0,0.5); }
+.btn-hide { color:rgba(184,127,255,0.7); border:1px solid rgba(184,127,255,0.25); }
+.btn-hide:hover, .btn-hide.on { color:var(--purple); border-color:rgba(184,127,255,0.6); }
+.btn-export { color:rgba(0,255,65,0.6); border:1px solid rgba(0,255,65,0.2); }
+.btn-export:hover { color:var(--green); border-color:rgba(0,255,65,0.5); }
+.btn-layout { color:rgba(0,240,255,0.6); border:1px solid rgba(0,240,255,0.2); }
+.btn-layout:hover, .btn-layout.active { color:var(--cyan); border-color:rgba(0,240,255,0.5); background:rgba(0,240,255,0.06); }
+
+/* TOPBAR BADGES */
+.topbar-badge {
+  font-family:var(--font-m); font-size:9px; letter-spacing:1.5px;
+  padding:3px 8px; border:1px solid; line-height:1;
+}
+.badge-creativity { color:rgba(184,127,255,0.65); border-color:rgba(184,127,255,0.25); }
+.badge-opt-pos { color:rgba(0,255,65,0.7); border-color:rgba(0,255,65,0.25); }
+.badge-opt-neu { color:rgba(232,232,224,0.4); border-color:rgba(232,232,224,0.15); }
+.badge-opt-neg { color:rgba(255,34,34,0.6); border-color:rgba(255,34,34,0.25); }
+
+/* MOBILE BOTTOM SHEET */
+.bottom-sheet {
+  position:fixed; bottom:0; left:0; right:0;
+  background:rgba(10,10,18,0.98); border-top:1px solid rgba(255,184,0,0.3);
+  padding:12px 20px 24px;
+  transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  z-index:250; max-height:60vh; overflow-y:auto;
+}
+.bottom-sheet.visible { transform:translateY(0); }
+.bs-handle { width:32px; height:3px; background:rgba(255,255,255,0.18); border-radius:2px; margin:0 auto 12px; }
+.bs-year { font-family:var(--font-m); font-size:10px; color:var(--amber); letter-spacing:2px; margin-bottom:3px; }
+.bs-title { font-family:var(--font-d); font-size:22px; color:var(--white); margin:2px 0; line-height:1.1; }
+.bs-cat { font-family:var(--font-m); font-size:9px; color:var(--dim); letter-spacing:2px; }
+.bs-desc { font-family:var(--font-b); font-size:12px; color:rgba(232,232,224,0.7); line-height:1.6; margin-top:8px; white-space:pre-wrap; }
+.bs-close { position:absolute; top:12px; right:16px; font-family:var(--font-m); font-size:11px; color:var(--dim); background:none; border:none; cursor:pointer; letter-spacing:1px; }
+.bs-close:hover { color:var(--white); }
+
+/* FOUR PILLARS */
+.pillars-section { padding:14px 24px; border-top:1px solid rgba(255,184,0,0.08); display:none; }
+.pillars-section.visible { display:block; }
+.pillars-label { font-family:var(--font-m); font-size:9px; color:rgba(255,184,0,0.4); letter-spacing:3px; margin-bottom:8px; }
+.pillars-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:7px; }
+@media(min-width:600px){ .pillars-grid { grid-template-columns:repeat(4,1fr); } }
+.pillar-card { padding:9px 11px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); }
+.pillar-label { font-family:var(--font-m); font-size:8px; letter-spacing:2px; opacity:0.4; margin-bottom:3px; text-transform:uppercase; }
+.pillar-value { font-family:var(--font-b); font-size:11px; color:var(--white); line-height:1.4; }
+
+/* VERTICAL CANVAS */
+.canvas-wrap.layout-vertical { overflow:visible; }
+#stringCanvas.layout-vertical { height:auto; }
+.year-axis.layout-vertical { display:none; }
+
+/* NO-DATA SCREEN */
+#noDataScreen {
+  display:none; min-height:100vh; align-items:center; justify-content:center;
+  flex-direction:column; gap:24px; text-align:center; padding:40px;
+}
+#noDataScreen.visible { display:flex; }
+.no-data-title { font-family:var(--font-d); font-size:60px; color:var(--amber); }
+.no-data-sub { font-family:var(--font-m); font-size:13px; color:var(--dim); line-height:1.8; max-width:440px; }
+.btn-go-quiz {
+  font-family:var(--font-m); font-size:12px; letter-spacing:2px;
+  padding:10px 28px; background:var(--amber); color:#000; border:none; cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-go-quiz:hover { background:#fff; }
+
+/* CANVAS WRAP */
+.canvas-wrap { position:relative; width:100%; background:var(--bg); border-bottom:1px solid rgba(255,184,0,0.08); overflow:hidden; }
+#stringCanvas { display:block; width:100%; cursor:crosshair; touch-action:none; -webkit-tap-highlight-color:transparent; }
+
+/* YEAR AXIS */
+.year-axis {
+  display:flex; justify-content:space-between;
+  padding:4px 40px; background:var(--bg);
+  border-bottom:1px solid rgba(255,184,0,0.06);
+}
+.year-axis span { font-family:var(--font-m); font-size:9px; color:rgba(255,184,0,0.3); letter-spacing:1px; }
+
+/* CANVAS TOOLTIP */
+.canvas-tooltip {
+  position:absolute; background:rgba(10,10,18,0.95);
+  border:1px solid rgba(255,184,0,0.35);
+  padding:7px 12px; font-family:var(--font-m); font-size:11px;
+  color:var(--white); pointer-events:none; opacity:0; transition:opacity 0.15s;
+  z-index:50; white-space:nowrap; letter-spacing:0.5px;
+}
+.canvas-tooltip.visible { opacity:1; }
+.canvas-tooltip .tt-year { color:var(--amber); font-size:10px; }
+.canvas-tooltip .tt-cat { font-size:9px; color:var(--dim); margin-top:2px; }
+
+/* WORLD EVENTS PANEL */
+.world-panel { background:rgba(10,10,18,0.98); border-bottom:1px solid rgba(255,102,51,0.2); }
+.world-panel-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 24px; cursor:pointer; user-select:none;
+}
+.world-panel-header:hover { background:rgba(255,102,51,0.04); }
+.world-panel-title { font-family:var(--font-m); font-size:10px; color:rgba(255,102,51,0.65); letter-spacing:3px; }
+.world-panel-toggle { font-family:var(--font-m); font-size:10px; color:rgba(255,102,51,0.4); letter-spacing:1px; transition:color 0.2s; }
+.world-panel-body { display:none; padding:0 24px 16px; }
+.world-panel-body.open { display:block; }
+.world-chips-row { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
+.world-chip {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  padding:5px 10px; background:transparent; color:rgba(232,232,224,0.4);
+  border:1px solid rgba(232,232,224,0.1); cursor:pointer; transition:all 0.18s; white-space:nowrap;
+}
+.world-chip:hover { border-color:rgba(255,102,51,0.45); color:rgba(255,102,51,0.9); }
+.world-chip.active { background:rgba(255,102,51,0.1); border-color:rgba(255,102,51,0.55); color:#ff6633; }
+.world-active-list { display:flex; flex-direction:column; gap:8px; }
+.world-event-card {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:10px 14px; background:rgba(255,102,51,0.05); border:1px solid rgba(255,102,51,0.15); transition:border-color 0.2s;
+}
+.world-event-card:hover { border-color:rgba(255,102,51,0.3); }
+.wec-emoji { font-size:18px; flex-shrink:0; margin-top:1px; }
+.wec-body { flex:1; min-width:0; }
+.wec-year { font-family:var(--font-m); font-size:9px; color:rgba(255,102,51,0.5); letter-spacing:2px; }
+.wec-title { font-family:var(--font-b); font-size:13px; color:var(--white); margin:2px 0; }
+.wec-desc { font-family:var(--font-b); font-size:11px; color:var(--dim); line-height:1.5; }
+.wec-actions { display:flex; gap:8px; margin-top:8px; align-items:center; }
+.btn-whatif {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1.5px;
+  padding:5px 12px; background:transparent; color:rgba(255,102,51,0.8);
+  border:1px solid rgba(255,102,51,0.4); cursor:pointer; transition:all 0.18s;
+}
+.btn-whatif:hover { background:rgba(255,102,51,0.1); color:#ff6633; border-color:rgba(255,102,51,0.7); }
+.wec-result {
+  display:none; margin-top:8px; padding:10px 12px;
+  background:rgba(0,0,0,0.3); border-left:2px solid rgba(255,102,51,0.4);
+  font-family:var(--font-m); font-size:11px; color:rgba(232,232,224,0.7);
+  line-height:1.7; white-space:pre-wrap; letter-spacing:0.5px;
+}
+.wec-result.visible { display:block; }
+.wec-remove { font-family:var(--font-m); font-size:9px; color:rgba(232,232,224,0.25); background:none; border:none; cursor:pointer; letter-spacing:1px; padding:4px 6px; }
+.wec-remove:hover { color:var(--red); }
+.world-empty { font-family:var(--font-m); font-size:10px; color:rgba(232,232,224,0.2); letter-spacing:2px; padding:6px 0; }
+
+/* FORK BANNER */
+.fork-banner {
+  display:none; align-items:center; justify-content:space-between; gap:16px;
+  padding:10px 24px; background:rgba(255,184,0,0.06);
+  border-bottom:1px solid rgba(255,184,0,0.2);
+}
+.fork-banner.visible { display:flex; }
+.fork-info { font-family:var(--font-m); font-size:12px; color:var(--amber); letter-spacing:1px; }
+.fork-event-name { font-size:15px; color:var(--white); margin:2px 0; }
+.fork-actions { display:flex; gap:10px; align-items:center; }
+.btn-pull {
+  font-family:var(--font-m); font-size:12px; letter-spacing:2px;
+  padding:8px 20px; background:var(--amber); color:#000;
+  border:none; cursor:pointer; transition:all 0.2s;
+}
+.btn-pull:hover { background:#fff; transform:scale(1.03); }
+.btn-pull:active { transform:scale(0.97); }
+.btn-clear {
+  font-family:var(--font-m); font-size:11px; letter-spacing:1px;
+  padding:7px 14px; background:transparent; color:var(--dim);
+  border:1px solid rgba(232,232,224,0.15); cursor:pointer;
+}
+.btn-clear:hover { border-color:var(--red); color:var(--red); }
+
+/* BRANCHES AREA */
+.branches-area { padding:0 24px 40px; background:var(--bg2); min-height:300px; }
+.branches-hint {
+  text-align:center; padding:60px 20px;
+  font-family:var(--font-m); font-size:12px; color:rgba(232,232,224,0.2);
+  letter-spacing:2px; pointer-events:none;
+}
+.branches-hint span { color:rgba(255,184,0,0.3); }
+.branch-svg { display:block; width:100%; overflow:visible; }
+.branch-tracks { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:0; }
+.track-label { font-family:var(--font-m); font-size:10px; letter-spacing:3px; padding:6px 12px; margin-bottom:10px; border-bottom:1px solid; }
+.track-label.real { color:var(--purple); border-color:rgba(184,127,255,0.3); }
+.track-label.alt { color:var(--cyan); border-color:rgba(0,240,255,0.3); }
+.event-card {
+  background:var(--panel); border-left:3px solid; padding:12px 14px; margin-bottom:10px;
+  opacity:0; transform:translateY(12px); transition:opacity 0.35s ease,transform 0.35s ease; position:relative;
+}
+.event-card.visible { opacity:1; transform:translateY(0); }
+.event-card.real-path { border-color:rgba(184,127,255,0.5); }
+.event-card.alt-path { border-color:rgba(0,240,255,0.5); background:rgba(0,240,255,0.03); }
+.card-year { font-family:var(--font-m); font-size:10px; color:var(--dim); letter-spacing:1px; }
+.card-title { font-family:var(--font-b); font-size:13px; color:var(--white); margin:3px 0; }
+.card-desc { font-family:var(--font-b); font-size:11px; color:var(--dim); line-height:1.5; }
+.card-reason { font-family:var(--font-m); font-size:10px; color:var(--cyan); margin-top:5px; letter-spacing:0.5px; }
+.cascade-count { font-family:var(--font-m); font-size:10px; color:var(--dim); padding:8px 0; display:none; }
+.scroll-cue { text-align:center; padding:10px; font-family:var(--font-m); font-size:10px; color:rgba(255,184,0,0.3); letter-spacing:2px; display:none; }
+.scroll-cue.visible { display:block; }
+
+/* AI TERMINAL */
+.ai-terminal { margin:24px; background:#050510; border:1px solid rgba(0,240,255,0.2); padding:20px; display:none; }
+.ai-terminal.visible { display:block; }
+.ai-header { font-family:var(--font-m); font-size:10px; color:var(--cyan); letter-spacing:2px; margin-bottom:12px; }
+.ai-output { font-family:var(--font-m); font-size:12px; color:var(--white); line-height:1.8; white-space:pre-wrap; }
+.ai-cursor { display:inline-block; width:7px; height:12px; background:var(--cyan); animation:blink 1s step-end infinite; vertical-align:middle; }
+@keyframes blink { 50%{opacity:0} }
+
+/* QUICK CHAT */
+.quick-chat { margin:0 24px 24px; display:none; }
+.quick-chat.visible { display:block; }
+.quick-prompts { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.qp {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  padding:6px 12px; background:transparent; color:var(--dim);
+  border:1px solid rgba(232,232,224,0.15); cursor:pointer; transition:all 0.2s;
+}
+.qp:hover { border-color:var(--amber); color:var(--amber); }
+.chat-row { display:flex; gap:10px; }
+.chat-in {
+  flex:1; background:var(--panel); border:1px solid rgba(232,232,224,0.15);
+  color:var(--white); font-family:var(--font-m); font-size:12px;
+  padding:10px 14px; outline:none;
+}
+.chat-in:focus { border-color:rgba(255,184,0,0.4); }
+.btn-send {
+  font-family:var(--font-m); font-size:11px; letter-spacing:1px;
+  padding:10px 18px; background:transparent; color:var(--green);
+  border:1px solid rgba(0,255,65,0.3); cursor:pointer;
+}
+.btn-send:hover { background:rgba(0,255,65,0.08); }
+
+/* SHARE BUTTON */
+#shareBtn {
+  display: none;
+  width: 100%;
+  margin-top: 14px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 12px 16px;
+  background: rgba(255,184,0,0.08);
+  color: rgba(255,184,0,0.9);
+  border: 1px solid rgba(255,184,0,0.35);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+#shareBtn:hover { background: rgba(255,184,0,0.15); }
+#shareBtn.visible { display: block; }
+
+/* API KEY ROW (inline key input for viz) */
+.api-row { margin:0 24px 24px; display:none; gap:10px; align-items:center; flex-wrap:wrap; }
+.api-row.visible { display:flex; }
+.api-label { font-family:var(--font-m); font-size:10px; color:var(--dim); letter-spacing:1px; white-space:nowrap; }
+.api-in {
+  flex:1; min-width:200px; background:var(--panel);
+  border:1px solid rgba(232,232,224,0.15); color:var(--white);
+  font-family:var(--font-m); font-size:11px; padding:8px 12px; outline:none; letter-spacing:1px;
+}
+.api-in:focus { border-color:rgba(0,240,255,0.4); }
+.btn-api-save {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  padding:8px 14px; background:transparent; color:var(--cyan);
+  border:1px solid rgba(0,240,255,0.3); cursor:pointer;
+}
+.btn-api-save:hover { background:rgba(0,240,255,0.06); }
+.api-status-txt { font-family:var(--font-m); font-size:10px; color:var(--dim); letter-spacing:1px; }
+
+/* BUTTERFLY OVERLAY */
+#butterflyOverlay { position:fixed; inset:0; pointer-events:none; z-index:9000; display:none; }
+#butterflyOverlay.active { display:block; }
+
+/* TIMELINE BREAK */
+#timelineBreak {
+  position:fixed; inset:0; z-index:99999;
+  background:#000; display:none; flex-direction:column;
+  align-items:center; justify-content:center;
+  pointer-events:all; overflow:hidden;
+}
+#timelineBreak.active { display:flex; }
+#timelineBreak canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.tb-text {
+  position:relative; z-index:2; display:flex; flex-direction:column;
+  align-items:center; gap:18px; text-align:center;
+  animation:tbShake 0.15s infinite alternate;
+}
+@keyframes tbShake { from{transform:translate(-2px,-1px) rotate(-0.4deg)} to{transform:translate(2px,1px) rotate(0.4deg)} }
+.tb-glitch {
+  font-family:'Bebas Neue',sans-serif; font-size:clamp(42px,8vw,90px);
+  letter-spacing:6px; color:#ff2222;
+  text-shadow:0 0 20px #ff2222,0 0 60px rgba(255,34,34,0.6),4px 0 0 rgba(0,240,255,0.7),-4px 0 0 rgba(184,127,255,0.7);
+  animation:tbGlitch 0.2s infinite;
+}
+@keyframes tbGlitch {
+  0%{clip-path:inset(0 0 95% 0);transform:translate(-4px,0)}
+  10%{clip-path:inset(30% 0 50% 0);transform:translate(4px,0)}
+  20%{clip-path:inset(60% 0 20% 0);transform:translate(-2px,0)}
+  30%{clip-path:inset(10% 0 80% 0);transform:translate(3px,0)}
+  40%{clip-path:inset(80% 0 5% 0);transform:translate(-3px,0)}
+  50%,100%{clip-path:inset(0 0 0 0);transform:translate(0,0)}
+}
+.tb-glitch-wrap { position:relative; }
+.tb-glitch-wrap::before,.tb-glitch-wrap::after {
+  content:'TIMELINE CORRUPTED'; position:absolute; inset:0;
+  font-family:'Bebas Neue',sans-serif; font-size:clamp(42px,8vw,90px); letter-spacing:6px;
+}
+.tb-glitch-wrap::before { color:rgba(0,240,255,0.6); animation:tbShiftL 0.3s infinite; clip-path:inset(20% 0 40% 0); }
+.tb-glitch-wrap::after  { color:rgba(184,127,255,0.6); animation:tbShiftR 0.25s infinite; clip-path:inset(55% 0 10% 0); }
+@keyframes tbShiftL { 0%,100%{transform:translate(-6px,2px)} 50%{transform:translate(4px,-1px)} }
+@keyframes tbShiftR { 0%,100%{transform:translate(6px,-2px)} 50%{transform:translate(-3px,1px)} }
+.tb-sub { font-family:'Share Tech Mono',monospace; font-size:clamp(12px,2vw,16px); color:rgba(255,184,0,0.85); letter-spacing:2px; animation:tbFade 1.2s ease-in-out infinite alternate; }
+@keyframes tbFade { from{opacity:0.4} to{opacity:1} }
+.tb-error { font-family:'Share Tech Mono',monospace; font-size:11px; color:rgba(255,34,34,0.6); letter-spacing:1px; max-width:520px; line-height:1.7; }
+.tb-countdown { font-family:'Bebas Neue',sans-serif; font-size:22px; color:rgba(255,184,0,0.5); letter-spacing:4px; }
+
+/* EMAIL GATE MODAL */
+#emailGate {
+  position:fixed; inset:0; z-index:50000;
+  background:rgba(0,0,0,0.85); backdrop-filter:blur(6px);
+  display:none; align-items:center; justify-content:center;
+}
+#emailGate.visible { display:flex; }
+.email-modal {
+  background:var(--bg2); border:1px solid rgba(255,184,0,0.3);
+  padding:40px; max-width:440px; width:90%;
+}
+.email-modal-title { font-family:var(--font-d); font-size:36px; color:var(--amber); letter-spacing:3px; margin-bottom:10px; }
+.email-modal-sub { font-family:var(--font-m); font-size:11px; color:var(--dim); line-height:1.7; margin-bottom:24px; letter-spacing:0.5px; }
+.email-modal-input {
+  width:100%; background:var(--panel); border:1px solid rgba(255,184,0,0.2);
+  color:var(--white); font-family:var(--font-m); font-size:12px;
+  padding:10px 14px; outline:none; margin-bottom:12px; letter-spacing:1px;
+}
+.email-modal-input:focus { border-color:rgba(255,184,0,0.5); }
+.btn-gate {
+  font-family:var(--font-m); font-size:12px; letter-spacing:2px;
+  padding:10px 24px; background:var(--amber); color:#000;
+  border:none; cursor:pointer; width:100%; transition:all 0.2s;
+}
+.btn-gate:hover { background:#fff; }
+.gate-skip {
+  font-family:var(--font-m); font-size:10px; color:rgba(232,232,224,0.25);
+  cursor:pointer; margin-top:12px; text-align:center; letter-spacing:1px;
+  transition:color 0.2s;
+}
+.gate-skip:hover { color:rgba(232,232,224,0.5); }
+.gate-note { font-family:var(--font-m); font-size:9px; color:rgba(232,232,224,0.2); margin-top:10px; letter-spacing:0.5px; line-height:1.6; }
+
+/* DEV BAR */
+#devBar {
+  position:fixed; bottom:0; left:0; right:0; z-index:9998;
+  background:rgba(255,184,0,0.08); border-top:1px solid rgba(255,184,0,0.25);
+  padding:6px 16px; display:flex; align-items:center; gap:12px;
+}
+.dev-label { font-family:var(--font-m); font-size:9px; color:rgba(255,184,0,0.5); letter-spacing:2px; }
+.btn-dev {
+  font-family:var(--font-m); font-size:9px; letter-spacing:1px;
+  padding:4px 10px; background:transparent; cursor:pointer;
+}
+.btn-dev-quiz { color:rgba(255,184,0,0.6); border:1px solid rgba(255,184,0,0.3); }
+.btn-dev-quiz:hover { color:var(--amber); }
+.btn-dev-clear { color:rgba(255,34,34,0.5); border:1px solid rgba(255,34,34,0.2); }
+.btn-dev-clear:hover { color:var(--red); }
+
+/* MANAGE EVENTS PANEL */
+.manage-panel { background:rgba(10,10,18,0.98); border-bottom:1px solid rgba(0,240,255,0.15); }
+.manage-panel-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 24px; cursor:pointer; user-select:none;
+}
+.manage-panel-header:hover { background:rgba(0,240,255,0.03); }
+.manage-panel-title { font-family:var(--font-m); font-size:10px; color:rgba(0,240,255,0.5); letter-spacing:3px; }
+.manage-panel-toggle { font-family:var(--font-m); font-size:10px; color:rgba(0,240,255,0.3); letter-spacing:1px; }
+.manage-panel-body { display:none; padding:0 24px 16px; }
+.manage-panel-body.open { display:block; }
+.manage-event-list { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; max-height:320px; overflow-y:auto; }
+.manage-event-row {
+  display:flex; align-items:center; gap:10px;
+  padding:7px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  transition:border-color 0.15s;
+}
+.manage-event-row:hover { border-color:rgba(255,34,34,0.3); }
+.mer-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.mer-year { font-family:var(--font-m); font-size:10px; color:var(--dim); width:36px; flex-shrink:0; }
+.mer-title { font-family:var(--font-b); font-size:12px; color:var(--white); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mer-cat { font-family:var(--font-m); font-size:9px; color:var(--dim); letter-spacing:1px; flex-shrink:0; }
+.mer-remove { font-family:var(--font-m); font-size:10px; background:none; border:none; color:rgba(255,34,34,0.3); cursor:pointer; padding:2px 6px; letter-spacing:1px; flex-shrink:0; }
+.mer-remove:hover { color:var(--red); }
+.add-event-form {
+  border-top:1px solid rgba(0,240,255,0.1); padding-top:12px; display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end;
+}
+.add-event-form input, .add-event-form select {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(0,240,255,0.2);
+  color:var(--white); font-family:var(--font-m); font-size:11px; padding:6px 10px; outline:none; letter-spacing:0.5px;
+}
+.add-event-form input:focus, .add-event-form select:focus { border-color:rgba(0,240,255,0.5); }
+.add-event-form select option { background:#0a0a12; }
+.btn-add-event {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1px;
+  padding:7px 14px; background:transparent; color:var(--cyan);
+  border:1px solid rgba(0,240,255,0.35); cursor:pointer; transition:all 0.18s; white-space:nowrap;
+}
+.btn-add-event:hover { background:rgba(0,240,255,0.08); }
+
+/* ALWAYS-ON TIMELINE SECTION */
+.timeline-section { padding:0 24px 40px; background:var(--bg); border-top:1px solid rgba(255,184,0,0.06); }
+.timeline-section-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 0 10px;
+}
+.timeline-section-title { font-family:var(--font-m); font-size:10px; color:rgba(255,184,0,0.4); letter-spacing:3px; }
+.timeline-columns { display:grid; grid-template-columns:1fr; gap:16px; }
+.timeline-columns.has-alt { grid-template-columns:1fr 1fr; }
+.timeline-columns.has-alt2 { grid-template-columns:1fr 1fr 1fr; }
+.tl-col-label { font-family:var(--font-m); font-size:9px; letter-spacing:3px; padding:5px 0; margin-bottom:8px; border-bottom:1px solid; }
+.tl-col-label.prime { color:rgba(184,127,255,0.55); border-color:rgba(184,127,255,0.2); }
+.tl-col-label.alt   { color:rgba(0,240,255,0.55); border-color:rgba(0,240,255,0.2); }
+.tl-col-label.alt2  { color:rgba(184,127,255,0.4); border-color:rgba(184,127,255,0.15); }
+.tl-card {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:8px 10px; margin-bottom:6px;
+  border-left:2px solid; background:rgba(255,255,255,0.02);
+  transition:background 0.15s;
+}
+.tl-card:hover { background:rgba(255,255,255,0.04); }
+.tl-card-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:3px; }
+.tl-card-body { flex:1; min-width:0; }
+.tl-card-year { font-family:var(--font-m); font-size:9px; color:var(--dim); letter-spacing:1px; }
+.tl-card-title { font-family:var(--font-b); font-size:12px; color:var(--white); margin:2px 0; }
+.tl-card-desc { font-family:var(--font-b); font-size:10px; color:rgba(232,232,224,0.35); line-height:1.4; }
+
+/* ALT² BRANCH CARD */
+.event-card.alt2-path { border-color:rgba(184,127,255,0.35); background:rgba(184,127,255,0.03); }
+.track-label.alt2 { color:rgba(184,127,255,0.55); border-color:rgba(184,127,255,0.25); }
+.branch-tracks.three-col { grid-template-columns:1fr 1fr 1fr; }
+
+/* FOOTER */
+.viz-footer {
+  padding:20px 24px; background:var(--bg);
+  border-top:1px solid rgba(255,184,0,0.06);
+  font-family:var(--font-m); font-size:9px; color:rgba(232,232,224,0.2);
+  letter-spacing:1px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+}
+
+/* LANDSCAPE HINT (mobile landscape only) */
+#landscapeHint {
+  display:none; position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+  font-family:var(--font-m); font-size:9px; color:rgba(255,184,0,0.35); letter-spacing:2px;
+  pointer-events:none; z-index:200; white-space:nowrap;
+}
+
+/* ─── RESPONSIVE ───────────────────────────────────────────────────────────── */
+
+/* TABLET ≤900px: collapse multi-columns, reduce padding */
+@media (max-width: 900px) {
+  .branch-tracks, .branch-tracks.three-col { grid-template-columns: 1fr !important; }
+  .timeline-columns.has-alt,
+  .timeline-columns.has-alt2 { grid-template-columns: 1fr; }
+  .topbar { padding: 8px 16px; }
+  .topbar-name { display: none; }
+  .topbar-logo { font-size: 16px; letter-spacing: 2px; }
+  .branches-area { padding: 0 16px 32px; }
+  .timeline-section { padding: 0 16px 32px; }
+  .ai-terminal { margin: 16px; }
+  .quick-chat, .api-row { margin: 0 16px 16px; }
+}
+
+/* Hide mobile bar on desktop, show desktop bar */
+.topbar-mobile-bar { display: none; }
+.topbar-desktop { display: flex; }
+
+/* MOBILE PORTRAIT ≤640px — clean full-screen experience */
+@media (max-width: 640px) and (orientation: portrait) {
+  /* Topbar — 3 buttons only */
+  .topbar { padding: 8px 12px; }
+  .topbar-logo { font-size: 13px; letter-spacing: 2px; }
+  .topbar-desktop { display: none !important; }
+  .topbar-mobile-bar { display: flex !important; gap: 6px; align-items: center; }
+  #dimBadge { display: none; }
+
+  /* Canvas — fixed height, canvas-internal scroll */
+  .canvas-wrap {
+    height: 56vh;
+    max-height: 56vh;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,184,0,0.12);
+  }
+  #stringCanvas {
+    touch-action: none;
+    height: 100% !important;
+  }
+
+  /* Hide desktop-only sections */
+  .world-panel,
+  .manage-panel,
+  .branches-area,
+  .timeline-section,
+  .viz-footer { display: none !important; }
+
+  /* Fork banner — hidden on mobile (buttons shown in bottom sheet instead) */
+  .fork-banner { display: none !important; }
+
+  /* Chat terminal — always visible */
+  .ai-terminal { margin: 8px 10px 0; }
+  .quick-chat { margin: 0 10px 8px; display: block !important; }
+  #aiOutput {
+    min-height: 50px;
+    max-height: 30vh;
+    overflow-y: auto;
+    font-size: 11px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .quick-prompts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chat-row { display: flex; gap: 8px; }
+  #chatIn { font-size: 16px; flex: 1; } /* 16px prevents iOS Safari auto-zoom on focus */
+  .btn-send { white-space: nowrap; padding: 10px 14px; font-size: 10px; }
+}
+
+/* ── BOTTOM SHEET FORK ACTIONS ──────────────────────────────────────────────── */
+#bsForkActions {
+  display: none;
+  margin-top: 16px;
+  gap: 8px;
+  flex-direction: row;
+}
+#bsForkActions.visible { display: flex; }
+.btn-mfb-pull {
+  flex:1; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:1.5px;
+  padding:10px 10px; background:rgba(0,240,255,0.1); color:rgba(0,240,255,0.9);
+  border:1px solid rgba(0,240,255,0.4); cursor:pointer; transition:all 0.18s;
+}
+.btn-mfb-pull:hover { background:rgba(0,240,255,0.18); }
+.btn-mfb-reset {
+  font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:1px;
+  padding:10px 12px; background:transparent; color:rgba(232,232,224,0.35);
+  border:1px solid rgba(232,232,224,0.12); cursor:pointer; transition:all 0.18s;
+}
+.btn-mfb-reset:hover { border-color:rgba(255,34,34,0.4); color:rgba(255,34,34,0.7); }
+
+/* ── MOBILE WHAT IF PANEL ──────────────────────────────────── */
+#mobileWhatIf {
+  display: none;
+  padding: 0 0 20px;
+}
+#mobileWhatIf.visible { display: block; }
+.mwi-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 14px 8px;
+  border-bottom: 1px solid rgba(0,240,255,0.1);
+}
+.mwi-title { font-family:'Share Tech Mono',monospace; font-size:10px; color:rgba(0,240,255,0.6); letter-spacing:3px; }
+.btn-mwi-reset {
+  font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:1px;
+  padding:5px 10px; background:transparent; color:rgba(232,232,224,0.3);
+  border:1px solid rgba(232,232,224,0.1); cursor:pointer;
+}
+.btn-mwi-reset:hover { border-color:rgba(255,34,34,0.4); color:rgba(255,34,34,0.7); }
+.mwi-cards { padding: 8px 14px; display:flex; flex-direction:column; gap:8px; }
+.mwi-card {
+  background: rgba(0,240,255,0.04); border: 1px solid rgba(0,240,255,0.15);
+  border-left: 3px solid rgba(0,240,255,0.5); padding: 10px 12px;
+}
+.mwi-card-year { font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,240,255,0.5); letter-spacing:2px; margin-bottom:3px; }
+.mwi-card-title { font-family:'DM Mono',monospace; font-size:13px; color:#e8e8e0; margin-bottom:4px; }
+.mwi-card-desc { font-family:'DM Mono',monospace; font-size:11px; color:rgba(232,232,224,0.55); line-height:1.5; }
+.mwi-alt2-card {
+  background: rgba(184,127,255,0.04); border: 1px solid rgba(184,127,255,0.15);
+  border-left: 3px solid rgba(184,127,255,0.5); padding: 10px 12px;
+}
+.mwi-alt2-card .mwi-card-year { color:rgba(184,127,255,0.5); }
+.mwi-alt2-card .mwi-card-title { color:#b87fff; }
+
+/* MOBILE LANDSCAPE: canvas fills screen, hide everything below */
+@media (max-height: 500px) and (orientation: landscape) {
+  .year-axis,
+  .world-panel,
+  .manage-panel,
+  .fork-banner,
+  .branches-area,
+  .ai-terminal,
+  .quick-chat,
+  .api-row,
+  .timeline-section,
+  .viz-footer,
+  #devBar { display: none !important; }
+
+  /* Topbar minimal */
+  .topbar { padding: 6px 14px; }
+  .topbar-logo { font-size: 14px; }
+  .btn-topbar.btn-hide,
+  .btn-topbar.btn-export { display: none; }
+
+  /* Show landscape hint */
+  #landscapeHint { display: block; }
+
+  /* Canvas fills remaining vertical space */
+  .canvas-wrap { height: calc(100dvh - 44px); overflow: hidden; }
+  #stringCanvas { height: 100% !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- TIMELINE BREAK OVERLAY -->
+<div id="timelineBreak">
+  <canvas id="tbCanvas"></canvas>
+  <div class="tb-text">
+    <div class="tb-glitch-wrap"><div class="tb-glitch">TIMELINE CORRUPTED</div></div>
+    <div class="tb-sub" id="tbSub">PARADOX DETECTED — BRANCH DEPTH EXCEEDED</div>
+    <div class="tb-error" id="tbError"></div>
+    <div class="tb-countdown" id="tbCountdown">REBOOTING IN 3…</div>
+  </div>
+</div>
+
+<!-- BUTTERFLY FULLSCREEN OVERLAY -->
+<canvas id="butterflyOverlay"></canvas>
+
+<!-- EMAIL GATE MODAL -->
+<div id="emailGate">
+  <div class="email-modal">
+    <div class="email-modal-title">PULL REQUEST</div>
+    <div class="email-modal-sub">You're about to pull the string — simulate the alternate path your life could have taken. Leave your email and we'll save this timeline so you can come back to it.</div>
+    <input class="email-modal-input" id="gateEmail" type="email" placeholder="your@email.com">
+    <button class="btn-gate" onclick="submitGate()">SAVE & PULL THE STRING →</button>
+    <div class="gate-skip" onclick="skipGate()">// skip — continue without saving</div>
+    <div class="gate-note">No data stored on our servers. Email saved locally in your browser only.</div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM SHEET -->
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="bs-handle"></div>
+  <button class="bs-close" onclick="hideBottomSheet()">✕ CLOSE</button>
+  <div class="bs-year" id="bsYear"></div>
+  <div class="bs-title" id="bsTitle"></div>
+  <div class="bs-cat" id="bsCat"></div>
+  <div class="bs-desc" id="bsDesc"></div>
+  <div id="bsForkActions">
+    <button class="btn-mfb-pull" onclick="mobilePull()">↗ PULL ALTERNATE TIMELINE</button>
+    <button class="btn-mfb-reset" onclick="mobileResetFork()">← RESET</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">STRING<span>THEORY</span></div>
+  <div id="dimBadge" class="dim-badge">DIMENSION C-137 · PRIME</div>
+
+  <!-- DESKTOP buttons -->
+  <div class="topbar-right topbar-desktop">
+    <span class="topbar-badge badge-creativity" id="creativityBadge" style="display:none"></span>
+    <span class="topbar-badge badge-opt-neu" id="optimismBadge" style="display:none"></span>
+    <button class="btn-topbar btn-layout" id="layoutBtn" onclick="toggleLayout()" title="Toggle mobile/desktop layout">⬦ MOBILE VIEW</button>
+    <button class="btn-topbar btn-hide" id="hideBtn" onclick="toggleHidePrime()">◎ HIDE PRIME</button>
+    <button class="btn-topbar btn-export" onclick="exportJSON()">↓ JSON</button>
+    <button class="btn-topbar btn-export" onclick="document.getElementById('vizJsonUpload').click()" title="Load a saved timeline JSON">↑ LOAD</button>
+    <input type="file" id="vizJsonUpload" accept=".json,application/json" style="display:none" onchange="handleVizJsonUpload(this)">
+    <a href="review.html" class="btn-topbar btn-back" style="text-decoration:none;">✎ EDIT ANSWERS</a>
+    <div class="topbar-name" id="topbarName">—</div>
+  </div>
+
+  <!-- MOBILE 3-button bar -->
+  <div class="topbar-right topbar-mobile-bar">
+    <span id="mobileNameBtn" class="btn-topbar" style="color:rgba(0,240,255,0.7);font-size:10px;letter-spacing:1px;cursor:default;">—</span>
+    <button class="btn-topbar" onclick="openSaveModal()" style="color:rgba(0,255,65,0.8);border-color:rgba(0,255,65,0.25);">↓ SAVE</button>
+    <a href="review.html" class="btn-topbar" style="text-decoration:none;color:rgba(255,184,0,0.8);">✎ EDIT</a>
+  </div>
+</div>
+
+<!-- SAVE MODAL (mobile) -->
+<div id="saveModal" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(2,2,2,0.95);flex-direction:column;align-items:center;justify-content:center;padding:24px;">
+  <div style="width:100%;max-width:360px;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(0,240,255,0.6);margin-bottom:12px;">// SAVE YOUR TIMELINE</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:#e8e8e0;margin-bottom:20px;">GET YOUR LINK</div>
+    <div id="saveModalBody">
+      <div style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(232,232,224,0.5);margin-bottom:16px;line-height:1.7;">Enter your email to get a unique link you can bookmark to return to your timeline on any device.</div>
+      <input id="saveModalEmail" type="email" placeholder="your@email.com" autocomplete="email"
+        style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,184,0,0.4);color:#e8e8e0;font-family:monospace;font-size:14px;padding:8px 0;margin-bottom:14px;outline:none;">
+      <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer;">
+        <input type="checkbox" id="saveModalConsent" onchange="updateSaveModalBtn()"
+          style="margin-top:2px;flex-shrink:0;accent-color:#ffb800;width:14px;height:14px;cursor:pointer;">
+        <span style="font-family:monospace;font-size:10px;line-height:1.6;color:rgba(232,232,224,0.4);">
+          I agree to my email and timeline data being stored to restore my timeline.
+          <a href="/privacy.html" target="_blank" style="color:rgba(255,184,0,0.6);text-decoration:none;">Privacy Policy</a>
+        </span>
+      </label>
+      <button id="saveModalBtn" onclick="doModalSave()" disabled
+        style="width:100%;font-family:monospace;font-size:10px;letter-spacing:2px;background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);color:rgba(255,184,0,0.4);padding:12px;cursor:not-allowed;transition:all 0.2s;">
+        SAVE & GET LINK →
+      </button>
+      <div id="saveModalStatus" style="font-family:monospace;font-size:9px;letter-spacing:1px;color:rgba(255,184,0,0.5);margin-top:10px;min-height:16px;text-align:center;"></div>
+    </div>
+    <button onclick="closeSaveModal()" style="margin-top:20px;width:100%;font-family:monospace;font-size:9px;letter-spacing:2px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:rgba(232,232,224,0.25);padding:10px;cursor:pointer;">
+      CLOSE
+    </button>
+  </div>
+</div>
+
+<!-- NO-DATA SCREEN -->
+<div id="noDataScreen">
+  <div class="no-data-title">NO TIMELINE</div>
+  <div class="no-data-sub">No quiz data found. Complete the questionnaire first to generate your personal string.</div>
+  <button class="btn-go-quiz" onclick="window.location.href='quiz.html'">START QUESTIONNAIRE →</button>
+</div>
+
+<!-- LANDSCAPE HINT -->
+<div id="landscapeHint">// TAP A NODE TO INSPECT · DRAG TO BEND</div>
+
+<!-- MAIN VIZ (hidden until data loads) -->
+<div id="vizMain" style="display:none;">
+
+<!-- CANVAS -->
+<div class="canvas-wrap" id="canvasWrap">
+  <canvas id="stringCanvas"></canvas>
+  <div class="canvas-tooltip" id="tooltip">
+    <div class="tt-year" id="ttYear"></div>
+    <div id="ttTitle"></div>
+    <div class="tt-cat" id="ttCat"></div>
+  </div>
+</div>
+
+<!-- YEAR AXIS -->
+<div class="year-axis" id="yearAxis"></div>
+
+<!-- WORLD EVENTS PANEL -->
+<div class="world-panel">
+  <div class="world-panel-header" onclick="toggleWorldPanel()">
+    <div class="world-panel-title">🌍 WORLD EVENTS — SELECT TO OVERLAY &amp; SIMULATE</div>
+    <div class="world-panel-toggle" id="worldPanelToggle">▸ EXPAND</div>
+  </div>
+  <div class="world-panel-body" id="worldPanelBody">
+    <div class="world-chips-row" id="worldChipsRow"></div>
+    <div class="world-active-list" id="worldActiveList">
+      <div class="world-empty" id="worldEmpty">// CLICK AN EVENT ABOVE TO ADD IT TO YOUR TIMELINE</div>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE EVENTS PANEL -->
+<div class="manage-panel">
+  <div class="manage-panel-header" onclick="toggleManagePanel()">
+    <div class="manage-panel-title">✦ EVENTS — <span id="manageCount">0</span> ON TIMELINE · ADD OR REMOVE</div>
+    <div class="manage-panel-toggle" id="managePanelToggle">▸ EXPAND</div>
+  </div>
+  <div class="manage-panel-body" id="managePanelBody">
+    <div class="manage-event-list" id="manageEventList"></div>
+    <div class="add-event-form">
+      <input id="addYear" type="number" placeholder="Year" style="width:80px" min="1900" max="2100">
+      <select id="addCat">
+        <option value="career">career</option>
+        <option value="identity">identity</option>
+        <option value="relationship">relationship</option>
+        <option value="location">location</option>
+        <option value="finance">finance</option>
+        <option value="world">world</option>
+        <option value="health">health</option>
+        <option value="custom" selected>custom</option>
+      </select>
+      <input id="addTitle" type="text" placeholder="Event title" style="flex:1;min-width:160px">
+      <input id="addDesc" type="text" placeholder="Description (optional)" style="flex:1;min-width:160px">
+      <button class="btn-add-event" onclick="addCustomEvent()">＋ ADD</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORK BANNER -->
+<div class="fork-banner" id="forkBanner">
+  <div class="fork-info">
+    <div style="font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;">FORK POINT SELECTED</div>
+    <div class="fork-event-name" id="forkEventName">—</div>
+    <div style="font-size:10px;margin-top:2px;">
+      <span id="lockedCount" style="color:var(--purple);">0 locked</span>
+      &nbsp;·&nbsp;
+      <span id="rewriteCount" style="color:var(--cyan);">0 will rewrite</span>
+    </div>
+  </div>
+  <div class="fork-actions">
+    <button class="btn-clear" onclick="clearFork()">✕ CLEAR</button>
+    <button class="btn-pull" id="pullBtn" onclick="initiatePull()">↗ PULL THIS STRING</button>
+  </div>
+</div>
+
+<!-- BRANCHES AREA -->
+<div class="branches-area" id="branchesArea">
+  <div class="branches-hint" id="branchHint">
+    <div style="font-size:20px;margin-bottom:8px;">〰〰〰</div>
+    CLICK ANY EVENT ON THE STRING TO SELECT A FORK POINT<br>
+    <span>THEN PULL TO REWRITE THE TIMELINE</span>
+  </div>
+  <svg id="branchSvg" class="branch-svg" height="60" style="display:none;"></svg>
+  <div class="cascade-count" id="cascadeCount"></div>
+  <div class="branch-tracks" id="branchTracks" style="display:none;">
+    <div>
+      <div class="track-label real">// REAL PATH · C-137</div>
+      <div id="realCards"></div>
+    </div>
+    <div>
+      <div class="track-label alt">// ALT PATH · DIMENSION C-ALT</div>
+      <div id="altCards"></div>
+    </div>
+    <div id="alt2Col" style="display:none;">
+      <div class="track-label alt2">// ALT² PATH · DEEP BRANCH</div>
+      <div id="alt2Cards"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- AI TERMINAL -->
+<div class="ai-terminal" id="aiTerminal">
+  <div class="ai-header">// SIMULATION ENGINE v0.2 · ALTERNATE_YOU.COMPUTE()</div>
+  <div class="ai-output" id="aiOutput"></div>
+  <button id="shareBtn" onclick="shareTimeline()">↗ SHARE THIS ALTERNATE PATH WITH FRIENDS</button>
+</div>
+
+<!-- QUICK CHAT -->
+<div class="quick-chat" id="quickChat">
+  <div class="quick-prompts" id="quickPrompts"></div>
+  <div class="chat-row">
+    <input class="chat-in" id="chatIn" type="text" placeholder="ask about the alternate path..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="btn-send" id="sendBtn" onclick="sendChat()">SEND →</button>
+  </div>
+</div>
+
+
+<!-- MOBILE WHAT IF PANEL — shown after string is pulled on mobile portrait -->
+<div id="mobileWhatIf">
+  <div class="mwi-header">
+    <div class="mwi-title">// WHAT IF?</div>
+    <button class="btn-mwi-reset" onclick="mobileResetFork()">← BACK TO PRIME</button>
+  </div>
+  <div class="mwi-cards" id="mwiCards"></div>
+</div>
+
+
+<div class="scroll-cue" id="scrollCue">↓ SCROLL DOWN TO SEE ALTERNATE TIMELINE</div>
+
+<!-- ALWAYS-ON TIMELINE LIST -->
+<div class="timeline-section" id="timelineSection">
+  <div class="timeline-section-header">
+    <div class="timeline-section-title">// YOUR TIMELINE</div>
+  </div>
+  <div class="timeline-columns" id="timelineColumns">
+    <div>
+      <div class="tl-col-label prime">// PRIME · C-137</div>
+      <div id="tlRealCol"></div>
+    </div>
+    <div id="tlAltWrapper" style="display:none;"><div id="tlAltCol"></div></div>
+    <div id="tlAlt2Wrapper" style="display:none;"><div id="tlAlt2Col"></div></div>
+  </div>
+</div>
+
+<div class="viz-footer">
+  <span>DYSTOPIC LABS · EXP-002 · STRING THEORY</span>
+  <span>
+    <a href="/privacy.html" target="_blank" style="color:rgba(232,232,224,0.35);text-decoration:none;letter-spacing:1px;" onmouseover="this.style.color='#ffb800'" onmouseout="this.style.color='rgba(232,232,224,0.35)'">PRIVACY POLICY</a>
+    &nbsp;·&nbsp;
+    <a href="/contact" style="color:rgba(232,232,224,0.35);text-decoration:none;letter-spacing:1px;" onmouseover="this.style.color='#ffb800'" onmouseout="this.style.color='rgba(232,232,224,0.35)'">CONTACT</a>
+  </span>
+</div>
+
+</div><!-- /vizMain -->
+
+<!-- DEV BAR (remove before prod) -->
+<div id="devBar" style="display:none;">
+  <span class="dev-label">// DEV</span>
+  <button class="btn-dev btn-dev-quiz" onclick="window.location.href='quiz.html'">← BACK TO QUIZ</button>
+  <button class="btn-dev" id="reEnrichBtn" onclick="reEnrichTimeline()" style="color:rgba(255,184,0,0.7)">↺ RE-ENRICH</button>
+  <button class="btn-dev btn-dev-clear" onclick="devClear()">✕ CLEAR DATA</button>
+</div>
+
+<script>
+// ─── CONSTANTS ─────────────────────────────────────────────────────────────────
+const NOW_YEAR = 2026;
+const HOSTED_ENDPOINT = '/api/ai';
+
+const CAT_COLOR = {
+  career:'#ffb800', relationship:'#ff2222', location:'#00ff41',
+  identity:'#e8e8e0', custom:'#00f0ff', alternate:'#b87fff',
+  health:'#ff9966', finance:'#ccff44', world:'#ff6633', future:'#6699ff',
+};
+
+const ALL_WORLD_EVENTS = [
+  { id:'covid',       year:2020, title:'COVID-19 Pandemic',       emoji:'🦠', desc:'Global pause. Careers bent. Remote work forced on everyone.' },
+  { id:'ukraine',     year:2022, title:'Ukraine War / Inflation',  emoji:'📈', desc:'Europe rearranges. Energy crisis. Cost of living spikes across the EU.' },
+  { id:'ai',          year:2023, title:'AI Revolution',            emoji:'🤖', desc:'GPT-4 ships. Every job description changes overnight.' },
+  { id:'gfc',         year:2008, title:'2008 Financial Crisis',    emoji:'📉', desc:'Global recession. Career entry-points disrupted for a generation.' },
+  { id:'911',         year:2001, title:'9/11 & Aftermath',         emoji:'✈️', desc:'Security state expands. Travel and immigration forever altered.' },
+  { id:'dotcom',      year:2001, title:'Dot-com Crash',            emoji:'💻', desc:'Tech optimism destroyed. The first internet dream ends.' },
+  { id:'smartphone',  year:2007, title:'Smartphone Era Begins',    emoji:'📱', desc:'iPhone ships. The attention economy captures everyone.' },
+  { id:'socialmedia', year:2009, title:'Rise of Social Media',     emoji:'🌐', desc:'Facebook, Twitter, Instagram reshape identity and comparison.' },
+  { id:'brexit',      year:2016, title:'Brexit',                   emoji:'🇬🇧', desc:'UK leaves EU. European mobility and identity politics shift.' },
+  { id:'demonetize',  year:2016, title:'India Demonetisation',     emoji:'💵', desc:'Overnight cash crisis. India\'s digital payment era accelerated.' },
+  { id:'gig',         year:2015, title:'Gig Economy Rise',         emoji:'🚗', desc:'Uber, freelance platforms. Employment stability redefined.' },
+  { id:'remote',      year:2021, title:'Remote Work Revolution',   emoji:'🏠', desc:'Post-COVID: location decoupled from employment for millions.' },
+  { id:'resignation', year:2021, title:'The Great Resignation',    emoji:'🚪', desc:'Mass re-evaluation of work. Career loyalty evaporated globally.' },
+  { id:'itboom',      year:2003, title:'India IT Boom',            emoji:'🇮🇳', desc:'Infosys, Wipro, TCS boom. Indian engineering career path crystallises.' },
+];
+
+const TB_MESSAGES = [
+  { sub:'PARADOX DETECTED — BRANCH DEPTH EXCEEDED', err:'// ERROR: You tried to fork an alternate of an alternate of your own life.\n// The universe politely refuses. That\'s not courage, that\'s procrastination with extra steps.\n// Your timeline has been flagged for deletion.' },
+  { sub:'CAUSALITY ENGINE OVERLOADED', err:'// FATAL: Stack overflow in the multiverse.\n// You have successfully made your therapist\'s job harder from a different dimension.\n// Recommended action: touch grass. Any grass. Any dimension.' },
+  { sub:'SINGULARITY IMMINENT', err:'// WARNING: Too many "what ifs" in a 5-year radius.\n// The probability matrix just rage-quit.\n// At this point the alternate you is also reading this and equally embarrassed.' },
+];
+
+const QUICK_PROMPTS = [
+  'would I be happier?',
+  'what would I miss most?',
+  'what does alt-me do on a Tuesday?',
+  'where am I in 3 years on this path?',
+  'what should I do NOW?',
+];
+
+const STRANDS = [
+  { color:'#ffffff', alpha:0.85, amp:1.0, phase:0,   thick:1.5 },
+  { color:'#ffb800', alpha:0.20, amp:1.4, phase:0.8, thick:1   },
+  { color:'#b87fff', alpha:0.15, amp:1.2, phase:1.6, thick:1   },
+  { color:'#00f0ff', alpha:0.12, amp:1.0, phase:2.4, thick:1   },
+  { color:'#ff2222', alpha:0.10, amp:0.8, phase:3.2, thick:1   },
+];
+
+// ─── STATE ─────────────────────────────────────────────────────────────────────
+let DATA = null;       // loaded from localStorage.st_timeline_data
+let EVENTS = [];       // built from DATA
+let TIMELINE_MIN = 1990;
+let TIMELINE_MAX = 2042;
+const LEFT_PAD = 48, RIGHT_PAD = 48;
+const WORLD_Y_OFFSET = 32; // px below the string — keeps world markers off nodes
+
+let forkIdx    = -1;
+let pulled     = false;
+let hidePrime  = false;
+let altDim     = 'C-137';
+let apiKey     = localStorage.getItem('st_api_key') || '';
+let convHistory = [];
+let activeWorldEventIds = new Set();
+let quizWorldNodeIds = new Set(); // IDs of world events already on timeline as nodes (from quiz)
+let worldPanelOpen = false;
+let gateShown  = false;
+let pendingPull = false;
+let whatIfCache = {};
+
+// Layout
+let currentLayout = localStorage.getItem('st_layout') || 'horizontal';
+let pullCount = 0;
+const TOP_PAD_V = 60, BOTTOM_PAD_V = 60;
+
+// Physics
+let physEvents      = [];
+let altPhysEvents   = [];
+let worldPhysEvents = [];
+let strandPhase     = 0;
+
+// Mobile portrait canvas scrolling
+let canvasScrollY     = 0;
+let canvasScrollMaxY  = 0;
+let fullTimelineH     = 0;
+let mobileScrollVel   = 0;
+let mobileTouchScrolling = false;
+let mobileTouchLastClientY = 0;
+let mobileTouchStartClientY = 0;
+let mobileTouchIsDrag = false;
+let rafId           = null;
+let hoveredIdx      = -1;
+let hoveredAltIdx   = -1;
+let hoveredWorldId  = null;
+let isDragging      = false;
+// Alt² state
+let altForkIdx          = -1;
+let altPulled           = false;
+let altBranchPhysEvents = [];
+let alt2SelectedIdx     = -1;
+
+// Canvas
+const canvas  = document.getElementById('stringCanvas');
+const ctx     = canvas.getContext('2d');
+const wrap    = document.getElementById('canvasWrap');
+const tooltip = document.getElementById('tooltip');
+const bOverlay = document.getElementById('butterflyOverlay');
+const bCtx     = bOverlay.getContext('2d');
+let swarm = []; let swarmActive = false;
+
+// ─── DATA LOADING ──────────────────────────────────────────────────────────────
+function loadData() {
+  try {
+    const raw = localStorage.getItem('st_timeline_data');
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+async function reEnrichTimeline() {
+  if (!DATA) { alert('No timeline loaded.'); return; }
+  const btn = document.getElementById('reEnrichBtn');
+  btn.textContent = '↺ RUNNING…';
+  btn.disabled = true;
+  const key = apiKey;
+  const a = DATA.answers || {};
+  const b = DATA.bonusAnswers || {};
+  const by = DATA.birthYear || 1990;
+  const name = DATA.name || 'unknown';
+  const city = DATA.city || 'unknown';
+
+  // Pass 1 — custom events
+  try {
+    const ctxLines = [
+      `Person: ${name}, born ${by}, lives in ${city}.`,
+      DATA.lifeSentence   ? `In their own words: "${DATA.lifeSentence}"` : '',
+      b.anchor            ? `What keeps them here: "${b.anchor}"` : '',
+      a.forkMoment        ? `Fork moment: "${a.forkMoment}"${a.forkYear ? ` (${a.forkYear})` : ''}` : '',
+      b.relationship      ? `Relationship: "${b.relationship}"` : '',
+      b.health            ? `Health: "${b.health}"` : '',
+      b.happinessWish     ? `Hidden aspiration: "${b.happinessWish}"` : '',
+      b.hobby             ? `Hobby: "${b.hobby}"` : '',
+      b.money             ? `Financial: ${b.money}` : '',
+    ].filter(Boolean).join('\n');
+    const p1 = `You are building a life timeline. Infer 3-5 SPECIFIC personal events implied by this person's story — milestones, setbacks, turning points.\n\nCONTEXT:\n${ctxLines}\n\nRules:\n- Specific to this person (use their words, city, career hints)\n- Spread across different years\n- Categories: career, relationship, location, identity, finance, health\n- Birth year is ${by}\n- Respond ONLY with a valid JSON array:\n[{"year": 2019, "cat": "career", "title": "Title", "desc": "One sentence."}, ...]`;
+    const r1 = await callAI([{role:'user',content:p1}], { heavy: true, max_tokens: 500 });
+    const m1 = r1.match(/\[[\s\S]*\]/);
+    if (m1) {
+      const evs = JSON.parse(m1[0]).filter(e=>e.year&&e.title&&e.year>1940&&e.year<2035)
+        .map(e=>({year:parseInt(e.year),cat:e.cat||'identity',title:String(e.title).slice(0,60),desc:e.desc?String(e.desc).slice(0,150):'',isEnriched:true}));
+      DATA.customEvents = evs;
+      localStorage.setItem('st_timeline_data', JSON.stringify(DATA));
+    }
+  } catch(e) { console.warn('[re-enrich pass1]', e); }
+
+  // Pass 2 — biographer
+  try {
+    const ctxLines2 = [
+      DATA.lifeSentence   ? `Life right now: "${DATA.lifeSentence}"` : '',
+      b.anchor            ? `What's keeping them here: "${b.anchor}"` : '',
+      b.relationship      ? `Relationship: "${b.relationship}"` : '',
+      b.health            ? `Health: "${b.health}"` : '',
+      b.hobby             ? `Hobbies: "${b.hobby}"` : '',
+      b.happinessWish     ? `Secret ambition: "${b.happinessWish}"` : '',
+      a.forkMoment        ? `Fork moment: "${a.forkMoment}" (~${a.forkYear||'?'})` : '',
+      a.cityHistory       ? `Cities: ${a.cityHistory}` : '',
+      a.careerField       ? `Career: ${a.careerField}` : '',
+    ].filter(Boolean).join('\n');
+    const p2 = `You are writing the life timeline of a real person as a precise biographer. Every event must be SPECIFIC.\n\nPERSON: ${name}, born ${by}, lives in ${city}.\n\nTHEIR STORY:\n${ctxLines2}\n\nGenerate 12-16 life events as raw JSON only:\n[{"year":${by},"cat":"identity","title":"Born — ${city}","desc":"One causal sentence."}, ...]`;
+    const r2 = await callAI([{role:'user',content:p2}], { heavy: true, max_tokens: 1400 });
+    const m2 = r2.match(/\[[\s\S]*\]/);
+    if (m2) {
+      const evs2 = JSON.parse(m2[0]).filter(e=>e.year&&e.title&&e.year>1930&&e.year<2035)
+        .map(e=>({year:parseInt(e.year),cat:e.cat||'identity',title:String(e.title).slice(0,80),desc:e.desc?String(e.desc).slice(0,200):''}));
+      if (evs2.length >= 5) {
+        DATA.biographerEvents = evs2;
+        localStorage.setItem('st_timeline_data', JSON.stringify(DATA));
+      }
+    }
+  } catch(e) { console.warn('[re-enrich pass2]', e); }
+
+  btn.textContent = '↺ RE-ENRICH';
+  btn.disabled = false;
+  window.location.reload();
+}
+
+function handleVizJsonUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.name || !data.birthYear) {
+        alert('// invalid file — missing name or birthYear');
+        input.value = '';
+        return;
+      }
+      localStorage.setItem('st_timeline_data', JSON.stringify(data));
+      if (data.ai && data.ai.key) localStorage.setItem('st_api_key', data.ai.key);
+      window.location.reload();
+    } catch {
+      alert('// could not parse — not valid JSON');
+      input.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function buildEventsFromData(d) {
+  const a   = d.answers      || {};
+  const b   = d.bonusAnswers || {};
+  const by  = d.birthYear    || 1990;
+  const cityRaw = d.city || 'Unknown';
+  const city = cityRaw.charAt(0).toUpperCase() + cityRaw.slice(1);
+  const birthCityRaw = d.birthCity || cityRaw;
+  const birthCity = birthCityRaw.charAt(0).toUpperCase() + birthCityRaw.slice(1);
+  const inf  = (d.ai && d.ai.inferredYears) ? d.ai.inferredYears : {};
+  const fa   = (d.ai && d.ai.followUpAnswers) ? d.ai.followUpAnswers : {};
+  const weis = d.worldEventImpacts || [];
+
+  // Effective years (quiz answers + AI inferences + follow-up answers)
+  const careerStart   = a.careerStartYear || parseInt(fa.careerStartYear) || inf.careerStart || (by + 22);
+  const relYear       = a.relationshipYear || parseInt(fa.relationshipYear) || inf.relationshipYear || null;
+  const moveYear      = a.moveYear || parseInt(fa.moveYear) || inf.moveYear || null;
+  const forkYear      = a.forkYear || parseInt(fa.forkYear) || inf.forkYear || (by + 30);
+  // Extended follow-up fields (AI may have asked about any of these)
+  const burnoutYear   = parseInt(fa.burnoutYear || fa.burnout_year) || null;
+  const breakupYear   = parseInt(fa.breakupYear || fa.breakup_year) || null;
+  const investYear    = parseInt(fa.investYear || fa.first_investment_year || fa.firstInvestmentYear) || null;
+  const bigWinYear    = parseInt(fa.bigWinYear || fa.big_win_year || fa.promotion_year || fa.promotionYear) || null;
+  const bigLossYear   = parseInt(fa.bigLossYear || fa.big_loss_year) || null;
+  const reinventYear  = parseInt(fa.reinventYear || fa.reinvention_year || fa.mindshiftYear) || null;
+  const careerEvent   = fa.careerEvent || fa.career_event || fa.promotionEvent || null;
+  const financeEvent  = fa.financeEvent || fa.finance_event || fa.investmentEvent || null;
+  const identityEvent = fa.identityEvent || fa.identity_event || fa.reinventionEvent || null;
+
+  const lifeSentence = d.lifeSentence || '';
+  const creativity   = d.creativity   ?? 50;
+  const optimism     = d.optimism     ?? 0;
+  const anchor       = b.anchor       || '';
+  const relationship = b.relationship || '';
+  const health       = b.health       || '';
+  const hobby        = b.hobby        || '';
+  const money        = b.money        || '';
+  const secretAmb    = b.happinessWish || '';
+
+  const events = [];
+
+  // ── 1. IDENTITY: Birth ──────────────────────────────────────────────────────
+  events.push({ year:by, cat:'identity', title:'Born — ' + birthCity, desc:'The original spawn point. No config options available.', locked:true });
+
+  // ── 2. IDENTITY: Childhood fork ──────────────────────────────────────────────
+  if (b.childhoodAge && b.childhood) {
+    const cAge = parseInt(b.childhoodAge);
+    // Use the user's actual words as the title, truncated
+    const childhoodTitle = b.childhood.length > 44 ? b.childhood.substring(0,42) + '…' : b.childhood;
+    events.push({
+      year: by + cAge, cat:'identity',
+      title: childhoodTitle,
+      desc: 'Age ' + cAge + '. This is still running in the background.',
+      locked:true,
+    });
+  }
+
+  // ── 3. IDENTITY: Education ──────────────────────────────────────────────────
+  const eduLabels = {
+    degree:'University — ' + (a.eduField || 'degree'),
+    dropout:'Dropped out — ' + (a.eduField || 'university'),
+    skipped:'Skipped university',
+    inprogress:'Currently studying — ' + (a.eduField || ''),
+  };
+  if (a.education) {
+    const eduYear = a.education === 'skipped' ? (by + 18) : Math.max(by + 17, careerStart - 4);
+    events.push({ year:eduYear, cat:'identity', title:eduLabels[a.education] || 'Education', desc:'Field: ' + (a.eduField || 'not specified') + '.', locked:true });
+  }
+
+  // ── 4. CAREER: First job / career start ──────────────────────────────────────
+  const field = a.careerField || '';
+  const careerTitles = {
+    stayed:      field ? 'Into ' + field : 'First job',
+    pivoted:     field ? 'Pivoted into ' + field : 'Career pivot',
+    selfemployed: field ? 'Founded — ' + field : 'Went independent',
+    figuring:    'Figuring it out',
+  };
+  events.push({
+    year: careerStart, cat:'career',
+    title: careerTitles[a.career] || (field ? 'Career starts — ' + field : 'Career begins'),
+    desc: 'The clock starts here. ' + (field ? field + '.' : 'First real move.'),
+    locked: true,
+  });
+
+  // ── 5. CAREER: Early progression (3 yrs after start) ──────────────────────────
+  if (careerStart + 3 < forkYear) {
+    const progressTitles = {
+      stayed:      field ? '3 years in — ' + field : '3 years in',
+      pivoted:     'Learning the new game',
+      selfemployed: field ? field + ' — early years' : 'Early company years',
+      figuring:    'Still searching',
+    };
+    events.push({
+      year: careerStart + 3, cat:'career',
+      title: progressTitles[a.career] || 'Building momentum',
+      desc: 'Three years in. The shape of the thing is becoming clear.',
+      locked: true,
+    });
+  }
+
+  // ── 6. RELATIONSHIP ──────────────────────────────────────────────────────────
+  if (a.relationships && a.relationships !== 'single' && relYear) {
+    const relTitles = {
+      committed:'Relationship — still running',
+      married:  'Married',
+      complicated:'It\'s complicated — still is',
+    };
+    events.push({
+      year: relYear, cat:'relationship',
+      title: relTitles[a.relationships] || 'Key relationship',
+      desc: 'The person in the frame when everything else was changing.',
+      locked: true,
+    });
+  }
+
+  // ── 7. IDENTITY: Children ────────────────────────────────────────────────────
+  if (b.hadKid === 'yes') {
+    const kidYear = relYear ? relYear + 3 : careerStart + 5;
+    events.push({ year:Math.min(kidYear, forkYear - 1), cat:'identity', title:'Children', desc:'The threshold that changes everything downstream.', locked:true });
+  }
+
+  // ── 8. LOCATION: City history or single move ────────────────────────────────
+  if (a.cityHistory) {
+    // Parse city history: "Delhi 1992, Mumbai 2014, Berlin 2022"
+    const cityParts = a.cityHistory.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+    const cityMoves = [];
+    for (const part of cityParts) {
+      const ym = part.match(/\b(19|20)\d{2}\b/);
+      if (ym) {
+        const yr = parseInt(ym[0]);
+        const ct = part.replace(ym[0], '').replace(/^[-–·\s,]+|[-–·\s,]+$/g, '').trim();
+        if (ct && yr > by) cityMoves.push({ city: ct, year: yr });
+      }
+    }
+    cityMoves.sort((a, b) => a.year - b.year);
+    cityMoves.forEach((mv, i) => {
+      const isLast = i === cityMoves.length - 1;
+      const isForeign = mv.city.toLowerCase() !== birthCity.toLowerCase();
+      events.push({
+        year: mv.year, cat: 'location',
+        title: `Moved to ${mv.city.charAt(0).toUpperCase() + mv.city.slice(1)}`,
+        desc: isLast ? `Current base. ${isForeign && birthCity ? `Left ${birthCity} for ${mv.city}.` : ''}`.trim() : `Chapter ${i + 2} of the location story.`,
+        locked: true,
+      });
+    });
+  } else if ((a.locations === 'abroad' || a.locations === 'diffcity' || a.locations === 'nomad') && moveYear) {
+    const locTitles = {
+      abroad: 'Moved abroad — ' + city,
+      diffcity: 'Moved cities',
+      nomad: 'Started moving — nomadic phase',
+    };
+    events.push({
+      year: moveYear, cat:'location',
+      title: locTitles[a.locations] || 'Relocated',
+      desc: 'Location as context: where you are shapes what\'s available.',
+      locked: true,
+    });
+  }
+
+  // ── 9. FINANCE: Assets / portfolio ──────────────────────────────────────────
+  if (a.assets && a.assets.length > 0 && !a.assets.includes('nothing')) {
+    const assetYear = Math.max(careerStart + 2, by + 24);
+    const assetDesc = a.assets.map(as => ({
+      property:'property', stocks:'stocks/ETFs', crypto:'crypto', business:'business/equity', pension:'pension'
+    }[as] || as)).join(', ');
+    events.push({
+      year: assetYear, cat:'finance',
+      title: 'Portfolio begins: ' + assetDesc.slice(0,30),
+      desc: 'Financial assets in play: ' + assetDesc + '. Stakes established.',
+      locked: true,
+    });
+  }
+
+  // ── 9b. EXTENDED: Follow-up answer nodes (AI-asked fields) ──────────────────
+  if (burnoutYear && burnoutYear > careerStart && burnoutYear < forkYear) {
+    events.push({ year:burnoutYear, cat:'identity', title:'Burnout', desc:'The system hit a wall. Recovery took longer than expected.', locked:true });
+  }
+  if (breakupYear && breakupYear > by + 16) {
+    events.push({ year:breakupYear, cat:'relationship', title:'Breakup', desc:'The relationship that ended. This one left a mark.', locked:true });
+  }
+  if (investYear && investYear > careerStart) {
+    const finTitle = financeEvent ? financeEvent.slice(0,44) : 'First real investment';
+    events.push({ year:investYear, cat:'finance', title:finTitle, desc:'Stakes in the game. The compounding clock starts here.', locked:true });
+  }
+  if (bigWinYear && bigWinYear > careerStart) {
+    const winTitle = careerEvent ? careerEvent.slice(0,44) : 'Career win';
+    events.push({ year:bigWinYear, cat:'career', title:winTitle, desc:'Something went right. This one compounded.', locked:true });
+  }
+  if (bigLossYear && bigLossYear > careerStart) {
+    events.push({ year:bigLossYear, cat:'finance', title:'Financial hit', desc:'The loss that recalibrated the risk model.', locked:true });
+  }
+  if (reinventYear && reinventYear > by + 18) {
+    const reinTitle = identityEvent ? identityEvent.slice(0,44) : 'Reinvention';
+    events.push({ year:reinventYear, cat:'identity', title:reinTitle, desc:'Identity update. Previous version deprecated.', locked:true });
+  }
+
+  // ── 10. WORLD EVENTS: From quiz worldEventImpacts ────────────────────────────
+  weis.forEach(wei => {
+    if (!wei.year) return;
+    events.push({
+      year: parseInt(wei.year), cat:'world',
+      title: wei.emoji + ' ' + wei.title,
+      desc: wei.impact || wei.title + ' — impact on your timeline.',
+      locked: true, isWorld: true, worldId: wei.id,
+    });
+  });
+
+  // ── 11. IDENTITY: THE MOMENT (main fork) ─────────────────────────────────────
+  if (a.forkMoment) {
+    events.push({
+      year: forkYear, cat: a.forkCategory || 'identity',
+      title: a.forkMoment.length > 48 ? a.forkMoment.substring(0,46)+'…' : a.forkMoment,
+      desc: b.almostDid ? ('You almost: ' + b.almostDid) : 'The decision that runs in the background.',
+      locked: true, isRegret: true, fullDesc: a.forkMoment,
+    });
+  }
+
+  // ── 11b. ALTERNATE: The road not taken ───────────────────────────────────────
+  // almostDid is the whole emotional payload — it deserves its own node
+  if (b.almostDid) {
+    const almostTitle = b.almostDid.length > 46 ? b.almostDid.substring(0,44)+'…' : b.almostDid;
+    events.push({
+      year: forkYear, cat:'alternate',
+      title: '↳ ' + almostTitle,
+      desc: 'The version of you that took this path exists in another dimension.',
+      locked: true, isAlmost: true,
+    });
+  }
+
+  // ── 12. CAREER: Post-fork progression ───────────────────────────────────────
+  if (forkYear < NOW_YEAR - 1) {
+    const postForkTitles = {
+      selfemployed: field ? 'Building ' + field + ' — post-fork' : 'Company building — post-fork',
+      stayed: 'Stayed. Living with it.',
+      pivoted: 'Pivot plays out',
+      figuring: 'Still searching',
+    };
+    events.push({
+      year: Math.min(forkYear + 2, NOW_YEAR - 1), cat:'career',
+      title: postForkTitles[a.career] || 'Life after the fork',
+      desc: 'This is the version you actually ran. The other one is still a hypothesis.',
+      locked: true,
+    });
+  }
+
+  // ── 13. IDENTITY: Current state ──────────────────────────────────────────────
+  // messageTo is the most personal thing in the quiz — use it as the node title
+  const msgTitle = b.messageTo
+    ? (b.messageTo.length > 46 ? b.messageTo.substring(0,44)+'…' : b.messageTo)
+    : ('Present — ' + city);
+  events.push({
+    year: NOW_YEAR - 1, cat:'identity',
+    title: msgTitle,
+    desc: b.emotion ? ('Still feeling: ' + b.emotion + '.') : 'Present moment.',
+    locked: true,
+  });
+
+  // ── NEW: ANCHOR event — what's keeping them here
+  if (anchor && !events.find(e => e.cat === 'career' && e.year >= by+20)) {
+    events.push({
+      year: Math.max(by+22, NOW_YEAR-3),
+      cat: 'career',
+      title: anchor.length > 44 ? anchor.slice(0,42)+'…' : anchor,
+      desc: 'The thing holding the centre right now.',
+      locked: true,
+    });
+  }
+
+  // ── NEW: RELATIONSHIP text event
+  if (relationship && !events.find(e => e.cat === 'relationship')) {
+    events.push({
+      year: relYear || (by + 28),
+      cat: 'relationship',
+      title: relationship.length > 44
+        ? relationship.slice(0,42)+'…'
+        : relationship,
+      desc: relationship,
+      locked: true,
+      isRegret: relationship.toLowerCase().includes('single') ||
+                relationship.toLowerCase().includes('want'),
+    });
+  }
+
+  // ── NEW: HEALTH event
+  if (health) {
+    events.push({
+      year: by + 28,
+      cat: 'health',
+      title: health.length > 44 ? health.slice(0,42)+'…' : health,
+      desc: health,
+      locked: true,
+      isRegret: /gain|weight|tired|stress|burnout/i.test(health),
+    });
+  }
+
+  // ── NEW: HOBBY / SECRET AMBITION as ghost node
+  if (secretAmb || hobby) {
+    const hobbyText = secretAmb || hobby;
+    events.push({
+      year: by + 25,
+      cat: 'identity',
+      title: hobbyText.length > 44
+        ? hobbyText.slice(0,42)+'…'
+        : hobbyText,
+      desc: secretAmb
+        ? 'The thing they would do if nobody was watching.'
+        : 'What happens outside of work. The signal in the noise.',
+      locked: true,
+      isAlmost: !!secretAmb,
+    });
+  }
+
+  // ── NEW: MONEY positioning event
+  if (money && money !== 'ontrack') {
+    const moneyYear = by + 30;
+    const moneyTitles = {
+      behind:      'Financial gap — behind where expected',
+      ahead:       'Financial position — ahead of plan',
+      complicated: 'Money situation — it\'s complicated',
+    };
+    events.push({
+      year: moneyYear,
+      cat: 'finance',
+      title: moneyTitles[money] || 'Financial position',
+      desc: money === 'behind'
+        ? 'Behind where they expected to be at this point.'
+        : money === 'ahead'
+        ? 'Ahead of the plan. The compounding worked.'
+        : 'The financial picture is more complex than a single number.',
+      locked: true,
+      isRegret: money === 'behind',
+    });
+  }
+
+  // ── NEW: CURRENT STATE snapshot (always add if no recent locked event)
+  const currentYear = NOW_YEAR;
+  if (!events.find(e => e.year >= currentYear - 1 && e.locked)) {
+    const snapshot = [
+      lifeSentence || '',
+      anchor       ? `Anchor: ${anchor}.` : '',
+      money        ? `Financially: ${money}.` : '',
+    ].filter(Boolean).join(' ');
+    events.push({
+      year: currentYear,
+      cat: 'identity',
+      title: 'Current state — ' + city,
+      desc: snapshot || 'The string is live.',
+      locked: true,
+    });
+  }
+
+  // ── FUTURE EVENTS ────────────────────────────────────────────────────────────
+  const score = calcScore(d);
+  const futureDescByScore = (hi, mid, lo) => score >= 67 ? hi : score >= 34 ? mid : lo;
+
+  events.push({
+    year: NOW_YEAR + 1, cat:'future', locked:false, isFuture:true,
+    title: 'Next chapter',
+    desc: futureDescByScore(
+      'Trajectory looks solid. The compounding is working.',
+      'Lateral move incoming. Different problems, similar altitude.',
+      'Something has to change. The alternate path is calling.'
+    ),
+  });
+
+  if (a.career === 'selfemployed') {
+    events.push({ year:NOW_YEAR+2, cat:'career', locked:false, isFuture:true, title:'Scale or sell?', desc:'The company question arrives. Both outcomes are fine.' });
+  } else {
+    events.push({ year:NOW_YEAR+3, cat:'career', locked:false, isFuture:true, title:'Career at ' + String(NOW_YEAR+3), desc:'Either the bet paid off or you\'re setting up the next one.' });
+  }
+
+  if (!relYear || parseInt(relYear) < NOW_YEAR - 3) {
+    events.push({ year:NOW_YEAR+4, cat:'relationship', locked:false, isFuture:true, title:'Relationship horizon', desc:'The social graph hasn\'t fully converged yet. Elevated probability.' });
+  }
+
+  events.push({ year:NOW_YEAR+8, cat:'finance', locked:false, isFuture:true, title:'Financial reckoning — ' + String(NOW_YEAR+8), desc:'The compounding either kicked in or it didn\'t. No middle outcome.' });
+  events.push({ year:NOW_YEAR+14, cat:'identity', locked:false, isFuture:true, title:'Midlife audit', desc:'The version of you 14 years from now opens this file. Verdict TBD.' });
+
+  // Guarantee minimum 10 events
+  while (events.length < 10) {
+    const existingYears = new Set(events.map(e => e.year));
+    const gaps = [
+      by + 18, by + 20, by + 24, by + 26, by + 29,
+      by + 31, by + 33, by + 35
+    ].filter(y => !existingYears.has(y) && y < currentYear);
+    if (!gaps.length) break;
+    const y = gaps[0];
+    events.push({
+      year: y,
+      cat: 'identity',
+      title: 'Age ' + (y - by) + ' — ' + city,
+      desc: 'Life in ' + city + ' at ' + (y - by) + '.',
+      locked: true,
+    });
+  }
+
+  // Sort by year and deduplicate close years
+  events.sort((x, y) => x.year - y.year);
+  return events;
+}
+
+function calcScore(d) {
+  const a = d.answers || {};
+  const b = d.bonusAnswers || {};
+  let s = 47;
+  if (a.locations === 'abroad')      s += 4;
+  if (a.career === 'pivoted')        s += 3;
+  if (a.career === 'selfemployed')   s += 5;
+  if (b.emotion === 'pride')         s += 3;
+  if (b.emotion === 'numbness')      s -= 5;
+  if (b.emotion === 'grief')         s -= 4;
+  if (b.emotion === 'longing')       s -= 2;
+  if (b.almostDid)                   s += 2;
+  if (b.messageTo)                   s += 2;
+  if (a.relationships === 'committed') s += 3;
+  if (a.relationships === 'complicated') s -= 3;
+  if (b.hadKid === 'yes')            s += 2;
+  // Self-reported happiness is the strongest signal — override inferences
+  if (b.happinessScore) {
+    const h = parseInt(b.happinessScore);
+    // Map 1-10 → shift score by up to ±25
+    s += Math.round((h - 5.5) * 5);
+  }
+  return Math.max(5, Math.min(95, s));
+}
+
+// ─── INIT ──────────────────────────────────────────────────────────────────────
+function init() {
+  DATA = loadData();
+  if (!DATA) {
+    document.getElementById('noDataScreen').classList.add('visible');
+    return;
+  }
+
+  document.getElementById('vizMain').style.display = 'block';
+
+  // Topbar name
+  const by = DATA.birthYear || 1990;
+  document.getElementById('topbarName').textContent = (DATA.name || '—').toUpperCase() + ' · ' + by + ' → ∞';
+  const mbn = document.getElementById('mobileNameBtn');
+  if (mbn) mbn.textContent = (DATA.name || '—').toUpperCase();
+
+  // Layout button initial state
+  const layoutBtn = document.getElementById('layoutBtn');
+  if (layoutBtn) {
+    layoutBtn.textContent = currentLayout === 'vertical' ? '⟷ DESKTOP VIEW' : '⬦ MOBILE VIEW';
+    layoutBtn.classList.toggle('active', currentLayout === 'vertical');
+  }
+
+  // Creativity + Optimism badges
+  if (DATA.creativity !== undefined) {
+    const cBadge = document.getElementById('creativityBadge');
+    if (cBadge) { cBadge.textContent = '✦ CREAT ' + DATA.creativity; cBadge.style.display = ''; }
+  }
+  if (DATA.optimism !== undefined) {
+    const oBadge = document.getElementById('optimismBadge');
+    if (oBadge) {
+      const o = DATA.optimism;
+      oBadge.textContent = '◈ OPT ' + (o > 0 ? '+' : '') + o;
+      oBadge.className = 'topbar-badge badge-opt-' + (o > 0 ? 'pos' : o < 0 ? 'neg' : 'neu');
+      oBadge.style.display = '';
+    }
+  }
+
+  // Set timeline range
+  TIMELINE_MIN = by - 1;
+  TIMELINE_MAX = by + 50;
+
+  // Build events
+  EVENTS = buildEventsFromData(DATA);
+
+  // If the biographer pass ran in the quiz, upgrade titles/descs with its output.
+  // Structural fields (isFork, isAlmost, locked, isFuture) stay from buildEventsFromData.
+  if (DATA.biographerEvents && DATA.biographerEvents.length >= 5) {
+    applyBiographerEvents(DATA.biographerEvents);
+  }
+// Track which world event IDs are already timeline nodes (from quiz selections)
+  quizWorldNodeIds = new Set(EVENTS.filter(e=>e.worldId).map(e=>e.worldId));
+  document.getElementById('manageCount').textContent = EVENTS.length;
+
+  if (!DATA.ai) DATA.ai = {};
+  DATA.ai.tier     = 'hosted';
+  DATA.ai.provider = 'hosted';
+
+  // Filter world events to those user was alive for (≥10 years old)
+  // All events shown, but user is at least born
+
+  // Canvas
+  resize();
+
+  // Track which world event IDs are already timeline nodes (from quiz selections)
+  //quizWorldNodeIds = new Set(EVENTS.filter(e=>e.worldId).map(e=>e.worldId));
+  //document.getElementById('manageCount').textContent = EVENTS.length;
+
+  // Load API key: prefer quiz data key, else stored key
+   // if (DATA.ai && DATA.ai.key) {
+   //   apiKey = DATA.ai.key;
+   //   localStorage.setItem('st_api_key', apiKey);
+   // } else {
+    //  apiKey = localStorage.getItem('st_api_key') || '';
+    //}
+  // Show API row immediately if no valid key is saved
+    //const hasKey = apiKey && (apiKey.startsWith('gsk_')||apiKey.startsWith('sk-')||apiKey.startsWith('AIza'));
+    //if (!hasKey) document.getElementById('apiRow').classList.add('visible');
+
+  // Filter world events to those user was alive for (≥10 years old)
+  // All events shown, but user is at least born
+
+  // Canvas — defer one frame so vizMain display:block is painted before measuring width
+  requestAnimationFrame(() => {
+    resize();
+    buildYearAxis();
+    loop();
+    renderTimelineSection();
+
+    // Show chat immediately on all layouts — no need to pull first
+    document.getElementById('aiTerminal').classList.add('visible');
+    document.getElementById('aiOutput').textContent = '> ASK ANYTHING ABOUT YOUR TIMELINE\n> OR TAP A NODE AND PULL AN ALTERNATE PATH';
+    showQuickChat();
+  });
+
+  // DEV bar: show if using dev prefill
+  if (DATA.name === 'Suhas' && DATA.city === 'Berlin') {
+    document.getElementById('devBar').style.display = 'flex';
+  }
+}
+
+// ─── RESPONSIVE HELPERS ────────────────────────────────────────────────────────
+function isMobilePortrait() {
+  return window.innerWidth <= 640 && window.matchMedia('(orientation: portrait)').matches;
+}
+function isMobileLandscape() {
+  return window.innerHeight <= 500 && window.matchMedia('(orientation: landscape)').matches;
+}
+
+// ─── CANVAS RESIZE ─────────────────────────────────────────────────────────────
+function resize() {
+  const W = wrap.clientWidth;
+  let H;
+  const yearAxis = document.getElementById('yearAxis');
+  const useVertical = currentLayout === 'vertical' || isMobilePortrait();
+  if (useVertical) {
+    if (isMobilePortrait()) {
+      // Canvas is fixed to container height; timeline extends in virtual space
+      H = Math.floor(window.innerHeight * 0.56);
+      fullTimelineH = Math.max(EVENTS.length * 80 + 100, 900);
+      canvasScrollMaxY = Math.max(0, fullTimelineH - H);
+      canvasScrollY = Math.min(canvasScrollY, canvasScrollMaxY);
+    } else {
+      H = Math.max(EVENTS.length * 90 + 120, 600);
+      fullTimelineH = H;
+      canvasScrollY = 0;
+      canvasScrollMaxY = 0;
+    }
+    canvas.classList.add('layout-vertical');
+    wrap.classList.add('layout-vertical');
+    if (yearAxis) yearAxis.classList.add('layout-vertical');
+  } else {
+    canvas.classList.remove('layout-vertical');
+    wrap.classList.remove('layout-vertical');
+    if (yearAxis) yearAxis.classList.remove('layout-vertical');
+    if (isMobileLandscape()) {
+      H = (window.innerHeight - 44);
+    } else {
+      H = Math.min(380, window.innerHeight * 0.44);
+    }
+    fullTimelineH = H;
+    canvasScrollY = 0;
+    canvasScrollMaxY = 0;
+  }
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.height = H + 'px';
+  // Reset transform before scale to avoid stacking
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  if (useVertical) {
+    buildPhysEventsVertical(W, fullTimelineH);
+  } else {
+    buildPhysEvents(W, H);
+    buildWorldPhysEvents(W, H);
+  }
+}
+
+function yearToX(year, W) {
+  const usableW = W - LEFT_PAD - RIGHT_PAD;
+  return LEFT_PAD + ((year - TIMELINE_MIN) / (TIMELINE_MAX - TIMELINE_MIN)) * usableW;
+}
+
+function yearToY(year, H) {
+  const usableH = H - TOP_PAD_V - BOTTOM_PAD_V;
+  return TOP_PAD_V + ((year - TIMELINE_MIN) / (TIMELINE_MAX - TIMELINE_MIN)) * usableH;
+}
+
+function buildPhysEvents(W, H) {
+  physEvents = EVENTS.map((ev, i) => {
+    const x  = yearToX(ev.year, W);
+    const cy = H / 2;
+    const nudge = (Math.random() - 0.5) * 3;
+    return { x, baseX:x, baseY:cy, y:cy + nudge, vy: nudge * 0.3, vx:0, idx:i, side:i%2===0?-1:1 };
+  });
+}
+
+function buildPhysEventsVertical(W, H) {
+  physEvents = EVENTS.map((ev, i) => {
+    const y = yearToY(ev.year, H);
+    const nudge = (Math.random() - 0.5) * 3;
+    return { x:W/2 + nudge, baseX:W/2, y, baseY:y, vy:0, vx: nudge * 0.3, idx:i, side:i%2===0?-1:1 };
+  });
+}
+
+// Vertical string X helper — used in drawVertical()
+function getStringX(y, W, H, si, time) {
+  const s = STRANDS[si];
+  const baseAmp = 18 * s.amp;
+  const cy = H / 2;
+  const rel = (H > 0) ? (y - cy) / cy : 0;
+  const env = Math.max(0, 1 - rel * rel);
+  return W / 2 + Math.sin((y / (H || 1)) * Math.PI * 2 + time + s.phase) * baseAmp * env;
+}
+
+function physTickVertical() {
+  physEvents.forEach(pe => {
+    const dx = pe.x - pe.baseX;
+    pe.vx = pe.vx + (-0.08 * dx) + (-0.18 * pe.vx);
+    pe.x  = pe.x + pe.vx;
+  });
+}
+
+function buildAltPhysEvents(W, H, altEvs) {
+  if (currentLayout === 'vertical') {
+    altPhysEvents = altEvs.map(ev => {
+      const y = yearToY(ev.year, H);
+      return { x: W/2, baseX: W/2, y, baseY: y, vy: 0, vx: 0, ev };
+    });
+  } else {
+    altPhysEvents = altEvs.map(ev => {
+      const x  = yearToX(ev.year, W);
+      const cy = H / 2;
+      return { x, baseY:cy, y:cy, vy:0, ev };
+    });
+  }
+}
+
+function buildWorldPhysEvents(W, H) {
+  worldPhysEvents = ALL_WORLD_EVENTS
+    .filter(we => activeWorldEventIds.has(we.id))
+    .map(we => {
+      const x = yearToX(we.year, W);
+      const cy = H / 2 + 55;
+      return { x, baseY:cy, y:cy, vy:0, ev:we };
+    });
+}
+
+function buildYearAxis() {
+  const axis = document.getElementById('yearAxis');
+  const by = DATA ? DATA.birthYear : 1990;
+  const years = [by, by+10, by+20, NOW_YEAR, by+35, by+45];
+  axis.innerHTML = years.map(y => `<span>${y}</span>`).join('');
+}
+
+// ─── BIOGRAPHER MERGE ──────────────────────────────────────────────────────────
+// Takes biographer events from the quiz AI pass and upgrades EVENTS[] in place.
+// Matching: same cat + year within 2 years → replace title + desc.
+// Unmatched biographer events (new milestones the local builder missed) are inserted.
+function applyBiographerEvents(bioEvs) {
+  bioEvs.forEach(bio => {
+    // Find closest EVENTS entry with same category and year within 2
+    let bestIdx = -1, bestDist = 3;
+    EVENTS.forEach((ev, i) => {
+      if (ev.cat !== bio.cat) return;
+      const d = Math.abs(ev.year - bio.year);
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
+    });
+    if (bestIdx >= 0) {
+      // Upgrade title and desc — preserve all structural fields
+      EVENTS[bestIdx].title = bio.title;
+      EVENTS[bestIdx].desc  = bio.desc;
+    } else {
+      // New event the local builder didn't generate — insert at correct year position
+      const insertAt = EVENTS.findIndex(ev => ev.year > bio.year);
+      const newEv = { year: bio.year, cat: bio.cat, title: bio.title, desc: bio.desc, isEnriched: true };
+      if (insertAt >= 0) EVENTS.splice(insertAt, 0, newEv);
+      else EVENTS.push(newEv);
+    }
+  });
+}
+
+// ─── PHYSICS ───────────────────────────────────────────────────────────────────
+function physTick() {
+  physEvents.forEach(pe => {
+    const dy  = pe.y - pe.baseY;
+    pe.vy = pe.vy + (-0.08 * dy) + (-0.18 * pe.vy);
+    pe.y  = pe.y + pe.vy;
+  });
+}
+
+function pluckAt(mx, my) {
+  let bestDist = 999; let bestI = -1;
+  physEvents.forEach((pe, i) => {
+    const d = Math.hypot(pe.x - mx, pe.y - my);
+    if (d < bestDist) { bestDist = d; bestI = i; }
+  });
+  if (bestDist < 60 && bestI >= 0) {
+    if (currentLayout === 'vertical' || isMobilePortrait()) {
+      physEvents[bestI].vx = (physEvents[bestI].vx || 0) + (mx - physEvents[bestI].x) * 0.45;
+    } else {
+      physEvents[bestI].vy += (my - physEvents[bestI].y) * 0.45;
+    }
+  }
+}
+
+// ─── STRING DRAWING ────────────────────────────────────────────────────────────
+function getStringY(x, W, H, si, time) {
+  const s = STRANDS[si];
+  const baseAmp = 12 * s.amp;
+  const cx = W / 2;
+  const env = 1 - ((x - cx) / cx) * ((x - cx) / cx);
+  return H / 2 + Math.sin((x / W) * Math.PI * 2 + time + s.phase) * baseAmp * env;
+}
+
+function draw() {
+  if (currentLayout === 'vertical' || isMobilePortrait()) { drawVertical(); return; }
+  const W = canvas.width  / devicePixelRatio;
+  const H = canvas.height / devicePixelRatio;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const time = strandPhase;
+
+  // ── MULTI-STRANDS (main prime string) ──
+  if (!hidePrime) STRANDS.forEach((s, si) => {
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += 2) {
+      let y = getStringY(x, W, H, si, time);
+      physEvents.forEach(pe => {
+        const dist = Math.abs(x - pe.x);
+        if (dist < 120) {
+          const inf = (1 - dist/120) * (1 - dist/120);
+          y += (pe.y - pe.baseY) * inf * (si === 0 ? 1 : 0.5);
+        }
+      });
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = s.color; ctx.globalAlpha = s.alpha;
+    ctx.lineWidth = s.thick; ctx.stroke(); ctx.globalAlpha = 1;
+  });
+
+  // ── PRIME LABEL when alt is active ──
+  if (!hidePrime && pulled && forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(184,127,255,0.5)';
+    ctx.fillText('// PRIME · C-137', fpe.x + 10, H / 2 + 30);
+  }
+
+  // ── ALT STRING ──
+  if (pulled && altPhysEvents.length > 0) {
+    const forkX   = forkIdx >= 0 ? physEvents[forkIdx].x : 0;
+    const forkY   = getStringY(forkX, W, H, 0, time);
+    const divOffset = H * 0.18;
+
+    function getAltY(x) {
+      const t    = Math.min(1, (x - forkX) / 280);
+      const ease = t * t * (3 - 2 * t);
+      let y = getStringY(x, W, H, 0, time + 0.35) + divOffset * ease;
+      altPhysEvents.forEach(ape => {
+        const dist = Math.abs(x - ape.x);
+        if (dist < 120) { const inf = (1-dist/120)*(1-dist/120); y += (ape.y - ape.baseY) * inf; }
+      });
+      return y;
+    }
+
+    // Fork-split indicator
+    ctx.beginPath(); ctx.moveTo(forkX, forkY);
+    ctx.lineTo(forkX + 32, forkY + divOffset * 0.28);
+    ctx.strokeStyle = 'rgba(255,184,0,0.55)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // Glow pass
+    ctx.beginPath(); ctx.setLineDash([5, 5]);
+    for (let x = forkX; x <= W; x += 3) {
+      const y = getAltY(x);
+      x === forkX ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(0,240,255,0.18)'; ctx.lineWidth = 7; ctx.stroke(); ctx.setLineDash([]);
+
+    // Main alt string
+    ctx.beginPath(); ctx.setLineDash([5, 5]);
+    for (let x = forkX; x <= W; x += 2) {
+      const y = getAltY(x);
+      x === forkX ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#00f0ff'; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.8;
+    ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+
+    ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(0,240,255,0.6)';
+    ctx.fillText('// ALT · ' + altDim, forkX + 14, getAltY(forkX + 70) - 10);
+
+    // Alt event nodes
+    altPhysEvents.forEach((ape, i) => {
+      const isHovA = hoveredAltIdx === i;
+      const isAltFrk = altForkIdx === i;
+      const r = (isHovA || isAltFrk) ? 9 : 6;
+      const nodeY = getAltY(ape.x) + (ape.y - ape.baseY);
+      if (isHovA || isAltFrk) {
+        ctx.beginPath(); ctx.arc(ape.x, nodeY, r+8, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(0,240,255,0.12)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(ape.x, nodeY, r+4, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(0,240,255,0.2)'; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(ape.x, nodeY, r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,240,255,0.25)'; ctx.fill();
+      ctx.strokeStyle = isAltFrk ? '#ffb800' : '#00f0ff';
+      ctx.lineWidth = isAltFrk ? 2 : 1.5; ctx.stroke();
+      const above = i % 2 === 0;
+      ape._nodeY = nodeY;
+      const _al = (ape.ev.title || '').split('—')[0].trim();
+      const shortLbl = _al.length > 22 ? _al.slice(0,20)+'…' : _al;
+      ctx.font = (isHovA||isAltFrk) ? 'bold 10px Share Tech Mono' : '9px Share Tech Mono';
+      ctx.fillStyle = (isHovA||isAltFrk) ? '#00f0ff' : 'rgba(0,240,255,0.7)';
+      ctx.textAlign = 'center';
+      ctx.fillText(shortLbl, ape.x, nodeY + (above ? -(r+15) : (r+15)));
+      ctx.fillStyle = 'rgba(0,240,255,0.45)';
+      ctx.fillText(String(ape.ev.year), ape.x, nodeY + (above ? -(r+5) : (r+25)));
+    });
+  }
+
+  // ── ALT² BRANCH ──
+  if (altPulled && altBranchPhysEvents.length > 0) {
+    ctx.beginPath(); ctx.setLineDash([3, 6]);
+    altBranchPhysEvents.forEach((b, bi) => {
+      bi===0 ? ctx.moveTo(b.x, b._nodeY) : ctx.lineTo(b.x, b._nodeY);
+    });
+    ctx.strokeStyle = 'rgba(184,127,255,0.65)'; ctx.globalAlpha = 0.65; ctx.lineWidth = 1.4;
+    ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+    if (altBranchPhysEvents[0]) {
+      ctx.font = '9px Share Tech Mono'; ctx.fillStyle = 'rgba(184,127,255,0.55)'; ctx.textAlign = 'left';
+      ctx.fillText('// ALT² · DEEP BRANCH', altBranchPhysEvents[0].x + 8, altBranchPhysEvents[0]._nodeY - 10);
+    }
+    altBranchPhysEvents.forEach((b, bi) => {
+      const isDanger = alt2SelectedIdx === bi;
+      const r2 = isDanger ? 8 : 5;
+      if (isDanger) {
+        ctx.beginPath(); ctx.arc(b.x, b._nodeY, r2+7, 0, Math.PI*2); ctx.fillStyle='rgba(255,34,34,0.1)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(b.x, b._nodeY, r2+3, 0, Math.PI*2); ctx.fillStyle='rgba(255,34,34,0.18)'; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(b.x, b._nodeY, r2, 0, Math.PI*2);
+      ctx.fillStyle = isDanger ? 'rgba(255,34,34,0.3)' : 'rgba(184,127,255,0.2)'; ctx.fill();
+      ctx.strokeStyle = isDanger ? '#ff2222' : '#b87fff'; ctx.lineWidth = isDanger ? 2 : 1.2; ctx.stroke();
+      ctx.font = isDanger ? 'bold 8px Share Tech Mono' : '8px Share Tech Mono';
+      ctx.fillStyle = isDanger ? 'rgba(255,34,34,0.9)' : 'rgba(184,127,255,0.65)'; ctx.textAlign = 'center';
+      const _bt=(b.ev.title||''); ctx.fillText(_bt.length>12?_bt.slice(0,10)+'…':_bt, b.x, b._nodeY - 12);
+      ctx.fillText(String(b.ev.year), b.x, b._nodeY + 16);
+    });
+  }
+
+  // ── NOW LINE ──
+  const nowX = yearToX(NOW_YEAR, W);
+  ctx.beginPath(); ctx.moveTo(nowX, 20); ctx.lineTo(nowX, H-20);
+  ctx.strokeStyle = 'rgba(255,184,0,0.18)'; ctx.lineWidth = 1; ctx.setLineDash([4, 6]);
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,184,0,0.35)'; ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'center';
+  ctx.fillText('NOW', nowX, 16);
+
+  // ── FORK LINE ──
+  if (forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    ctx.beginPath(); ctx.moveTo(fpe.x, 10); ctx.lineTo(fpe.x, H-10);
+    ctx.strokeStyle = 'rgba(255,184,0,0.7)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 4]);
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // ── PRIME EVENT NODES ──
+  if (!hidePrime) physEvents.forEach((pe, i) => {
+    const ev  = EVENTS[pe.idx];
+    const col = CAT_COLOR[ev.cat] || '#e8e8e0';
+    const isHov  = hoveredIdx === i;
+    const isFork = forkIdx === i;
+    const r = isHov || isFork ? 9 : 6;
+    if (isHov || isFork) {
+      ctx.beginPath(); ctx.arc(pe.x, pe.y, r+8, 0, Math.PI*2); ctx.fillStyle = col+'22'; ctx.fill();
+      ctx.beginPath(); ctx.arc(pe.x, pe.y, r+4, 0, Math.PI*2); ctx.fillStyle = col+'33'; ctx.fill();
+    }
+    if (ev.isAlmost) {
+      // Road not taken — ghosted node floating above the string
+      const ghostY = pe.y - 36;
+      ctx.save();
+      ctx.globalAlpha = isHov ? 0.75 : 0.42;
+      ctx.beginPath(); ctx.arc(pe.x, ghostY, r, 0, Math.PI*2);
+      ctx.strokeStyle = '#b87fff'; ctx.lineWidth = 1.2; ctx.setLineDash([3,3]); ctx.stroke(); ctx.setLineDash([]);
+      // Dashed connector line to string
+      ctx.beginPath(); ctx.moveTo(pe.x, pe.y - r - 2); ctx.lineTo(pe.x, ghostY + r + 2);
+      ctx.strokeStyle = 'rgba(184,127,255,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([2,4]); ctx.stroke(); ctx.setLineDash([]);
+      const _gt = (ev.title || ''); const ghostLabel = _gt.length > 16 ? _gt.slice(0,14)+'…' : _gt;
+      ctx.font = '8px Share Tech Mono'; ctx.fillStyle = '#b87fff'; ctx.textAlign = 'center';
+      ctx.fillText(ghostLabel, pe.x, ghostY - r - 4);
+      ctx.globalAlpha = 1;
+      ctx.restore();
+      return; // don't draw normal node for isAlmost
+    }
+
+    ctx.beginPath(); ctx.arc(pe.x, pe.y, r, 0, Math.PI*2);
+    if (ev.locked && !ev.isFuture) { ctx.fillStyle = col; ctx.fill(); }
+    else { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]); ctx.stroke(); ctx.setLineDash([]); }
+    if (ev.isRegret) {
+      ctx.font = '11px Share Tech Mono'; ctx.fillStyle = '#ff2222'; ctx.textAlign = 'center';
+      ctx.fillText('!', pe.x, pe.y - r - 5);
+    }
+    const above = i % 2 === 0;
+    const label = (ev.title || '').split('—')[0].split(':')[0].trim();
+    const shortLabel = label.length > 22 ? label.slice(0,20)+'…' : label;
+    ctx.font = isFork || isHov ? 'bold 10px Share Tech Mono' : '9px Share Tech Mono';
+    ctx.fillStyle = isFork ? '#ffb800' : isHov ? col : 'rgba(232,232,224,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText(shortLabel, pe.x, pe.y + (above ? -(r+15) : (r+15)));
+    ctx.fillText(String(ev.year), pe.x, pe.y + (above ? -(r+5) : (r+25)));
+  });
+
+  // ── WORLD EVENT DIAMOND MARKERS ──
+  ALL_WORLD_EVENTS.forEach(we => {
+    if (we.year < TIMELINE_MIN || we.year > TIMELINE_MAX) return;
+    if (quizWorldNodeIds.has(we.id)) return; // already a node from quiz, no double-render
+    const x = yearToX(we.year, W);
+    const isActive = activeWorldEventIds.has(we.id);
+    const isHovW   = hoveredWorldId === we.id;
+    const stringY = getStringY(x, W, H, 0, time);
+    const sy = stringY + WORLD_Y_OFFSET;
+    // Thin connector from string to diamond
+    ctx.beginPath();
+    ctx.moveTo(x, stringY + 4);
+    ctx.lineTo(x, sy - 4);
+    ctx.strokeStyle = isActive ? 'rgba(255,102,51,0.35)' : 'rgba(255,102,51,0.12)';
+    ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x, sy-14); ctx.lineTo(x, sy+14);
+    ctx.strokeStyle = isActive ? `rgba(255,102,51,${isHovW?0.9:0.55})` : `rgba(255,102,51,${isHovW?0.45:0.15})`;
+    ctx.lineWidth = isActive ? 1.8 : 1; ctx.setLineDash(isActive ? [] : [2,3]); ctx.stroke(); ctx.setLineDash([]);
+    const dr = isActive ? 5 : 3;
+    ctx.save(); ctx.translate(x, sy); ctx.rotate(Math.PI/4);
+    ctx.beginPath(); ctx.rect(-dr, -dr, dr*2, dr*2);
+    ctx.fillStyle = isActive ? 'rgba(255,102,51,0.18)' : 'rgba(255,102,51,0.06)'; ctx.fill();
+    ctx.strokeStyle = isActive ? `rgba(255,102,51,${isHovW?1:0.7})` : `rgba(255,102,51,${isHovW?0.6:0.2})`;
+    ctx.lineWidth = isActive ? 1.5 : 0.8; ctx.stroke(); ctx.restore();
+    if (isActive || isHovW) {
+      ctx.font = (isActive?'bold ':'') + '8px Share Tech Mono';
+      ctx.fillStyle = isHovW ? '#ff6633' : 'rgba(255,102,51,0.65)'; ctx.textAlign = 'center';
+      ctx.fillText(we.emoji + ' ' + we.year, x, sy + 26);
+    }
+  });
+
+  strandPhase += 0.014;
+  physTick();
+  worldPhysEvents.forEach(wpe => {
+    wpe.vy = wpe.vy + (-0.06*(wpe.y-wpe.baseY)) + (-0.15*wpe.vy);
+    wpe.y += wpe.vy;
+  });
+}
+
+// ─── VERTICAL DRAW ─────────────────────────────────────────────────────────────
+function drawVertical() {
+  const W = canvas.width  / devicePixelRatio;
+  const H = canvas.height / devicePixelRatio;
+  // Mobile portrait uses a virtual tall coordinate space with scroll offset.
+  // Desktop always uses H directly (original behaviour).
+  const mob = isMobilePortrait();
+  const FH = mob ? (fullTimelineH || H) : H;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const time = strandPhase;
+
+  // Mobile portrait only: translate canvas context to implement scroll
+  if (mob) { ctx.save(); ctx.translate(0, -canvasScrollY); }
+
+  // ── VERTICAL STRANDS ──
+  if (!hidePrime) STRANDS.forEach((s, si) => {
+    ctx.beginPath();
+    for (let y = 0; y <= FH; y += 2) {
+      let x = getStringX(y, W, FH, si, time);
+      physEvents.forEach(pe => {
+        const dist = Math.abs(y - pe.y);
+        if (dist < 120) {
+          const inf = (1 - dist/120) * (1 - dist/120);
+          x += (pe.x - pe.baseX) * inf * (si === 0 ? 1 : 0.5);
+        }
+      });
+      y === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = s.color; ctx.globalAlpha = s.alpha;
+    ctx.lineWidth = s.thick; ctx.stroke(); ctx.globalAlpha = 1;
+  });
+
+  // ── NOW LINE (horizontal) ──
+  const nowY = yearToY(NOW_YEAR, FH);
+  ctx.beginPath(); ctx.moveTo(20, nowY); ctx.lineTo(W - 20, nowY);
+  ctx.strokeStyle = 'rgba(255,184,0,0.18)'; ctx.lineWidth = 1; ctx.setLineDash([4, 6]);
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,184,0,0.35)'; ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'right';
+  ctx.fillText('NOW', W - 24, nowY - 4);
+
+  // ── FORK LINE (horizontal) ──
+  if (forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    ctx.beginPath(); ctx.moveTo(10, fpe.y); ctx.lineTo(W - 10, fpe.y);
+    ctx.strokeStyle = 'rgba(255,184,0,0.7)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 4]);
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // ── PRIME LABEL when alt is active ──
+  if (!hidePrime && pulled && forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(184,127,255,0.5)';
+    ctx.fillText('// PRIME · C-137', 10, fpe.y - 10);
+  }
+
+  // ── ALT STRING (diverges right) ──
+  if (pulled && altPhysEvents.length > 0) {
+    const forkPe = forkIdx >= 0 ? physEvents[forkIdx] : { y: 0 };
+    const forkY  = forkPe.y;
+    const divOffset = Math.min(W * 0.22, 110);
+
+    function getAltX(y) {
+      const t = Math.min(1, (y - forkY) / 300);
+      const ease = t * t * (3 - 2 * t);
+      let x = getStringX(y, W, FH, 0, time + 0.35) + divOffset * ease;
+      return x;
+    }
+
+    // Glow
+    ctx.beginPath(); ctx.setLineDash([5, 5]);
+    for (let y = forkY; y <= FH; y += 3) {
+      const x = getAltX(y);
+      y === forkY ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(0,240,255,0.18)'; ctx.lineWidth = 7; ctx.stroke(); ctx.setLineDash([]);
+
+    // Main alt string
+    ctx.beginPath(); ctx.setLineDash([5, 5]);
+    for (let y = forkY; y <= FH; y += 2) {
+      const x = getAltX(y);
+      y === forkY ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#00f0ff'; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.8;
+    ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+
+    const labelAltX = getAltX(forkY + 40);
+    ctx.font = '9px Share Tech Mono'; ctx.fillStyle = 'rgba(0,240,255,0.6)'; ctx.textAlign = 'left';
+    ctx.fillText('// ALT · ' + altDim, labelAltX + 8, forkY + 40);
+
+    // Alt nodes
+    altPhysEvents.forEach((ape, i) => {
+      const nodeX = getAltX(ape.y);
+      ape._nodeX = nodeX; ape._nodeY = ape.y;
+      const isHovA = hoveredAltIdx === i;
+      const isAltFrk = altForkIdx === i;
+      const r = (isHovA || isAltFrk) ? 9 : 6;
+      if (isHovA || isAltFrk) {
+        ctx.beginPath(); ctx.arc(nodeX, ape.y, r+8, 0, Math.PI*2); ctx.fillStyle='rgba(0,240,255,0.12)'; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(nodeX, ape.y, r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,240,255,0.25)'; ctx.fill();
+      ctx.strokeStyle = isAltFrk ? '#ffb800' : '#00f0ff'; ctx.lineWidth = isAltFrk ? 2 : 1.5; ctx.stroke();
+      const _vl = (ape.ev.title || '').split('—')[0].trim();
+      const lbl = _vl.length > 18 ? _vl.slice(0,16)+'…' : _vl;
+      ctx.font = (isHovA||isAltFrk) ? 'bold 9px Share Tech Mono' : '9px Share Tech Mono';
+      ctx.fillStyle = (isHovA||isAltFrk) ? '#00f0ff' : 'rgba(0,240,255,0.7)'; ctx.textAlign = 'left';
+      ctx.fillText(lbl, nodeX + r + 5, ape.y - 2);
+      ctx.fillStyle = 'rgba(0,240,255,0.45)'; ctx.font = '8px Share Tech Mono';
+      ctx.fillText(String(ape.ev.year), nodeX + r + 5, ape.y + 9);
+    });
+
+    // ── ALT² BRANCH (vertical) ──
+    if (altPulled && altBranchPhysEvents.length > 0) {
+      const alt2Offset = Math.min(W * 0.20, 80);
+      function getAlt2X(y) { return getAltX(y) + alt2Offset; }
+      ctx.beginPath(); ctx.setLineDash([2, 5]);
+      altBranchPhysEvents.forEach((b, bi) => {
+        const y = yearToY(b.ev.year, FH);
+        const x = getAlt2X(y);
+        b._vx = x; b._vy = y;
+        bi === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = 'rgba(184,127,255,0.55)'; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.2;
+      ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+      if (altBranchPhysEvents[0]) {
+        const fy = yearToY(altBranchPhysEvents[0].ev.year, FH);
+        ctx.font = '8px Share Tech Mono'; ctx.fillStyle = 'rgba(184,127,255,0.5)'; ctx.textAlign = 'left';
+        ctx.fillText('// ALT²', getAlt2X(fy) + 6, fy - 10);
+      }
+      altBranchPhysEvents.forEach((b, bi) => {
+        const isDanger = alt2SelectedIdx === bi;
+        const r2 = isDanger ? 8 : 5;
+        const bx = b._vx, by = b._vy;
+        if (!bx || !by) return;
+        ctx.beginPath(); ctx.arc(bx, by, r2, 0, Math.PI * 2);
+        ctx.fillStyle = isDanger ? 'rgba(255,34,34,0.3)' : 'rgba(184,127,255,0.2)'; ctx.fill();
+        ctx.strokeStyle = isDanger ? '#ff2222' : '#b87fff';
+        ctx.lineWidth = isDanger ? 2 : 1.2; ctx.stroke();
+        const _bt = (b.ev.title || '');
+        const lbl2 = _bt.length > 14 ? _bt.slice(0, 12) + '…' : _bt;
+        ctx.font = isDanger ? 'bold 8px Share Tech Mono' : '8px Share Tech Mono';
+        ctx.fillStyle = isDanger ? 'rgba(255,34,34,0.9)' : 'rgba(184,127,255,0.65)';
+        ctx.textAlign = 'left';
+        ctx.fillText(lbl2, bx + r2 + 4, by - 2);
+        ctx.font = '7px Share Tech Mono'; ctx.fillStyle = 'rgba(184,127,255,0.4)';
+        ctx.fillText(String(b.ev.year), bx + r2 + 4, by + 8);
+      });
+    }
+  }
+
+  // ── PRIME EVENT NODES ──
+  if (!hidePrime) physEvents.forEach((pe, i) => {
+    const ev  = EVENTS[pe.idx];
+    const col = CAT_COLOR[ev.cat] || '#e8e8e0';
+    const isHov  = hoveredIdx === i;
+    const isFork = forkIdx === i;
+    const r = isHov || isFork ? 9 : 6;
+    const nodeX = pe.x;
+    const nodeY = pe.y;
+    pe._nodeX = nodeX;
+
+    if (ev.isAlmost) {
+      const ghostX = nodeX - 44;
+      ctx.save(); ctx.globalAlpha = isHov ? 0.75 : 0.42;
+      ctx.beginPath(); ctx.arc(ghostX, nodeY, r, 0, Math.PI*2);
+      ctx.strokeStyle = '#b87fff'; ctx.lineWidth = 1.2; ctx.setLineDash([3,3]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(nodeX - r - 2, nodeY); ctx.lineTo(ghostX + r + 2, nodeY);
+      ctx.strokeStyle = 'rgba(184,127,255,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([2,4]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.globalAlpha = 1; ctx.restore();
+      return;
+    }
+
+    if (isHov || isFork) {
+      ctx.beginPath(); ctx.arc(nodeX, nodeY, r+8, 0, Math.PI*2); ctx.fillStyle = col+'22'; ctx.fill();
+      ctx.beginPath(); ctx.arc(nodeX, nodeY, r+4, 0, Math.PI*2); ctx.fillStyle = col+'33'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(nodeX, nodeY, r, 0, Math.PI*2);
+    if (ev.locked && !ev.isFuture) { ctx.fillStyle = col; ctx.fill(); }
+    else { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]); ctx.stroke(); ctx.setLineDash([]); }
+
+    const side = pe.side !== undefined ? pe.side : (i%2===0 ? -1 : 1);
+    const labelX = side < 0 ? nodeX - r - 8 : nodeX + r + 8;
+    const align  = side < 0 ? 'right' : 'left';
+    const label  = (ev.title || '').split('—')[0].split(':')[0].trim();
+    const short  = label.length > 22 ? label.slice(0, 20) + '…' : label;
+    ctx.font = isFork || isHov ? 'bold 10px Share Tech Mono' : '9px Share Tech Mono';
+    ctx.fillStyle = isFork ? '#ffb800' : isHov ? col : 'rgba(232,232,224,0.5)';
+    ctx.textAlign = align;
+    ctx.fillText(short, labelX, nodeY - 2);
+    ctx.fillStyle = isFork ? 'rgba(255,184,0,0.5)' : 'rgba(232,232,224,0.3)';
+    ctx.font = '8px Share Tech Mono';
+    ctx.fillText(String(ev.year), labelX, nodeY + 9);
+  });
+
+  strandPhase += 0.014;
+  physTickVertical();
+  if (mob) ctx.restore();
+
+  // ── SCROLL INDICATOR (not scrolled — drawn in screen space) ──
+  if (canvasScrollMaxY > 0) {
+    const trackH = H * 0.7;
+    const trackY = H * 0.15;
+    const pct = canvasScrollY / canvasScrollMaxY;
+    const thumbH = Math.max(24, trackH * (H / FH));
+    const thumbY = trackY + pct * (trackH - thumbH);
+    ctx.fillStyle = 'rgba(255,184,0,0.12)';
+    ctx.fillRect(W - 6, trackY, 3, trackH);
+    ctx.fillStyle = 'rgba(255,184,0,0.45)';
+    ctx.fillRect(W - 6, thumbY, 3, thumbH);
+    // Hint text on first view
+    if (canvasScrollY < 10) {
+      ctx.font = '8px Share Tech Mono';
+      ctx.fillStyle = 'rgba(255,184,0,0.35)';
+      ctx.textAlign = 'center';
+      ctx.fillText('↕ SCROLL', W / 2, H - 10);
+    }
+  }
+}
+
+function loop() {
+  draw();
+  tickSwarm();
+  // Mobile portrait scroll inertia
+  if (isMobilePortrait() && !mobileTouchScrolling && Math.abs(mobileScrollVel) > 0.5) {
+    canvasScrollY = Math.max(0, Math.min(canvasScrollMaxY, canvasScrollY + mobileScrollVel));
+    mobileScrollVel *= 0.88;
+  }
+  rafId = requestAnimationFrame(loop);
+}
+
+// ─── BUTTERFLY SWARM ──────────────────────────────────────────────────────────
+const BFLY_PALETTES = [
+  ['#ffb800','rgba(255,184,0,0.8)','rgba(255,140,0,0.6)'],
+  ['#00f0ff','rgba(0,240,255,0.8)','rgba(0,160,220,0.6)'],
+  ['#b87fff','rgba(184,127,255,0.8)','rgba(120,80,200,0.6)'],
+  ['#ff2222','rgba(255,60,60,0.8)','rgba(200,0,80,0.6)'],
+  ['#00ff41','rgba(0,255,65,0.8)','rgba(0,180,30,0.6)'],
+];
+
+function resizeOverlay() {
+  bOverlay.width  = window.innerWidth  * devicePixelRatio;
+  bOverlay.height = window.innerHeight * devicePixelRatio;
+  bOverlay.style.width  = window.innerWidth  + 'px';
+  bOverlay.style.height = window.innerHeight + 'px';
+}
+
+function spawnSwarm(originX, originY) {
+  resizeOverlay();
+  swarm = []; swarmActive = true;
+  bCtx.clearRect(0, 0, bOverlay.width, bOverlay.height);
+  bOverlay.classList.add('active');
+  const rect = canvas.getBoundingClientRect();
+  const sx = rect.left + originX, sy = rect.top + originY;
+  for (let i = 0; i < 100; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 0.8 + Math.random() * 3.5;
+    const pal   = BFLY_PALETTES[Math.floor(Math.random() * BFLY_PALETTES.length)];
+    swarm.push({
+      x:sx*devicePixelRatio, y:sy*devicePixelRatio,
+      vx:Math.cos(angle)*speed*devicePixelRatio, vy:Math.sin(angle)*speed*devicePixelRatio - Math.random()*2*devicePixelRatio,
+      scale:(0.4+Math.random()*1.4)*devicePixelRatio, phase:Math.random()*Math.PI*2,
+      phaseSpeed:0.08+Math.random()*0.14, rotation:angle, palette:pal,
+      life:1.0, decay:0.003+Math.random()*0.005, delay:Math.random()*1.2,
+      wobble:(Math.random()-0.5)*0.04, t:0,
+    });
+  }
+}
+
+function drawOneButterfly(bx, by, scale, phase, rotation, palette, alpha) {
+  bCtx.save(); bCtx.globalAlpha = alpha;
+  bCtx.translate(bx, by); bCtx.rotate(rotation); bCtx.scale(scale, scale);
+  const flapOpen = Math.abs(Math.sin(phase));
+  const wW = 18 * flapOpen, wH = 13;
+  bCtx.beginPath(); bCtx.moveTo(0,0);
+  bCtx.bezierCurveTo(wW*0.3,-wH,wW*0.8,-wH*1.2,wW,-wH*0.3);
+  bCtx.bezierCurveTo(wW*0.7,-wH*0.08,wW*0.3,0,0,0);
+  bCtx.fillStyle = palette[1]; bCtx.fill();
+  bCtx.beginPath(); bCtx.moveTo(0,0);
+  bCtx.bezierCurveTo(wW*0.25,wH*0.65,wW*0.55,wH*0.8,wW*0.75,wH*0.2);
+  bCtx.bezierCurveTo(wW*0.45,wH*0.1,wW*0.22,0,0,0);
+  bCtx.fillStyle = palette[2]; bCtx.fill();
+  bCtx.beginPath(); bCtx.moveTo(0,0);
+  bCtx.bezierCurveTo(-wW*0.3,-wH,-wW*0.8,-wH*1.2,-wW,-wH*0.3);
+  bCtx.bezierCurveTo(-wW*0.7,-wH*0.08,-wW*0.3,0,0,0);
+  bCtx.fillStyle = palette[1]; bCtx.fill();
+  bCtx.beginPath(); bCtx.moveTo(0,0);
+  bCtx.bezierCurveTo(-wW*0.25,wH*0.65,-wW*0.55,wH*0.8,-wW*0.75,wH*0.2);
+  bCtx.bezierCurveTo(-wW*0.45,wH*0.1,-wW*0.22,0,0,0);
+  bCtx.fillStyle = palette[2]; bCtx.fill();
+  bCtx.beginPath(); bCtx.ellipse(0,0,1.5*devicePixelRatio,7*devicePixelRatio,0,0,Math.PI*2);
+  bCtx.fillStyle = palette[0]; bCtx.fill();
+  bCtx.restore();
+}
+
+function tickSwarm() {
+  if (!swarmActive) return;
+  bCtx.clearRect(0, 0, bOverlay.width, bOverlay.height);
+  let anyAlive = false;
+  swarm.forEach(b => {
+    b.t += 0.016;
+    if (b.t < b.delay || b.life > 0) anyAlive = true;
+    if (b.t < b.delay) return;
+    b.phase += b.phaseSpeed; b.rotation += b.wobble;
+    b.vx += (Math.random()-0.5)*0.15*devicePixelRatio;
+    b.vy += -0.02*devicePixelRatio;
+    b.x += b.vx; b.y += b.vy; b.life -= b.decay;
+    if (b.life > 0) drawOneButterfly(b.x, b.y, b.scale, b.phase, b.rotation, b.palette, Math.max(0,b.life));
+  });
+  if (!anyAlive) {
+    swarmActive = false; bOverlay.classList.remove('active');
+    bCtx.clearRect(0, 0, bOverlay.width, bOverlay.height);
+  }
+}
+
+// ─── INTERACTION ──────────────────────────────────────────────────────────────
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  const Wc = canvas.width / devicePixelRatio, Hc = canvas.height / devicePixelRatio;
+
+  let bestDist=999, bestI=-1;
+  physEvents.forEach((pe,i) => { const d=Math.hypot(pe.x-mx,pe.y-my); if(d<bestDist){bestDist=d;bestI=i;} });
+
+  let bestAltDist=999, bestAltI=-1;
+  if (pulled) {
+    altPhysEvents.forEach((ape,i) => {
+      const nx = (currentLayout==='vertical'||isMobilePortrait()) ? (ape._nodeX!==undefined?ape._nodeX:ape.x) : ape.x;
+      const ny = ape._nodeY!==undefined ? ape._nodeY : ape.y;
+      const d=Math.hypot(nx-mx,ny-my);
+      if(d<bestAltDist){bestAltDist=d;bestAltI=i;}
+    });
+  }
+
+  let bestWorldId=null, bestWorldDist=999;
+  ALL_WORLD_EVENTS.forEach(we => {
+    if(we.year<TIMELINE_MIN||we.year>TIMELINE_MAX) return;
+    const wx=yearToX(we.year,Wc), wy=getStringY(wx,Wc,Hc,0,strandPhase) + WORLD_Y_OFFSET;
+    const d=Math.hypot(wx-mx,wy-my);
+    if(d<bestWorldDist){bestWorldDist=d;bestWorldId=we.id;}
+  });
+
+  if (bestAltDist<28 && bestAltDist<bestDist) {
+    hoveredIdx=-1; hoveredAltIdx=bestAltI; hoveredWorldId=null;
+    showAltTooltip(bestAltI, e.clientX, e.clientY);
+    canvas.style.cursor='pointer';
+  } else if (bestDist<28) {
+    hoveredIdx=bestI; hoveredAltIdx=-1; hoveredWorldId=null;
+    showTooltip(bestI, e.clientX, e.clientY);
+    canvas.style.cursor='pointer';
+  } else if (bestWorldDist<28) {
+    hoveredIdx=-1; hoveredAltIdx=-1; hoveredWorldId=bestWorldId;
+    const we=ALL_WORLD_EVENTS.find(w=>w.id===bestWorldId);
+    showWorldTooltip(we, e.clientX, e.clientY);
+    canvas.style.cursor='pointer';
+  } else {
+    hoveredIdx=-1; hoveredAltIdx=-1; hoveredWorldId=null;
+    hideTooltip();
+    canvas.style.cursor = isDragging ? 'grabbing' : 'crosshair';
+  }
+  if (isDragging) pluckAt(mx, my);
+});
+
+canvas.addEventListener('mousedown', e => {
+  isDragging = true; canvas.style.cursor = 'grabbing';
+  const rect = canvas.getBoundingClientRect();
+  pluckAt(e.clientX-rect.left, e.clientY-rect.top);
+});
+canvas.addEventListener('mouseup', () => { isDragging=false; canvas.style.cursor='crosshair'; });
+canvas.addEventListener('mouseleave', () => {
+  isDragging=false; hoveredIdx=-1; hoveredAltIdx=-1; hoveredWorldId=null;
+  hideTooltip(); canvas.style.cursor='crosshair';
+});
+
+// ─── TOUCH SUPPORT ────────────────────────────────────────────────────────────
+function getTouchPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches[0] || e.changedTouches[0];
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+
+// ── MOBILE PORTRAIT: Smart touch — scroll vs. interact ──
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches[0];
+  const clientX = t.clientX - rect.left;
+  const clientY = t.clientY - rect.top;
+  // Canvas coordinate (accounting for scroll offset)
+  const cx = clientX;
+  const cy = clientY + canvasScrollY;
+
+  mobileTouchStartClientY = t.clientY;
+  mobileTouchLastClientY  = t.clientY;
+  mobileScrollVel = 0;
+
+  if (isMobilePortrait()) {
+    // Check if near a node
+    let best = 999, bestI = -1;
+    physEvents.forEach((pe, i) => {
+      const d = Math.hypot(pe.x - cx, pe.y - cy);
+      if (d < best) { best = d; bestI = i; }
+    });
+    if (best < 72 && bestI >= 0) {
+      mobileTouchIsDrag = true;
+      mobileTouchScrolling = false;
+      isDragging = true;
+      pluckAt(cx, cy);
+      hoveredIdx = bestI;
+      const ev = EVENTS[bestI];
+      if (!ev.isAlmost) showBottomSheet(ev.year, ev.title, ev.cat, ev.desc);
+    } else {
+      mobileTouchIsDrag = false;
+      mobileTouchScrolling = true;
+      isDragging = false;
+    }
+    return;
+  }
+
+  // Desktop / landscape touch
+  isDragging = true;
+  pluckAt(clientX, clientY);
+  let best2 = 999, bestI2 = -1;
+  physEvents.forEach((pe, i) => { const d = Math.hypot(pe.x - clientX, pe.y - clientY); if (d < best2) { best2 = d; bestI2 = i; } });
+  if (best2 < 40 && bestI2 >= 0) { hoveredIdx = bestI2; showTooltip(bestI2, t.clientX, t.clientY); }
+  else hideTooltip();
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches[0];
+  const clientX = t.clientX - rect.left;
+  const clientY = t.clientY - rect.top;
+  const cy = clientY + canvasScrollY;
+  const dy = mobileTouchLastClientY - t.clientY;
+  mobileScrollVel = dy;
+  mobileTouchLastClientY = t.clientY;
+
+  if (isMobilePortrait()) {
+    if (mobileTouchScrolling) {
+      canvasScrollY = Math.max(0, Math.min(canvasScrollMaxY, canvasScrollY + dy));
+    } else if (mobileTouchIsDrag && isDragging) {
+      pluckAt(clientX, cy);
+    }
+    return;
+  }
+
+  if (isDragging) pluckAt(clientX, clientY);
+}, { passive: false });
+
+let _lastTap = 0;
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  isDragging = false;
+  mobileTouchScrolling = false;
+  const rect = canvas.getBoundingClientRect();
+  const t = e.changedTouches[0];
+  const clientX = t.clientX - rect.left;
+  const clientY = t.clientY - rect.top;
+  const cy = clientY + canvasScrollY;
+
+  if (isMobilePortrait()) {
+    const moveDist = Math.abs(t.clientY - mobileTouchStartClientY);
+    // Treat as tap if finger barely moved — use 22px threshold (normal tap moves 5-15px)
+    if (moveDist < 22) {
+      // Find nearest node to where finger lifted
+      let best = 999, bestI = -1;
+      physEvents.forEach((pe, i) => {
+        if (EVENTS[i]?.isAlmost) return;
+        const d = Math.hypot(pe.x - clientX, pe.y - cy);
+        if (d < best) { best = d; bestI = i; }
+      });
+      if (best < 72 && bestI >= 0) {
+        setFork(bestI);
+        updateMobileForkBar(bestI);
+      }
+    }
+    mobileTouchIsDrag = false;
+    hoveredIdx = -1;
+    return;
+  }
+
+  // Desktop / landscape
+  const now = Date.now();
+  if (now - _lastTap < 300) {
+    let best = 999, bestI = -1;
+    physEvents.forEach((pe, i) => { const d = Math.hypot(pe.x - clientX, pe.y - clientY); if (d < best) { best = d; bestI = i; } });
+    if (best < 80 && bestI >= 0) {
+      const pe = physEvents[bestI];
+      let _alpha = 1.0;
+      function _flash() {
+        if (_alpha <= 0) return;
+        ctx.save(); ctx.globalAlpha = _alpha;
+        ctx.font = 'bold 11px Share Tech Mono'; ctx.fillStyle = '#ffb800'; ctx.textAlign = 'center';
+        ctx.fillText('// DRAG TO PULL', pe.x, pe.y - 28);
+        ctx.restore();
+        _alpha -= 0.04; requestAnimationFrame(_flash);
+      }
+      _flash();
+      physEvents[bestI].vy -= 10;
+    }
+    _lastTap = 0;
+  } else {
+    _lastTap = now;
+    let best = 999, bestI = -1;
+    physEvents.forEach((pe, i) => { if (EVENTS[i]?.isAlmost) return; const d = Math.hypot(pe.x - clientX, pe.y - clientY); if (d < best) { best = d; bestI = i; } });
+    if (best < 40 && bestI >= 0) setFork(bestI);
+  }
+  hoveredIdx = -1;
+  setTimeout(hideTooltip, 1200);
+}, { passive: false });
+
+canvas.addEventListener('click', e => {
+  if (isDragging) return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const Wc=canvas.width/devicePixelRatio, Hc=canvas.height/devicePixelRatio;
+
+  // Alt² nodes
+  if (altPulled) {
+    let best2Dist=999, best2I=-1;
+    altBranchPhysEvents.forEach((b,i) => {
+      const d=Math.hypot(b.x-mx,b._nodeY-my);
+      if(d<best2Dist){best2Dist=d;best2I=i;}
+    });
+    if (best2Dist<32) { setAlt2Selected(best2I); return; }
+  }
+  // Alt nodes
+  if (pulled) {
+    let bestAltDist=999, bestAltI=-1;
+    altPhysEvents.forEach((ape,i) => {
+      const nx = (currentLayout==='vertical'||isMobilePortrait()) ? (ape._nodeX!==undefined?ape._nodeX:ape.x) : ape.x;
+      const ny = ape._nodeY!==undefined ? ape._nodeY : ape.y;
+      const d=Math.hypot(nx-mx,ny-my);
+      if(d<bestAltDist){bestAltDist=d;bestAltI=i;}
+    });
+    if (bestAltDist<32) { setAltFork(bestAltI); return; }
+  }
+  // Prime nodes (checked before world markers so nodes always win) — skip ghost nodes
+  let bestDist=999, bestI=-1;
+  physEvents.forEach((pe,i) => {
+    if (EVENTS[i]?.isAlmost) return;
+    const d=Math.hypot(pe.x-mx,pe.y-my);
+    if(d<bestDist){bestDist=d;bestI=i;}
+  });
+  if (bestDist<32) { setFork(bestI); return; }
+  // World markers (only if no node nearby)
+  let bestWDist=999, bestWId=null;
+  ALL_WORLD_EVENTS.forEach(we => {
+    if(we.year<TIMELINE_MIN||we.year>TIMELINE_MAX) return;
+    if(quizWorldNodeIds.has(we.id)) return; // skip quiz-selected world events (they're nodes now)
+    const wx=yearToX(we.year,Wc), wy=getStringY(wx,Wc,Hc,0,strandPhase) + WORLD_Y_OFFSET;
+    const d=Math.hypot(wx-mx,wy-my);
+    if(d<bestWDist){bestWDist=d;bestWId=we.id;}
+  });
+  if (bestWDist<28) { toggleWorldEventById(bestWId); return; }
+});
+
+// ─── TOOLTIPS ──────────────────────────────────────────────────────────────────
+function showTooltip(i, cx, cy) {
+  const ev=EVENTS[i]; if(!ev) return;
+  if (isMobilePortrait() || currentLayout==='vertical') {
+    showBottomSheet(ev.year, ev.title, (ev.cat||'').toUpperCase(), ev.desc||'');
+    return;
+  }
+  const rect=wrap.getBoundingClientRect();
+  document.getElementById('ttYear').textContent = ev.year;
+  document.getElementById('ttTitle').textContent = ev.title;
+  document.getElementById('ttCat').textContent = (ev.cat||'').toUpperCase();
+  tooltip.style.left=(cx-rect.left+14)+'px'; tooltip.style.top=(cy-rect.top-48)+'px';
+  tooltip.classList.add('visible');
+}
+function showAltTooltip(i, cx, cy) {
+  const ape=altPhysEvents[i]; if(!ape) return;
+  if (isMobilePortrait() || currentLayout==='vertical') {
+    showBottomSheet(ape.ev.year, ape.ev.title, ((ape.ev.cat||'alt')).toUpperCase()+' · ALT', ape.ev.desc||'');
+    return;
+  }
+  const rect=wrap.getBoundingClientRect();
+  document.getElementById('ttYear').textContent = ape.ev.year;
+  document.getElementById('ttTitle').textContent = ape.ev.title;
+  document.getElementById('ttCat').textContent = ((ape.ev.cat||'alt')).toUpperCase()+' · ALT';
+  tooltip.style.left=(cx-rect.left+14)+'px'; tooltip.style.top=(cy-rect.top-48)+'px';
+  tooltip.classList.add('visible');
+}
+function showWorldTooltip(we, cx, cy) {
+  if(!we) return;
+  const rect=wrap.getBoundingClientRect();
+  document.getElementById('ttYear').textContent = we.year;
+  document.getElementById('ttTitle').textContent = we.emoji+' '+we.title;
+  document.getElementById('ttCat').textContent = activeWorldEventIds.has(we.id) ? 'WORLD · ACTIVE — CLICK TO REMOVE' : 'WORLD EVENT — CLICK TO ADD';
+  tooltip.style.left=(cx-rect.left+14)+'px'; tooltip.style.top=(cy-rect.top-48)+'px';
+  tooltip.classList.add('visible');
+}
+function hideTooltip() { tooltip.classList.remove('visible'); }
+// Bottom sheet is closed explicitly — don't auto-hide it on mouseleave
+
+// ── MOBILE FORK BAR ──────────────────────────────────────────────────────────
+function updateMobileForkBar(i) {
+  if (!isMobilePortrait()) return;
+  const ev = EVENTS[i];
+  if (!ev) return;
+  document.getElementById('bsForkActions').classList.add('visible');
+  document.getElementById('mobileWhatIf').classList.remove('visible');
+}
+
+function mobilePull() {
+  hideBottomSheet();
+  initiatePull();
+}
+
+function mobileResetFork() {
+  clearFork();
+  hideBottomSheet();
+  document.getElementById('mobileWhatIf').classList.remove('visible');
+}
+
+function showMobileWhatIf(altEvs, label) {
+  if (!isMobilePortrait()) return;
+  const container = document.getElementById('mwiCards');
+  const prefix = label === 'alt2' ? 'mwi-alt2-card' : 'mwi-card';
+  container.innerHTML += altEvs.map(ev => `
+    <div class="${prefix}">
+      <div class="mwi-card-year">${ev.year}</div>
+      <div class="mwi-card-title">${ev.title || ''}</div>
+      <div class="mwi-card-desc">${ev.desc || ''}</div>
+    </div>
+  `).join('');
+  document.getElementById('mobileWhatIf').classList.add('visible');
+  // Scroll into view
+  setTimeout(() => {
+    document.getElementById('mobileWhatIf').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+
+// ─── FORK LOGIC ──────────────────────────────────────────────────────────────
+function setFork(i) {
+  const ev=EVENTS[i];
+  // The "almost did" ghost node isn't pullable — it's the other dimension, not a fork point
+  if (ev && ev.isAlmost) return;
+  forkIdx=i; pulled=false;
+  document.getElementById('forkEventName').textContent = ev.title;
+  document.getElementById('lockedCount').textContent = (i+1) + ' locked';
+  document.getElementById('rewriteCount').textContent = (EVENTS.length-i-1) + ' will rewrite';
+  document.getElementById('forkBanner').classList.add('visible');
+  document.getElementById('branchHint').style.display = 'none';
+  document.getElementById('branchTracks').style.display = 'none';
+  document.getElementById('branchSvg').style.display = 'none';
+  document.getElementById('cascadeCount').style.display = 'none';
+  document.getElementById('aiTerminal').classList.remove('visible');
+  document.getElementById('quickChat').classList.remove('visible');
+  if (currentLayout==='vertical'||isMobilePortrait()) { physEvents[i].vx = (physEvents[i].vx||0) - 18; }
+  else { physEvents[i].vy -= 18; }
+  // Reset pull button
+  const btn=document.getElementById('pullBtn');
+  btn.textContent='↗ PULL THIS STRING'; btn.style.background=''; btn.style.color=''; btn.style.boxShadow=''; btn.onclick=initiatePull;
+}
+
+function clearFork() {
+  forkIdx=-1; pulled=false; isDragging=false;
+  altPhysEvents=[]; altForkIdx=-1; altPulled=false; altBranchPhysEvents=[]; alt2SelectedIdx=-1;
+  swarm=[]; swarmActive=false;
+  bOverlay.classList.remove('active'); bCtx.clearRect(0,0,bOverlay.width,bOverlay.height);
+  hidePrime=false;
+  physEvents.forEach(pe=>{pe.y=pe.baseY;pe.vy=0;});
+  document.getElementById('forkBanner').classList.remove('visible');
+  document.getElementById('branchHint').style.display='';
+  document.getElementById('branchTracks').style.display='none';
+  document.getElementById('branchSvg').style.display='none';
+  document.getElementById('cascadeCount').style.display='none';
+  document.getElementById('aiTerminal').classList.remove('visible');
+  document.getElementById('quickChat').classList.remove('visible');
+  document.getElementById('shareBtn').classList.remove('visible');
+  document.getElementById('dimBadge').textContent='DIMENSION C-137 · PRIME';
+  document.getElementById('dimBadge').classList.remove('alt');
+  const hb=document.getElementById('hideBtn');
+  if(hb){hb.textContent='◎ HIDE PRIME';hb.classList.remove('on');}
+  hideBottomSheet();
+  // Alt events live in branch cards only — timeline section always shows real path
+  document.getElementById('mobileWhatIf').classList.remove('visible');
+  document.getElementById('mwiCards').innerHTML = '';
+}
+
+function setAltFork(i) {
+  altForkIdx=i; altPulled=false;
+  const ape=altPhysEvents[i]; if(!ape) return;
+  ape.vy -= 15;
+  document.getElementById('forkEventName').textContent = ape.ev.title + ' · ALT FORK';
+  const cc=document.getElementById('cascadeCount');
+  cc.style.display='block';
+  cc.textContent='↻ alt fork set — '+(altPhysEvents.length-i-1)+' downstream alt events will rewrite…';
+  const btn=document.getElementById('pullBtn');
+  btn.textContent='↗ PULL ALT STRING'; btn.onclick=pullAltString;
+}
+
+function pullAltString() {
+  if(altForkIdx<0) return;
+  altPulled=true;
+  const ape=altPhysEvents[altForkIdx]; if(!ape) return;
+  ape.vy -= 22;
+  spawnSwarm(ape.x, ape._nodeY||ape.y);
+  const W=canvas.width/devicePixelRatio, H=canvas.height/devicePixelRatio;
+  // Static placeholder for alt²
+  altBranchPhysEvents = altPhysEvents.slice(altForkIdx+1).map(a=>{
+    const ny=(a._nodeY||a.y)+H*0.13;
+    return { x:a.x, baseY:ny, y:ny, vy:0, _nodeY:ny, ev:{...a.ev} };
+  });
+  const btn=document.getElementById('pullBtn');
+  btn.textContent='↗ PULL THIS STRING'; btn.onclick=initiatePull;
+  const altForkEvIdx = altForkIdx;
+  altForkIdx=-1;
+  renderAlt2Branch();
+  // AI generates the real alt² causal chain
+  generateAlt2Timeline(altForkEvIdx);
+}
+
+function setAlt2Selected(i) {
+  alt2SelectedIdx=i;
+  const b=altBranchPhysEvents[i]; if(!b) return;
+  b.vy=-12;
+  const btn=document.getElementById('pullBtn');
+  btn.textContent='⚠ PULL ALT² STRING';
+  btn.style.background='#ff2222'; btn.style.color='#000'; btn.style.boxShadow='0 0 16px rgba(255,34,34,0.7)';
+  btn.onclick=triggerTimelineBreak;
+  document.getElementById('forkEventName').textContent=b.ev.title+' · ⚠ DANGER ZONE';
+  const cc=document.getElementById('cascadeCount');
+  cc.style.display='block'; cc.style.color='#ff2222';
+  cc.textContent='⚠ WARNING: pulling this string may cause catastrophic timeline failure';
+}
+
+// ─── EMAIL GATE ────────────────────────────────────────────────────────────────
+function initiatePull() {
+  if (forkIdx < 0) return;
+  const alreadyGated = localStorage.getItem('st_gate_passed');
+  if (alreadyGated) { pullString(); return; }
+  pendingPull = true;
+  document.getElementById('emailGate').classList.add('visible');
+}
+
+function submitGate() {
+  const email = document.getElementById('gateEmail').value.trim();
+  if (email) localStorage.setItem('st_gate_email', email);
+  localStorage.setItem('st_gate_passed', '1');
+  document.getElementById('emailGate').classList.remove('visible');
+  if (pendingPull) { pendingPull=false; pullString(); }
+}
+
+function skipGate() {
+  localStorage.setItem('st_gate_passed', '1');
+  document.getElementById('emailGate').classList.remove('visible');
+  if (pendingPull) { pendingPull=false; pullString(); }
+}
+
+// ─── PULL STRING ──────────────────────────────────────────────────────────────
+function pullString() {
+  if (forkIdx<0) return;
+  pulled=true;
+  pullCount++;
+  const fpe=physEvents[forkIdx];
+  if (currentLayout==='vertical'||isMobilePortrait()) {
+    fpe.vx = (fpe.vx||0) - 28;
+  } else {
+    fpe.vy -= 30;
+  }
+  spawnSwarm(fpe.x, fpe.y);
+  // Reset pull button after pull to allow re-pulling a different fork
+  setTimeout(()=>{
+    const btn=document.getElementById('pullBtn');
+    if(btn&&pulled){ btn.textContent='↗ PULL ANOTHER STRING'; btn.onclick=initiatePull; }
+  }, 900);
+  physEvents.forEach((pe,i)=>{
+    if(i>forkIdx) setTimeout(()=>{pe.vy-=(Math.random()*8+4)*(i%2===0?-1:1);},(i-forkIdx)*80);
+  });
+
+  const forkEv=EVENTS[forkIdx];
+  altDim='C-ALT-'+forkEv.year;
+  document.getElementById('dimBadge').textContent='DIMENSION '+altDim;
+  document.getElementById('dimBadge').classList.add('alt');
+
+  const cc=document.getElementById('cascadeCount');
+  cc.style.display='block'; cc.style.color='';
+  cc.textContent='↻ rewriting '+(EVENTS.length-forkIdx-1)+' events across timeline…';
+
+  // Show static placeholder events immediately, then replace with AI
+  setTimeout(()=>{
+    const staticAltEvs = buildGenericAltEvents(forkIdx);
+    const W=canvas.width/devicePixelRatio, H=canvas.height/devicePixelRatio;
+    buildAltPhysEvents(W, H, staticAltEvs);
+    renderBranches(staticAltEvs);
+    showAltTimeline(staticAltEvs);
+    showMobileWhatIf(staticAltEvs, 'alt1');
+    document.getElementById('scrollCue').classList.add('visible');
+    setTimeout(()=>document.getElementById('scrollCue').classList.remove('visible'),4000);
+    // AI generates the real causal chain
+    generateAltTimeline(forkIdx);
+  }, 600);
+}
+
+function buildGenericAltEvents(idx) {
+  const forkEv = EVENTS[idx];
+  const d      = DATA || {};
+  const b      = d.bonusAnswers || {};
+  const a      = d.answers || {};
+  const almostDid = (b.almostDid || '').trim();
+
+  // ── Detect what the alternate path is about ──────────────────────────────
+  const AL = almostDid.toLowerCase();
+  const isCrypto   = /crypto|bitcoin|btc|eth|mine|mined|mining|blockchain|web3/i.test(almostDid);
+  const isStartup  = /startup|series [ab]|joined .+ (startup|company)|founded|early.?stage|venture/i.test(almostDid);
+  const isMove     = /move|moved|relocat|amsterdam|london|new york|nyc|singapore|dubai|toronto|paris|lisbon/i.test(almostDid);
+  const isAcademia = /phd|masters|master'?s|degree|research|academia|university/i.test(almostDid);
+  const isFreelance= /freelance|consulting|independent|solo/i.test(almostDid);
+
+  // Extract year from almostDid ("Mine crypto in 2016" → 2016)
+  const yearInAlmost = (almostDid.match(/\b(19|20)\d{2}\b/) || [])[0];
+  // Extract city from almostDid
+  const cityMatch = almostDid.match(/amsterdam|london|new york|nyc|singapore|dubai|toronto|paris|lisbon/i);
+  const altCity   = cityMatch ? cityMatch[0].charAt(0).toUpperCase() + cityMatch[0].slice(1).toLowerCase() : 'elsewhere';
+  // Extract startup name guess
+  const startupMatch = almostDid.match(/(?:joined|at|at a)\s+([A-Z][a-zA-Z]+)/);
+  const startupName  = startupMatch ? startupMatch[1] : 'the startup';
+
+  // ── Narrative threads per alt-path type ──────────────────────────────────
+  // Each thread is: { cat → array of { years:[from,to], title, desc } }
+  // Matched by event.year and event.cat
+
+  const CRYPTO_THREAD = {
+    finance: [
+      { y:[0,   2017], t:'🪙 Mining operation — BTC at $600',      d:'Started in a spare room. Electricity bill raised eyebrows.' },
+      { y:[2017,2018], t:'📈 First peak — 20× on paper',            d:'December 2017. You did not sell. Nobody sold.' },
+      { y:[2018,2020], t:'🧊 Crypto winter — still hodling',         d:'Down 85%. Technically still a miner. Emotionally a survivor.' },
+      { y:[2020,2022], t:'🚀 DeFi summer — portfolio recovers',      d:'Rode the wave back. Told nobody at work. Yet.' },
+      { y:[2021,2023], t:'💎 Net worth: 7 figures (briefly)',        d:'Three weeks in November 2021. Peak human experience.' },
+      { y:[2022,2026], t:'📉 FTX. Portfolio: −60% again.',           d:'Sam Bankman-Fried had other plans for your money.' },
+      { y:[2026,9999], t:'🪙 Next halving — still positioned',       d:'The cycle continues. You have become the cycle.' },
+    ],
+    career: [
+      { y:[0,   2020], t:'Mining as side income',                   d:'Day job funds the operation. Nobody knows. Yet.' },
+      { y:[2020,2022], t:'Left corporate — crypto gave the runway',  d:'Finally quit. Timing: aggressive but correct.' },
+      { y:[2022,9999], t:'Building in web3 — probably fine',         d:'Founder mode. Volatility is the job description.' },
+    ],
+    location: [
+      { y:[0,   9999], t:'Moved to Portugal — NHR tax regime',       d:'Lisbon. Crypto capital of Europe. You did the math.' },
+    ],
+    identity: [
+      { y:[0,   2020], t:'Identity: tech-libertarian phase',         d:'"Banks are going to zero." You said this a lot.' },
+      { y:[2020,9999], t:'Post-ideology — the boat is real though',  d:'The thesis softened. The portfolio didn\'t.' },
+    ],
+    relationship: [
+      { y:[0,   9999], t:'Partner tolerates the price-checking',     d:'They knew what they signed up for. Mostly.' },
+    ],
+    future: [
+      { y:[0,   9999], t:'🪙 Halving cycle decides everything',      d:'Positioned going in. The math should work. Should.' },
+    ],
+  };
+
+  const STARTUP_THREAD = {
+    career: [
+      { y:[0,   2020], t:`Early ${startupName} — employee #8`,       d:'Ground floor. Options. Hope. Ping pong table.' },
+      { y:[2020,2023], t:`${startupName} scales — you're a lead now`, d:'The scrappy phase ends. Now you manage the scrappy phase.' },
+      { y:[2023,9999], t:`Post-${startupName}: what now?`,            d:'Exit, acquihire, or "we\'re pivoting." One of the three.' },
+    ],
+    finance: [
+      { y:[0,   2022], t:'Options vest — on paper you\'re up',        d:'Unrealised. As is tradition.' },
+      { y:[2022,9999], t:'Options: liquidated or expired',            d:'The outcome was binary. It landed somewhere.' },
+    ],
+    identity: [
+      { y:[0,   9999], t:'Identity: startup operator',               d:'The pace rewired your brain. Office jobs feel slow forever.' },
+    ],
+    location: [
+      { y:[0,   9999], t:`Relocated for ${startupName}`,              d:'The job was in a different city. You went.' },
+    ],
+    future: [
+      { y:[0,   9999], t:'Next bet — angel or founder?',              d:'You\'ve seen enough to know which mistakes to avoid. New ones await.' },
+    ],
+  };
+
+  const MOVE_THREAD = {
+    location: [
+      { y:[0,   9999], t:`Moved to ${altCity}`,                      d:'Pulled the trigger. The logistics were fine. The rest took longer.' },
+    ],
+    career: [
+      { y:[0,   2020], t:`Job hunt in ${altCity}`,                   d:'Recruiters there had a different accent. Same questions though.' },
+      { y:[2020,9999], t:`Established in ${altCity}`,                d:'3 years in and it\'s just home now. You forgot to call it an adventure.' },
+    ],
+    identity: [
+      { y:[0,   9999], t:'Expat mode — permanently explaining yourself', d:'The accent stays. The nationality becomes a personality.' },
+    ],
+    relationship: [
+      { y:[0,   9999], t:'Long-distance phase, then a decision',      d:'Every relationship has a checkpoint. This one had coordinates.' },
+    ],
+    future: [
+      { y:[0,   9999], t:`Rooted in ${altCity} — or moving again?`,  d:'Once you move once, the calculus changes permanently.' },
+    ],
+  };
+
+  const FALLBACK_THREAD = {
+    _: (ev) => ({
+      t: almostDid ? `${ev.title} — ${almostDid.slice(0,28)} path` : ev.title + ' (alt)',
+      d: almostDid
+        ? `You went with "${almostDid.slice(0,50)}". This is what ${ev.cat} looked like downstream.`
+        : 'This branch played out differently.',
+    }),
+  };
+
+  function pickFromThread(thread, ev) {
+    const rows = thread[ev.cat] || thread['_'];
+    if (!rows) return null;
+    if (typeof rows === 'function') return rows(ev);
+    const match = rows.find(r => ev.year >= r.y[0] && ev.year < r.y[1]) || rows[rows.length - 1];
+    return { t: match.t, d: match.d };
+  }
+
+  function getAltNarrative(ev) {
+    // The "almost did" ghost node — in alt timeline it actually happened for real
+    if (ev.isAlmost) {
+      const cleanTitle = almostDid
+        .replace(/^↳\s*/, '')
+        .replace(/\bin \d{4}\b/i, '')
+        .trim();
+      return {
+        title: cleanTitle || almostDid,
+        desc: 'In this dimension, you went through with it.',
+        reason: null,
+      };
+    }
+
+    // World events still happened — show how alt self experienced them differently
+    if (ev.cat === 'world') {
+      const altImpact = isCrypto
+        ? 'On the crypto path, this hits the portfolio directly. The volatility is already baked in — this just moves the timeline.'
+        : isStartup
+        ? 'The startup absorbs the shock. Hiring freeze, runway recalculation, pivot. You\'ve been through worse.'
+        : isMove
+        ? `In ${altCity}, the impact plays out differently. Different safety nets, different exposure.`
+        : 'Different life configuration, different exposure to this event.';
+      return { title: ev.title + ' — alt path', desc: altImpact, reason: null };
+    }
+
+    let hit = null;
+    if (isCrypto)    hit = pickFromThread(CRYPTO_THREAD, ev);
+    else if (isStartup) hit = pickFromThread(STARTUP_THREAD, ev);
+    else if (isMove)    hit = pickFromThread(MOVE_THREAD, ev);
+
+    if (!hit) hit = pickFromThread(FALLBACK_THREAD, ev);
+
+    return {
+      title:  hit ? hit.t : ev.title + ' (alt)',
+      desc:   hit ? hit.d : (almostDid ? `Downstream of "${almostDid.slice(0,40)}".` : 'Different path, different outcome.'),
+      reason: null,
+    };
+  }
+
+  // Continuation labels used when a thread runs out (never go backwards in time)
+  const CONT = {
+    career:       ['Compounding the bet', 'Still building', 'Raising the stakes', 'Next level unlocked'],
+    identity:     ['The thesis evolves', 'Another layer', 'Still recalibrating', 'Version update'],
+    finance:      ['Volatility absorbed', 'Repositioning', 'The math continues', 'Net worth: ongoing'],
+    relationship: ['Status: evolving', 'Long game', 'New chapter', 'Connections shift'],
+    location:     ['Still here, for now', 'Geography holds', 'Rooted or moving again?'],
+    future:       ['Next cycle incoming', 'Long horizon', 'Still in it', 'Horizon update'],
+    world:        ['World event — alt lens', 'External shock absorbed'],
+    alternate:    ['The choice deepens', 'Still diverged'],
+    health:       ['Body keeps the score', 'Health update'],
+    default:      ['Alt path — continued', 'Different branch, same person'],
+  };
+  const catUsedCount = {};
+  const usedTitles = {};
+
+  const raw = EVENTS.slice(idx+1).map(e => {
+    const n = getAltNarrative(e);
+    let title = n.title;
+    let desc  = n.desc;
+    const key = e.cat + '|' + title;
+
+    if (usedTitles[key]) {
+      // Never go back to earlier thread entries — use forward continuation labels
+      const vars = CONT[e.cat] || CONT.default;
+      const dupIdx = (catUsedCount[e.cat] || 0);
+      title = vars[dupIdx % vars.length];
+      desc  = almostDid
+        ? `${e.year}: still downstream of "${almostDid.slice(0,35)}". Different version of this problem.`
+        : 'Different branch. The pattern continues.';
+      catUsedCount[e.cat] = dupIdx + 1;
+    }
+
+    usedTitles[e.cat + '|' + title] = true;
+
+    return {
+      year:     e.isAlmost ? e.year : e.year,  // no ±1 randomization — keep sorted
+      cat:      e.cat,
+      title,
+      desc,
+      reason:   n.reason,
+      isFuture: e.isFuture,
+    };
+  });
+
+  // Ensure alt events are in chronological order
+  raw.sort((a, b) => a.year - b.year);
+  return raw;
+}
+
+// ─── BRANCHES ─────────────────────────────────────────────────────────────────
+function renderBranches(altEvs) {
+  const realDiv=document.getElementById('realCards'), altDiv=document.getElementById('altCards');
+  realDiv.innerHTML=''; altDiv.innerHTML='';
+
+  // Fork context card — what actually changed at the fork point
+  const forkEv = EVENTS[forkIdx];
+  const b = DATA.bonusAnswers || {};
+  if (forkEv) {
+    const isAlmostFork = forkEv.isAlmost || forkEv.isRegret;
+    const premise = (isAlmostFork && b.almostDid)
+      ? `WHAT IF: "${b.almostDid}"`
+      : deriveAltPremise(forkEv);
+    const premiseCard = document.createElement('div');
+    premiseCard.className = 'event-card premise-card';
+    premiseCard.innerHTML = `<div class="card-year">${forkEv.year}</div><div class="card-title" style="color:var(--amber)">↳ ${premise}</div><div class="card-desc" style="opacity:0.5">Downstream cascade computing…</div>`;
+    altDiv.appendChild(premiseCard);
+    setTimeout(()=>premiseCard.classList.add('visible'), 100);
+  }
+
+  EVENTS.slice(forkIdx+1).forEach((ev,i)=>{
+    const card=document.createElement('div');
+    card.className='event-card real-path';
+    card.innerHTML=`<div class="card-year">${ev.year}</div><div class="card-title">${ev.title}</div><div class="card-desc">${ev.desc||''}</div>`;
+    realDiv.appendChild(card);
+    setTimeout(()=>card.classList.add('visible'),100+i*120);
+  });
+  altEvs.forEach((ev,i)=>{
+    const card=document.createElement('div');
+    card.className='event-card alt-path';
+    card.innerHTML=`<div class="card-year">${ev.year}</div><div class="card-title">${ev.title}</div><div class="card-desc">${ev.desc||''}</div>${ev.reason?`<div class="card-reason">${ev.reason}</div>`:''}`;
+    altDiv.appendChild(card);
+    setTimeout(()=>card.classList.add('visible'),300+i*150);
+  });
+  // Reset alt² column (re-shown by renderAlt2Branch when string is pulled)
+  document.getElementById('alt2Col').style.display='none';
+  document.getElementById('alt2Cards').innerHTML='';
+  document.getElementById('branchTracks').classList.remove('three-col');
+  document.getElementById('branchTracks').style.display='grid';
+  renderBranchSvg();
+}
+
+function renderAlt2Branch() {
+  if (!altBranchPhysEvents.length) return;
+  const alt2Div = document.getElementById('alt2Cards');
+  const alt2Col = document.getElementById('alt2Col');
+  alt2Div.innerHTML = '';
+  altBranchPhysEvents.forEach((b, i) => {
+    const card = document.createElement('div');
+    card.className = 'event-card alt2-path';
+    card.innerHTML = `<div class="card-year">${b.ev.year}</div><div class="card-title">${b.ev.title}</div><div class="card-desc">${b.ev.desc || 'Deep branch — second-order alternate.'}</div>${b.ev.reason ? `<div class="card-reason">${b.ev.reason}</div>` : ''}`;
+    alt2Div.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 150 + i * 120);
+  });
+  alt2Col.style.display = '';
+  document.getElementById('branchTracks').classList.add('three-col');
+  // Alt² timeline section below
+  const alt2Evs = altBranchPhysEvents.map(b => b.ev);
+  showAlt2Timeline(alt2Evs);
+}
+
+function renderBranchSvg() {
+  const svg=document.getElementById('branchSvg');
+  const W=document.querySelector('.branches-area').clientWidth;
+  svg.style.display='block'; svg.setAttribute('viewBox',`0 0 ${W} 60`); svg.setAttribute('width',W);
+  const cx=W/2;
+  svg.innerHTML=`
+    <line x1="${cx}" y1="0" x2="${cx}" y2="20" stroke="rgba(255,184,0,0.4)" stroke-width="1" stroke-dasharray="3,4"/>
+    <path d="M${cx},20 C${cx},40 ${cx*0.35},50 ${cx*0.25},60" stroke="rgba(184,127,255,0.5)" stroke-width="1.5" fill="none"/>
+    <path d="M${cx},20 C${cx},40 ${cx*1.65},50 ${cx*1.75},60" stroke="rgba(0,240,255,0.5)" stroke-width="1.5" fill="none"/>
+    <circle cx="${cx}" cy="20" r="4" fill="#ffb800"/>
+    <text x="${cx*0.25}" y="58" font-family="Share Tech Mono" font-size="9" fill="rgba(184,127,255,0.6)" text-anchor="middle">REAL PATH</text>
+    <text x="${cx*1.75}" y="58" font-family="Share Tech Mono" font-size="9" fill="rgba(0,240,255,0.65)" text-anchor="middle">ALT PATH</text>`;
+}
+
+// ─── AI TERMINAL ──────────────────────────────────────────────────────────────
+function renderAI(altEvs) {
+  // Now a no-op — generateAltTimeline() handles AI terminal rendering.
+  // Called from pullString() after static events are shown.
+}
+
+function typewrite(el, text, onDone) {
+  let i=0; el.innerHTML='';
+  const cursor=document.createElement('span'); cursor.className='ai-cursor'; el.appendChild(cursor);
+  const iv=setInterval(()=>{
+    if(i<text.length){ el.insertBefore(document.createTextNode(text[i]),cursor); i++; }
+    else { clearInterval(iv); cursor.remove(); if(onDone) onDone(); }
+  },18);
+}
+
+function typewriteEl(el, text) {
+  let i=0; el.textContent='';
+  const iv=setInterval(()=>{ if(i<text.length){el.textContent+=text[i];i++;}else clearInterval(iv); },14);
+}
+
+// ─── ALT TIMELINE GENERATION (AI-FIRST) ───────────────────────────────────────
+// Timeline JSON is the source of truth. AI receives full JSON, returns alt JSON.
+// Static buildGenericAltEvents() is the instant placeholder; AI replaces it.
+
+function deriveAltPremise(ev) {
+  const t = ev.title || '';
+  const cat = ev.cat || '';
+  // Generate a specific "what if" based on the event's category and content
+  if (cat === 'career') {
+    if (/left|quit|resigned|fired/i.test(t))   return `What if you never left — stayed and rode it out`;
+    if (/pivot|switch|change/i.test(t))         return `What if you didn't pivot — kept the original path`;
+    if (/joined|started|new job/i.test(t))      return `What if you never took that job`;
+    if (/promoted|senior|lead/i.test(t))        return `What if the promotion never came`;
+    return `What if "${t}" went the other way`;
+  }
+  if (cat === 'relationship') {
+    if (/married|engagement|together/i.test(t)) return `What if you never committed — stayed single`;
+    if (/breakup|split|ended|divorced/i.test(t))return `What if you stayed — never broke up`;
+    return `What if "${t}" played out differently`;
+  }
+  if (cat === 'location') {
+    if (/moved|relocated/i.test(t))             return `What if you never moved — stayed where you were`;
+    return `What if you chose a different city`;
+  }
+  if (cat === 'finance') {
+    if (/portfolio|invest|stocks|crypto/i.test(t)) return `What if you never started investing — kept the money liquid`;
+    if (/loss|crash|lost/i.test(t))             return `What if you avoided this financial hit entirely`;
+    return `What if "${t}" went the other way financially`;
+  }
+  if (cat === 'identity') {
+    if (/burnout|breakdown/i.test(t))           return `What if the burnout never happened — you kept going`;
+    if (/reinvent|reset|restart/i.test(t))      return `What if you never reinvented — same identity, different outcome`;
+    return `What if "${t}" never triggered a shift`;
+  }
+  if (cat === 'world') {
+    return `What if this world event never happened`;
+  }
+  return `What if "${t}" never happened`;
+}
+
+function buildAltPromptContext(forkEv, altPath) {
+  const b = DATA.bonusAnswers || {};
+  const score = calcScore(DATA);
+  const birthCity = DATA.birthCity || DATA.city || '';
+  const city = DATA.city || 'unknown';
+  const originDesc = birthCity.toLowerCase() !== city.toLowerCase()
+    ? `born in ${birthCity}, now in ${city}` : `in ${city}`;
+
+  const realEventsJSON = JSON.stringify(
+    EVENTS.filter(e => !e.isFuture).map(e => ({
+      year: e.year, cat: e.cat, title: e.title,
+      desc: e.desc ? e.desc.slice(0, 100) : undefined,
+    })), null, 2);
+
+  const scoreLabel = score <= 33 ? 'ROUGH_PATH' : score <= 66 ? 'LATERAL_MOVE' : 'SOLID_PATH';
+
+  const rawOptimism = (DATA && DATA.optimism !== undefined && DATA.optimism !== null)
+    ? DATA.optimism
+    : (score <= 33 ? -1 : score >= 67 ? 1 : 0);
+
+  const rawCreativity = (DATA && DATA.creativity !== undefined)
+    ? DATA.creativity
+    : 50;
+
+  const creativityInstruction = rawCreativity >= 70
+    ? 'CREATIVITY: HIGH — be bold, escalate plausibly, unexpected outcomes allowed. One absurd-but-plausible domino per path — tied to THIS person\'s actual context, not generic tropes.'
+    : rawCreativity >= 40
+    ? 'CREATIVITY: MEDIUM — realistic with one unexpected twist per path.'
+    : 'CREATIVITY: LOW — stay close to realistic cause-and-effect. No big leaps.';
+
+  const optimismRule = rawOptimism >= 1
+    ? `OPTIMISM: HIGH — the alternate self lands well. Things compound. The right people show up. ${creativityInstruction}`
+    : rawOptimism <= -1
+    ? `OPTIMISM: LOW — honest costs, real trade-offs. Some things that work in real life don't work here. ${creativityInstruction}`
+    : `OPTIMISM: NEUTRAL — different path, not better or worse. Show both gains and losses. ${creativityInstruction}`;
+
+  const childCtx = (b.childhood && forkEv.desc && forkEv.desc.includes('Age'))
+    ? `\nCHILDHOOD FORK: "${b.childhood}" at age ${b.childhoodAge||'?'}. Ripples through identity, confidence, social wiring — everything downstream.` : '';
+
+  // World event cascade context: if world events hit this person's real life,
+  // the alternate path must show how those same events land differently
+  const worldImpacts = DATA.worldEventImpacts || [];
+  const worldCascade = worldImpacts.length > 0
+    ? `\nWORLD EVENT CASCADES — in the real timeline these events hit them:\n` +
+      worldImpacts.map(w => `- ${w.title} (${w.year}): "${w.impact}"`).join('\n') +
+      `\nIn the alternate path, these same world events happened — but from a different life position. Show how the alternate configuration absorbs or amplifies them differently.`
+    : '';
+
+  const extras = [
+    b.emotion           ? `Current emotion: ${b.emotion}` : '',
+    b.happinessScore    ? `Self-reported happiness: ${b.happinessScore}/10` : '',
+    b.happinessWish     ? `What would make them happier: "${b.happinessWish}"` : '',
+    b.messageTo         ? `Message to past self: "${b.messageTo}"` : '',
+    b.almostDid         ? `What they almost did: "${b.almostDid}"` : '',
+    b.firstLove         ? `First love context: "${b.firstLove}"` : '',
+    b.biggestFailure    ? `Biggest failure: "${b.biggestFailure}"` : '',
+    b.healthEvent       ? `Health chapter: "${b.healthEvent}"` : '',
+    b.careerEvent       ? `Career milestone: "${b.careerEvent}"` : '',
+    b.financeEvent      ? `Finance event: "${b.financeEvent}"` : '',
+    DATA.answers?.eduText       ? `Education: "${DATA.answers.eduText}"` : '',
+    DATA.answers?.cityHistory   ? `Full city history: ${DATA.answers.cityHistory}` : '',
+    DATA.currentCityYear        ? `Moved to ${DATA.city} in ${DATA.currentCityYear}` : '',
+    DATA.answers?.companyName   ? `Current company: ${DATA.answers.companyName}` : '',
+    DATA.answers?.altCityPath   ? `Alternate city path: "${DATA.answers.altCityPath}"` : '',
+  ].filter(Boolean).join('\n');
+
+  return { realEventsJSON, optimismRule, childCtx: childCtx + worldCascade, extras, originDesc, score, scoreLabel };
+}
+
+function parseAltJSON(raw) {
+  // Try JSON array first
+  const jsonMatch = raw.match(/\[[\s\S]*\]/);
+  if (jsonMatch) {
+    try {
+      const parsed = JSON.parse(jsonMatch[0]);
+      if (Array.isArray(parsed) && parsed.length >= 2) {
+        const validCats = ['career','relationship','location','identity','finance','health','future','world','alternate'];
+        return parsed
+          .filter(e => e.year && e.title && e.year > 1950 && e.year < 2100)
+          .map(e => ({
+            year: parseInt(e.year),
+            cat: validCats.includes((e.cat||'').toLowerCase()) ? e.cat.toLowerCase() : 'identity',
+            title: String(e.title).slice(0, 60),
+            desc: e.desc ? String(e.desc).slice(0, 150) : '',
+            isFuture: parseInt(e.year) > NOW_YEAR,
+          }))
+          .sort((a, b) => a.year - b.year);
+      }
+    } catch {}
+  }
+  // Fallback: parse [EVENT: cat|year|title|desc] lines
+  const events = [];
+  const regex = /\[EVENT:\s*([^|]+)\|([^|]+)\|([^|]+)\|([^\]]+)\]/gi;
+  let m;
+  while ((m = regex.exec(raw)) !== null) {
+    const cat = m[1].trim().toLowerCase();
+    const year = parseInt(m[2].trim());
+    const validCats = ['career','relationship','location','identity','finance','health','future','world','alternate'];
+    if (year > 1950 && year < 2100)
+      events.push({ year, cat: validCats.includes(cat)?cat:'identity', title:m[3].trim(), desc:m[4].trim(), isFuture:year>NOW_YEAR });
+  }
+  return events.sort((a,b)=>a.year-b.year);
+}
+
+function extractNarrative(raw) {
+  // Try explicit delimiters first
+  const sectionMatch = raw.match(/SECTION_ANALYSIS\s*([\s\S]*?)\s*END_ANALYSIS/i);
+  if (sectionMatch) return sectionMatch[1].trim();
+
+  // Fallback: take everything before the first JSON array [
+  const jStart = raw.indexOf('[');
+  let text = jStart > 0 ? raw.slice(0, jStart) : raw;
+
+  return text
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/SECTION_JSON[\s\S]*/gi, '')
+    .replace(/^(SECTION_ANALYSIS|END_ANALYSIS|PART [12]:.*|EVENTS?:|ANALYSIS:|OUTPUT:)\s*/gim, '')
+    .replace(/^\s*\n{2,}/gm, '\n\n')
+    .trim();
+}
+
+async function generateAltTimeline(idx) {
+  const terminal = document.getElementById('aiTerminal');
+  const output   = document.getElementById('aiOutput');
+  terminal.classList.add('visible');
+  output.innerHTML = '';
+
+  output.textContent = '> REWRITING TIMELINE FROM ' + EVENTS[idx].year + '…\n\n';
+
+  const forkEv = EVENTS[idx];
+  const b = DATA.bonusAnswers || {};
+  // Only use almostDid when pulling the ghost node or the main regret event.
+  // For any other event, the premise is "what if THIS went differently".
+  const isAlmostFork = forkEv.isAlmost || forkEv.isRegret;
+  const altPath = isAlmostFork && b.almostDid
+    ? b.almostDid
+    : deriveAltPremise(forkEv);
+  const { realEventsJSON, optimismRule, childCtx, extras, originDesc } = buildAltPromptContext(forkEv, altPath);
+
+  const prompt =
+`PERSON: ${DATA.name||'?'}, born ${DATA.birthYear||'?'}, ${originDesc}.${childCtx}
+${extras ? '\nCONTEXT:\n' + extras : ''}
+
+ORIGINAL TIMELINE (JSON):
+${realEventsJSON}
+
+FORK: "${forkEv.title}" (${forkEv.year}) — WHAT IF they instead went with: "${altPath}"
+
+${optimismRule}
+
+OUTPUT — two sections in this exact order:
+
+SECTION_ANALYSIS
+2-3 paragraphs (max 100 words total). Address ${DATA.name} directly. Cite specific years. Honest, warm, dark humour. Ground every sentence in their actual data — zero generic observations. Follow the DIRECTIVE for optimism/pessimism.
+END_ANALYSIS
+
+SECTION_JSON
+A complete valid JSON array of 6-10 events starting from year ${forkEv.year}. Raw JSON only — no markdown, no code fences.
+RULES:
+- Use REAL specifics: city (${DATA.city}), birth city (${DATA.birthCity||DATA.city}), career (${DATA.answers?.careerField||'unknown'}), company (${DATA.answers?.companyName||'unknown'})
+- Every title must name real places, real roles, real decisions — no generic phrases
+- Show CAUSAL CHAIN: each event caused by the previous one
+- Show how world events (COVID 2020, Ukraine 2022, AI 2023) hit the alternate path differently
+- Follow the DIRECTIVE — alternate self clearly WINS or STRUGGLES per score
+[
+  {"year": ..., "cat": "career|relationship|location|identity|finance|health|future", "title": "...", "desc": "one concrete sentence", "reason": "↳ one causal link from the fork"},
+  ...
+]
+END_JSON`;
+
+  try {
+    const raw = await callAI([{role:'user', content:prompt}], { heavy: true, max_tokens: 1400 });
+
+    const aiEvs = parseAltJSON(raw);
+    if (aiEvs.length >= 3) {
+      const W = canvas.width/devicePixelRatio, H = canvas.height/devicePixelRatio;
+      buildAltPhysEvents(W, H, aiEvs);
+      renderBranches(aiEvs);
+      showAltTimeline(aiEvs);
+      document.querySelectorAll('.event-card.alt-path').forEach((c,i)=>{
+        c.classList.remove('visible');
+        setTimeout(()=>c.classList.add('visible'), 60+i*90);
+      });
+    }
+
+    const narrative = extractNarrative(raw);
+    output.textContent = '';
+    const displayText = narrative || '> Alternate timeline computed. Ask me anything about it.';
+    const lines = displayText.split(/\n/).filter(l=>l.trim());
+    lines.forEach((line, li) => {
+      setTimeout(() => {
+        output.textContent += (li > 0 ? '\n' : '') + line.trim();
+        _chatScroll();
+        if (li === lines.length - 1) {
+          showQuickChat();
+          document.getElementById('shareBtn').classList.add('visible');
+        }
+      }, li * 200);
+    });
+
+    [0.2,0.5,0.8,0.35,0.65].forEach((x,i)=>setTimeout(()=>{
+      const pi = Math.round(x*(physEvents.length-1));
+      if(physEvents[pi]) physEvents[pi].vy -= 8;
+    }, i*150));
+  } catch(err) {
+    const isQuota  = /quota|rate.?limit|limit.*0|429/i.test(err.message);
+    const isAuth   = /api.?key|unauthorized|invalid.*key|403/i.test(err.message);
+    const hint = isQuota
+      ? '> QUOTA EXCEEDED — free tier used up.\n> Try Groq (free): console.groq.com → paste gsk_... key below.\n\n'
+      : isAuth
+      ? '> API KEY INVALID — double-check the key and try again.\n\n'
+      : '> AI ERROR: '+err.message+'\n\n';
+    output.textContent = hint + buildLocalAnalysis();
+    showQuickChat();
+  }
+}
+
+async function generateAlt2Timeline(altForkEvIdx) {
+  if (!altPhysEvents[altForkEvIdx]) return;
+
+  const terminal = document.getElementById('aiTerminal');
+  const output   = document.getElementById('aiOutput');
+  terminal.classList.add('visible');
+
+  const altForkEv = altPhysEvents[altForkEvIdx].ev;
+  const b = DATA.bonusAnswers || {};
+  const altPath = b.almostDid || 'the alternate path';
+  const { realEventsJSON, optimismRule, originDesc } = buildAltPromptContext(EVENTS[forkIdx]||EVENTS[0], altPath);
+
+  // Current alt timeline events
+  const currentAltJSON = JSON.stringify(
+    altPhysEvents.map(pe => pe.ev).filter(e => !e.isFuture).map(e => ({
+      year:e.year, cat:e.cat, title:e.title, desc:e.desc?e.desc.slice(0,80):undefined
+    })), null, 2);
+
+  output.textContent = '> COMPUTING SECOND-ORDER BRANCH FROM ' + altForkEv.year + '…\n\n';
+
+  const prompt =
+`PERSON: ${DATA.name||'?'}, born ${DATA.birthYear||'?'}, ${originDesc}.
+
+ORIGINAL TIMELINE (JSON):
+${realEventsJSON}
+
+FIRST ALTERNATE TIMELINE (JSON) — they already took the fork to "${altPath}":
+${currentAltJSON}
+
+SECOND FORK: Now in the ALTERNATE timeline, pull the string again at "${altForkEv.title}" (${altForkEv.year}).
+This is a second-order branch — the deepest divergence.
+
+${optimismRule}
+
+OUTPUT:
+1. ALTERNATE² TIMELINE JSON — 5-8 events from ${altForkEv.year}. REAL specifics — real places, real decisions, real years. MUST be complete — no truncation, close all brackets:
+[{"year":..., "cat":"career|relationship|location|identity|finance|health|future", "title":"...", "desc":"one concrete sentence", "reason":"↳ causal link from this second fork"}]
+
+2. ANALYSIS — 2 paragraphs (80 words max). Darkly funny. This person has forked twice from their original self. What does that mean for identity?`;
+
+  try {
+    const raw = await callAI([{role:'user', content:prompt}], { heavy: true, max_tokens: 1400 });
+    const alt2Evs = parseAltJSON(raw);
+
+    if (alt2Evs.length >= 2) {
+      const W = canvas.width/devicePixelRatio, H = canvas.height/devicePixelRatio;
+      altBranchPhysEvents = alt2Evs.map(ev => {
+        // Position below alt string
+        const altPe = altPhysEvents.find(pe => pe.ev.year === ev.year) || altPhysEvents[altPhysEvents.length-1];
+        const baseX = altPe ? altPe.x : W * 0.7;
+        const ny = (altPe?._nodeY || H*0.5) + H*0.13;
+        return { x:baseX, baseY:ny, y:ny, vy:0, _nodeY:ny, ev };
+      });
+      renderAlt2Branch();
+    }
+
+    const narrative = extractNarrative(raw);
+    output.textContent += narrative || '';
+    showQuickChat();
+  } catch(err) {
+    output.textContent += '\n> ALT² ERROR: '+err.message;
+  }
+}
+
+function buildLocalAnalysis() {
+  if(!DATA) return 'No data.';
+  const forkEv=EVENTS[forkIdx]||{title:'this moment',year:'?'};
+  const name=DATA.name||'you';
+  const score=calcScore(DATA);
+  const cat=score<=33?'rough':score<=66?'lateral':'solid';
+  const isChildhoodFork = forkEv.title && forkEv.title.startsWith('Childhood Fork');
+  if (isChildhoodFork) {
+    const age = DATA.bonusAnswers && DATA.bonusAnswers.childhoodAge ? DATA.bonusAnswers.childhoodAge : '?';
+    const event = DATA.bonusAnswers && DATA.bonusAnswers.childhood ? DATA.bonusAnswers.childhood : forkEv.desc;
+    return `> FORK: ${forkEv.title} (${forkEv.year}) · CHILDHOOD\n\nALTERNATE_${name.toUpperCase()}:\nAt age ${age}, the other version of you didn't have to carry: "${event}"\n\nThat changes how they walk into every room from that point forward. Confidence, social wiring, who they trust — all slightly different. The career choices, the relationships — those come later, but they're downstream of this.\n\n// Add an API key below for the full alternate path.`;
+  }
+  const almostDid  = DATA.bonusAnswers && DATA.bonusAnswers.almostDid || '';
+  const emotion    = DATA.bonusAnswers && DATA.bonusAnswers.emotion;
+  // Only use almostDid narrative when the fork IS the almostDid/regret event
+  const isAlmostFork = forkEv.isAlmost || forkEv.isRegret;
+  const altPath = isAlmostFork && almostDid ? almostDid : deriveAltPremise(forkEv);
+  const isCryptoLocal  = isAlmostFork && /crypto|bitcoin|btc|mine|mining/i.test(almostDid);
+  const isStartupLocal = isAlmostFork && /startup|series|joined|venture/i.test(almostDid);
+
+  // Optimism inversion — low score = alt self wins, high score = alt self struggles
+  const verdict = score <= 33
+    ? `\n\n😈 One of your versions made it. Not the one reading this.`
+    : score >= 67
+    ? `\n\nThe other you was fine. Just... less fine.`
+    : `\n\nNeither version is clearly winning. Different problems, same altitude.`;
+
+  let narrative = '';
+  if (isCryptoLocal) {
+    narrative = score <= 33
+      ? `${name} mined BTC at $600. By 2017: 20× up. By 2021: briefly 7 figures. Exited before FTX. Currently runs a small fund in Lisbon, works 4 days a week, the fifth day is surfing. Your version works 5 days. The sixth day is worrying.`
+      : score >= 67
+      ? `${name} mined BTC at $600. By 2017: up 20×. Didn't sell. By 2018: down 85%. By 2022: FTX wiped another third. Currently holds a high-conviction position in something that sounds like "Solana but faster." Has not surfed once.`
+      : `The crypto ${name} ran the full cycle — mining, peak, crash, DeFi, peak again, crash again. Net result: roughly the same as your current path, but with way more spreadsheets and a suspicious amount of knowledge about Moldovan tax law.`;
+  } else if (isStartupLocal) {
+    narrative = score <= 33
+      ? `${name} joined "${almostDid}". Options vested. Series B happened. They acquired by a big co at 8× — ${name} walked out with real money and a title. Works 3 days now. Your version works 5. The other ${name} sends you job listings occasionally, just to see.`
+      : score >= 67
+      ? `${name} joined "${almostDid}". The equity vest took 4 years. The company pivoted twice and acquihired at 0.3× of your time's value. The founders raised their next round. ${name} got a good story and $40k pre-tax. Went back to a corporate job in 2023, "temporarily."`
+      : `The startup ${name} learned fast, burned out once, and came out with a network and a realistic view of equity. Compensation: probably less. Interesting problems: more. Roughly lateral.`;
+  } else {
+    narrative = score <= 33
+      ? `${name} took "${altPath}". The decision that felt risky turned out to be exactly right — right city, right timing, right people. Currently ${name} in that dimension doesn't have the specific friction that's here. Different problems, but smaller ones.`
+      : score >= 67
+      ? `The ${name} who took "${altPath}" is figuring out different problems — not better ones.${emotion === 'longing' ? ' The longing you feel is nostalgia for a difficulty that would have found you anyway.' : ''} You made the smarter call.`
+      : `The ${name} who took "${altPath}" is doing about the same. Different complaints, similar altitude. Lateral move. Neither version is winning.`;
+  }
+  return `> FORK: ${forkEv.title} (${forkEv.year})\n\n${narrative}${verdict}\n\n// Add an API key for the full causal chain simulation.`;
+}
+
+// ─── AI CALL (3-tier) ──────────────────────────────────────────────────────────
+async function callAI(messages, opts = {}) {
+  // All AI calls proxied through /api/ai — key stays server-side
+  // Caller sets opts.heavy=true for JSON/structured generation, light model for prose/chat
+  const model = opts.heavy ? 'openai/gpt-oss-120b' : 'openai/gpt-oss-20b';
+  const max_tokens = opts.max_tokens || 350;
+  const res = await fetch('/api/ai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model, messages, max_tokens, temperature: 0.9 }),
+  });
+  const d = await res.json();
+  if (d.error) throw new Error(d.error.message || d.error);
+  return d.choices?.[0]?.message?.content || '';
+}
+
+// ─── CHAT SYSTEM PROMPT ────────────────────────────────────────────────────────
+function buildChatSystemPrompt(name, forkEv) {
+  const d  = DATA || {};
+  const a  = d.answers      || {};
+  const b  = d.bonusAnswers || {};
+  const fa = (d.ai && d.ai.followUpAnswers) || {};
+
+  // Assemble everything we know about this person
+  const realEvents = EVENTS
+    .filter(e => !e.isAlt)
+    .map(e => `${e.year}: ${e.title}`)
+    .join(' · ');
+
+  const facts = [
+    `Name: ${name}`,
+    `Born: ${d.birthYear || '?'}, lives in: ${d.city || '?'}`,
+    d.lifeSentence   ? `In their own words: "${d.lifeSentence}"` : '',
+    b.emotion        ? `How it feels right now: ${b.emotion}` : '',
+    b.anchor         ? `What's keeping them here: "${b.anchor}"` : '',
+    a.forkMoment     ? `The fork they still think about: "${a.forkMoment}" (${a.forkYear || '?'})` : '',
+    b.relationship   ? `Relationship situation: "${b.relationship}"` : '',
+    b.health         ? `Health: "${b.health}"` : '',
+    b.happinessWish  ? `What would make them happier: "${b.happinessWish}"` : '',
+    a.altCityPath    ? `City they've thought about: ${a.altCityPath}` : '',
+    b.hobby          ? `Outside work: "${b.hobby}"` : '',
+    b.money          ? `Financially: ${b.money}` : '',
+    // Follow-up answers add depth
+    ...Object.entries(fa)
+      .filter(([k,v]) => v && !k.endsWith('_year'))
+      .map(([k,v]) => `${k}: "${v}"`),
+  ].filter(Boolean).join('\n');
+
+  const hasFork = forkEv && forkEv.title && forkEv.title !== 'unknown';
+  const forkLine = hasFork
+    ? `THE FORK: ${forkEv.title} (${forkEv.year}) — this is where the alternate path split.`
+    : `NO FORK SELECTED YET — talk about their real life and what they've shared.`;
+
+  return `You are a sharp, warm life coach who knows ${name}'s full story.
+
+WHAT YOU KNOW ABOUT ${name.toUpperCase()}:
+${facts}
+
+THEIR REAL TIMELINE: ${realEvents}
+
+${forkLine}
+
+YOUR JOB:
+Help ${name} understand their life better. If a fork is selected, explore the alternate path. If not, engage directly with their real situation — their anchor, their ambition, their fork moment they mentioned, what they'd change.
+
+RULES:
+- Reference their actual data constantly — anchor ("${b.anchor||''}"), the fork, the dream city, the relationship question, the ambition. Never be generic.
+- When they ask about happiness or regret, connect it to something specific in their real timeline ("Your job ends in July — that's not a crisis, that's your fork arriving")
+- Follow the natural arc of the conversation: curiosity about alt-path → reflection on real life → "what should I do NOW?" — meet them wherever they are on that arc
+- When they ask "what should I do now?" — answer directly. Use their data. Be specific. Don't hedge.
+- Keep responses under 100 words. Dense, not padded. No lists, no bullet points, no headers.
+- NEVER output JSON, code, or structured data. Plain conversational text only.
+- Tone: direct, warm, occasionally wry. Like a smart friend who knows the full picture.
+- Never break character into generic advice. If you can't reference something specific from their data, you're being too generic.`;
+}
+
+// ─── CHAT ─────────────────────────────────────────────────────────────────────
+function showQuickChat() {
+  const qc=document.getElementById('quickChat'), qp=document.getElementById('quickPrompts');
+  qc.classList.add('visible');
+  qp.innerHTML=QUICK_PROMPTS.map(p=>`<button class="qp" onclick="quickAsk('${p}')">${p}</button>`).join('');
+  if (pulled) document.getElementById('shareBtn').classList.add('visible');
+}
+
+function quickAsk(prompt) {
+  document.getElementById('chatIn').value=prompt; sendChat();
+}
+
+let _chatBusy = false;
+
+function _chatScroll() {
+  const el = document.getElementById('aiOutput');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+function _setChatBusy(busy) {
+  _chatBusy = busy;
+  const btn = document.getElementById('sendBtn');
+  const inp = document.getElementById('chatIn');
+  if (btn) { btn.disabled = busy; btn.textContent = busy ? '…' : 'SEND →'; }
+  if (inp) inp.disabled = busy;
+}
+
+async function sendChat() {
+  if (_chatBusy) return;
+  const input = document.getElementById('chatIn');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const output = document.getElementById('aiOutput');
+  output.textContent += '\n\n— ' + msg + '\n';
+  _chatScroll();
+  _setChatBusy(true);
+
+  convHistory.push({ role: 'user', content: msg });
+  if (convHistory.length > 16) convHistory = convHistory.slice(-16);
+
+  const name = DATA ? DATA.name : 'you';
+  const forkEv = EVENTS[forkIdx] || { title: 'unknown', year: '?' };
+  const sysprompt = buildChatSystemPrompt(name, forkEv);
+  const messages = [{ role: 'system', content: sysprompt }, ...convHistory];
+
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-20b',
+        messages,
+        max_tokens: 280,
+        temperature: 0.9,
+        stream: true,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || err.error || `HTTP ${res.status}`);
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let reply = '';
+    let buf = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop(); // keep incomplete line in buffer
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const chunk = JSON.parse(data);
+          const delta = chunk.choices?.[0]?.delta?.content || '';
+          if (delta) {
+            reply += delta;
+            output.textContent = output.textContent.replace(/\n…$/, '') + (reply === delta ? '\n' + delta : delta);
+            _chatScroll();
+          }
+        } catch {}
+      }
+    }
+
+    convHistory.push({ role: 'assistant', content: reply });
+  } catch (err) {
+    output.textContent += '\n// ' + (err.message || 'error');
+    _chatScroll();
+  } finally {
+    _setChatBusy(false);
+  }
+}
+
+function saveVizKey() {
+  const val=document.getElementById('apiIn').value.trim();
+  if(val){
+    apiKey=val; localStorage.setItem('st_api_key',val);
+    // Store provider in DATA so callAI can detect it
+    if(DATA&&DATA.ai){
+      if(val.startsWith('AIza'))   DATA.ai.provider='gemini';
+      else if(val.startsWith('gsk_')) DATA.ai.provider='groq';
+      else if(val.startsWith('sk-ant')) DATA.ai.provider='anthropic';
+      else DATA.ai.provider='openai';
+    }
+    document.getElementById('apiStatus').textContent='✓ SAVED';
+  }
+}
+
+// ─── LAYOUT SWITCHING ──────────────────────────────────────────────────────────
+function setLayout(layout) {
+  currentLayout = layout;
+  localStorage.setItem('st_layout', layout);
+  const btn = document.getElementById('layoutBtn');
+  if (btn) {
+    btn.textContent = layout === 'vertical' ? '⟷ DESKTOP VIEW' : '⬦ MOBILE VIEW';
+    btn.classList.toggle('active', layout === 'vertical');
+  }
+  clearFork();
+  resize();
+  buildYearAxis();
+}
+
+function toggleLayout() {
+  setLayout(currentLayout === 'vertical' ? 'horizontal' : 'vertical');
+}
+
+// ─── BOTTOM SHEET (mobile + vertical mode tooltips) ────────────────────────────
+function showBottomSheet(year, title, cat, desc) {
+  document.getElementById('bsYear').textContent  = year;
+  document.getElementById('bsTitle').textContent = title;
+  document.getElementById('bsCat').textContent   = cat;
+  document.getElementById('bsDesc').textContent  = desc || '';
+  document.getElementById('bottomSheet').classList.add('visible');
+}
+
+function hideBottomSheet() {
+  document.getElementById('bottomSheet').classList.remove('visible');
+  document.getElementById('bsForkActions').classList.remove('visible');
+}
+
+// ─── FOUR PILLARS ──────────────────────────────────────────────────────────────
+function buildPillars() {
+  const grid = document.getElementById('pillarsGrid');
+  const section = document.getElementById('pillarsSection');
+  if (!grid || !section) return;
+  const altEvs = altPhysEvents.map(pe => pe.ev);
+  const defs = [
+    { label:'LOCATION', cat:'location' },
+    { label:'CAREER',   cat:'career' },
+    { label:'LOVE',     cat:'relationship' },
+    { label:'HEALTH',   cat:'health' },
+  ];
+  grid.innerHTML = defs.map(p => {
+    const ev = altEvs.find(e => e.cat === p.cat) || null;
+    const val = ev ? (ev.title || '').slice(0, 42) : '—';
+    return `<div class="pillar-card"><div class="pillar-label">${p.label}</div><div class="pillar-value">${val}</div></div>`;
+  }).join('');
+  section.classList.add('visible');
+}
+
+// ─── HIDE PRIME ────────────────────────────────────────────────────────────────
+function toggleHidePrime() {
+  hidePrime=!hidePrime;
+  const btn=document.getElementById('hideBtn');
+  btn.classList.toggle('on',hidePrime);
+  btn.textContent=hidePrime?'◎ SHOW PRIME':'◎ HIDE PRIME';
+}
+
+// ─── MANAGE EVENTS PANEL ────────────────────────────────────────────────────────
+let managePanelOpen = false;
+let removedEventKeys = new Set(); // "year|title" keys of removed events
+let customEvents = []; // user-added events: { year, cat, title, desc }
+
+function toggleManagePanel() {
+  managePanelOpen = !managePanelOpen;
+  document.getElementById('managePanelBody').classList.toggle('open', managePanelOpen);
+  document.getElementById('managePanelToggle').textContent = managePanelOpen ? '▾ COLLAPSE' : '▸ EXPAND';
+  if (managePanelOpen) renderManagePanel();
+}
+
+function renderManagePanel() {
+  const list = document.getElementById('manageEventList');
+  list.innerHTML = '';
+  document.getElementById('manageCount').textContent = EVENTS.length;
+  EVENTS.forEach((ev, i) => {
+    const col = CAT_COLOR[ev.cat] || '#e8e8e0';
+    const key = ev.year + '|' + ev.title;
+    const row = document.createElement('div');
+    row.className = 'manage-event-row';
+    row.innerHTML = `
+      <div class="mer-dot" style="background:${col}"></div>
+      <div class="mer-year">${ev.year}</div>
+      <div class="mer-title">${ev.title}</div>
+      <div class="mer-cat">${(ev.cat||'').toUpperCase()}</div>
+      <button class="mer-remove" onclick="removeEvent('${key.replace(/'/g,'\\\'')}')" title="Remove from timeline">× REMOVE</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function removeEvent(key) {
+  removedEventKeys.add(key);
+  rebuildTimeline();
+  if (managePanelOpen) renderManagePanel();
+}
+
+function addCustomEvent() {
+  const year  = parseInt(document.getElementById('addYear').value);
+  const cat   = document.getElementById('addCat').value;
+  const title = document.getElementById('addTitle').value.trim();
+  const desc  = document.getElementById('addDesc').value.trim();
+  if (!year || !title) return;
+  customEvents.push({ year, cat, title, desc: desc || 'Custom event.', locked: true });
+  document.getElementById('addYear').value = '';
+  document.getElementById('addTitle').value = '';
+  document.getElementById('addDesc').value = '';
+  rebuildTimeline();
+  if (managePanelOpen) renderManagePanel();
+}
+
+function rebuildTimeline() {
+  // Save fork context before rebuild so we can restore it
+  const prevForkKey = (forkIdx >= 0 && EVENTS[forkIdx])
+    ? EVENTS[forkIdx].year + '|' + EVENTS[forkIdx].title : null;
+  const prevPulled = pulled;
+
+  // Rebuild EVENTS from scratch, apply removals, add customs
+  let evs = buildEventsFromData(DATA);
+  evs = evs.filter(ev => !removedEventKeys.has(ev.year + '|' + ev.title));
+  evs = evs.concat(customEvents);
+  evs.sort((a, b) => a.year - b.year);
+  EVENTS = evs;
+  quizWorldNodeIds = new Set(EVENTS.filter(e => e.worldId).map(e => e.worldId));
+  const W = canvas.width / devicePixelRatio, H = canvas.height / devicePixelRatio;
+  buildPhysEvents(W, H);
+  clearFork();
+  renderTimelineSection();
+  document.getElementById('manageCount').textContent = EVENTS.length;
+
+  // Re-establish and re-run fork if one was active
+  if (prevPulled && prevForkKey) {
+    const newIdx = EVENTS.findIndex(e => e.year + '|' + e.title === prevForkKey);
+    const useIdx = newIdx >= 0 ? newIdx : Math.min(forkIdx, EVENTS.length - 2);
+    if (useIdx >= 0) {
+      setFork(useIdx);
+      setTimeout(() => pullString(), 100);
+    }
+  }
+}
+
+// ─── ALWAYS-ON TIMELINE SECTION ────────────────────────────────────────────────
+function renderTimelineSection() {
+  renderTlCol('tlRealCol', EVENTS, 'real');
+}
+
+function renderTlCol(containerId, evs, type) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  evs.forEach(ev => {
+    const col = CAT_COLOR[ev.cat] || '#e8e8e0';
+    const card = document.createElement('div');
+    card.className = 'tl-card';
+    card.style.borderLeftColor = col + '55';
+    card.innerHTML = `
+      <div class="tl-card-dot" style="background:${col}"></div>
+      <div class="tl-card-body">
+        <div class="tl-card-year">${ev.year} · ${(ev.cat||'').toUpperCase()}</div>
+        <div class="tl-card-title">${ev.title}</div>
+        ${ev.desc ? `<div class="tl-card-desc">${ev.desc}</div>` : ''}
+      </div>
+    `;
+    el.appendChild(card);
+  });
+}
+
+function showAltTimeline(altEvs) {
+  // Alt events are shown in the branch cards section — not duplicated here
+}
+
+function showAlt2Timeline(alt2Evs) {
+  // Alt² events are shown in the branch cards section — not duplicated here
+}
+
+// ─── WORLD EVENTS PANEL ────────────────────────────────────────────────────────
+function toggleWorldPanel() {
+  worldPanelOpen=!worldPanelOpen;
+  document.getElementById('worldPanelBody').classList.toggle('open',worldPanelOpen);
+  document.getElementById('worldPanelToggle').textContent=worldPanelOpen?'▾ COLLAPSE':'▸ EXPAND';
+  if(worldPanelOpen) buildWorldPanelChips();
+}
+
+function buildWorldPanelChips() {
+  const row=document.getElementById('worldChipsRow');
+  const by=DATA?DATA.birthYear:1900;
+  row.innerHTML=ALL_WORLD_EVENTS
+    .filter(we=>we.year>by)
+    .map(we=>{
+      if(quizWorldNodeIds.has(we.id)){
+        return `<button class="world-chip" style="opacity:0.35;cursor:default;border-style:dashed" title="Already on your timeline">${we.emoji} ${we.year} · ${we.title} ✓</button>`;
+      }
+      return `<button class="world-chip ${activeWorldEventIds.has(we.id)?'active':''}" id="wchip-${we.id}" onclick="toggleWorldEventById('${we.id}')">${we.emoji} ${we.year} · ${we.title}</button>`;
+    })
+    .join('');
+}
+
+function toggleWorldEventById(id) {
+  if(activeWorldEventIds.has(id)){ activeWorldEventIds.delete(id); }
+  else {
+    activeWorldEventIds.add(id);
+    const we=ALL_WORLD_EVENTS.find(e=>e.id===id);
+    if(we&&physEvents.length){
+      let best=physEvents[0];
+      physEvents.forEach(pe=>{ if(Math.abs(EVENTS[pe.idx].year-we.year)<Math.abs(EVENTS[best.idx].year-we.year)) best=pe; });
+      best.vy-=18;
+    }
+  }
+  const W=canvas.width/devicePixelRatio, H=canvas.height/devicePixelRatio;
+  buildWorldPhysEvents(W,H);
+  document.querySelectorAll('.world-chip').forEach(chip=>chip.classList.toggle('active',activeWorldEventIds.has(chip.id.replace('wchip-',''))));
+  renderWorldActiveCards();
+}
+
+function renderWorldActiveCards() {
+  const list=document.getElementById('worldActiveList'), empty=document.getElementById('worldEmpty');
+  const active=ALL_WORLD_EVENTS.filter(we=>activeWorldEventIds.has(we.id));
+  if(!active.length){ list.innerHTML=''; list.appendChild(empty); empty.style.display=''; return; }
+  empty.style.display='none';
+  list.innerHTML=active.map(we=>`
+    <div class="world-event-card" id="wcard-${we.id}">
+      <div class="wec-emoji">${we.emoji}</div>
+      <div class="wec-body">
+        <div class="wec-year">${we.year}</div>
+        <div class="wec-title">${we.title}</div>
+        <div class="wec-desc">${we.desc}</div>
+        <div class="wec-actions">
+          <button class="btn-whatif" onclick="simulateWithout('${we.id}')">WHAT IF THIS NEVER HAPPENED →</button>
+          <button class="wec-remove" onclick="toggleWorldEventById('${we.id}')">✕ REMOVE</button>
+        </div>
+        <div class="wec-result" id="wresult-${we.id}"></div>
+      </div>
+    </div>`).join('');
+}
+
+async function simulateWithout(id) {
+  const we=ALL_WORLD_EVENTS.find(e=>e.id===id); if(!we) return;
+  const resultEl=document.getElementById('wresult-'+id); if(!resultEl) return;
+  if(whatIfCache[id]){ resultEl.textContent=whatIfCache[id]; resultEl.classList.add('visible'); return; }
+  resultEl.textContent='> computing alternate timeline without '+we.title+'…';
+  resultEl.classList.add('visible');
+  const name=DATA?DATA.name:'the user';
+  const by=DATA?DATA.birthYear:'?';
+  const city=DATA?DATA.city:'unknown';
+  const birthCity=DATA&&DATA.birthCity?DATA.birthCity:'';
+
+  // Find personal events that overlap with this world event (±3 years)
+  const personalOverlap = EVENTS.filter(e=>!e.isFuture && Math.abs(e.year - we.year) <= 3)
+    .map(e=>`${e.year}: [${e.cat}] ${e.title}${e.desc?' — '+e.desc.slice(0,80):''}`)
+    .join('\n');
+
+  // Search all events for keyword mentions of this world event
+  const weKeywords = we.title.toLowerCase().replace(/[^a-z0-9]/g,' ').split(' ').filter(w=>w.length>3);
+  const mentionedEvents = EVENTS.filter(e => {
+    const text = ((e.title||'')+(e.desc||'')).toLowerCase();
+    return weKeywords.some(k=>text.includes(k));
+  }).map(e=>`${e.year}: "${e.title}"${e.desc?' ('+e.desc.slice(0,60)+')':''}`);
+
+  const personalCtx = personalOverlap ? `\nPersonal events around this time:\n${personalOverlap}` : '';
+  const mentionCtx  = mentionedEvents.length
+    ? `\nEvents in their life that directly mention or relate to ${we.title}:\n${mentionedEvents.join('\n')}`
+    : '';
+  const originDesc  = birthCity && birthCity.toLowerCase()!==city.toLowerCase() ? ` (born in ${birthCity})` : '';
+
+  // Build the personal impact note if they tagged this event in quiz
+  const taggedImpact = (DATA.worldEventImpacts||[]).find(wi=>wi.id===id);
+  const taggedCtx = taggedImpact?.impact
+    ? `\n${name}'s own words on how it hit them: "${taggedImpact.impact}"`
+    : '';
+
+  const prompt=`${name} was born ${by}, lives in ${city}${originDesc}.${personalCtx}${mentionCtx}${taggedCtx}
+
+World event that did NOT happen in this dimension: "${we.title}" (${we.year}) — ${we.desc}
+
+Show the CAUSAL CASCADE of this absence on ${name}'s actual life:
+1. First-order: What changes immediately (income, location, relationship, body)?
+2. Second-order: What does that first change cause? (Use their actual events as anchors)
+3. Third-order: Where are they in ${NOW_YEAR} as a result?
+
+Use their REAL specifics (${city}, ${DATA.answers?.careerField||'their career'}, the personal events above). Be honest — sometimes absence helps, sometimes hurts. 2-3 paragraphs. End with a sharp one-line verdict.`;
+  try {
+    const text=await callAI([{role:'user',content:prompt}], { heavy: true, max_tokens: 600 });
+    whatIfCache[id]=text; resultEl.textContent=''; typewriteEl(resultEl,text);
+  } catch(err) {
+    const fallbacks={
+      covid:'No lockdowns. Career decisions happen with full clarity instead of pandemic fog. The 2021 hiring market catches at peak leverage. About 2 years of momentum recovered.\n\n// Verdict: COVID cost most people exactly one version of their life.',
+      ai:'Without GPT-4, any AI-adjacent work looks completely different — building on a stack that doesn\'t exist yet. The product roadmap shifts entirely.\n\n// Verdict: The AI revolution either created your current path or is threatening it. No neutral.',
+      gfc:'Entering the workforce into a healthier economy. Starting salaries higher. The austerity-hangover that shaped your generation\'s expectations doesn\'t exist.\n\n// Verdict: 2008 suppressed early-career salaries for an entire cohort by ~12%.',
+      ukraine:'Energy prices stay stable. EU cost-of-living doesn\'t spike. Savings don\'t erode from inflation.\n\n// Verdict: Ukraine war cost Europeans roughly 15% of real purchasing power 2022–2024.',
+    };
+    const text=fallbacks[id]||`Without ${we.title}: the cascade effects on your timeline are significant.`;
+    whatIfCache[id]=text; resultEl.textContent=''; typewriteEl(resultEl,text);
+  }
+}
+
+// ─── TIMELINE BREAK ────────────────────────────────────────────────────────────
+function triggerTimelineBreak() {
+  const overlay=document.getElementById('timelineBreak');
+  const tbCanvas=document.getElementById('tbCanvas');
+  const msg=TB_MESSAGES[Math.floor(Math.random()*TB_MESSAGES.length)];
+  document.getElementById('tbSub').textContent=msg.sub;
+  document.getElementById('tbError').textContent=msg.err;
+  document.getElementById('tbCountdown').textContent='REBOOTING IN 3…';
+  overlay.classList.add('active');
+  tbCanvas.width=window.innerWidth; tbCanvas.height=window.innerHeight;
+  const tc=tbCanvas.getContext('2d');
+  const shards=Array.from({length:120},()=>({
+    x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight*0.6+window.innerHeight*0.2,
+    vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6,
+    life:1, decay:0.008+Math.random()*0.012, len:8+Math.random()*40,
+    angle:Math.random()*Math.PI,
+    col:['#ff2222','#b87fff','#ffb800','#e8e8e0'][Math.floor(Math.random()*4)]
+  }));
+  let tbRaf;
+  function tbDraw() {
+    tc.clearRect(0,0,tbCanvas.width,tbCanvas.height);
+    for(let y=0;y<tbCanvas.height;y+=4){ tc.fillStyle='rgba(255,34,34,0.025)'; tc.fillRect(0,y,tbCanvas.width,1); }
+    shards.forEach(s=>{
+      if(s.life<=0) return;
+      tc.save(); tc.globalAlpha=s.life; tc.strokeStyle=s.col; tc.lineWidth=1.2;
+      tc.beginPath(); tc.moveTo(s.x,s.y); tc.lineTo(s.x+Math.cos(s.angle)*s.len,s.y+Math.sin(s.angle)*s.len);
+      tc.shadowColor=s.col; tc.shadowBlur=8; tc.stroke(); tc.restore();
+      s.x+=s.vx; s.y+=s.vy; s.angle+=0.04; s.life-=s.decay;
+    });
+    if(Math.random()<0.35){
+      const ty=Math.random()*tbCanvas.height, th=1+Math.random()*6;
+      tc.fillStyle=`rgba(255,34,34,${0.15+Math.random()*0.25})`; tc.fillRect(0,ty,tbCanvas.width,th);
+    }
+    tbRaf=requestAnimationFrame(tbDraw);
+  }
+  tbDraw();
+  let count=3;
+  const iv=setInterval(()=>{
+    count--;
+    if(count>0){ document.getElementById('tbCountdown').textContent=`REBOOTING IN ${count}…`; }
+    else {
+      clearInterval(iv); cancelAnimationFrame(tbRaf);
+      overlay.classList.remove('active');
+      const btn=document.getElementById('pullBtn');
+      btn.textContent='↗ PULL THIS STRING'; btn.style.background=''; btn.style.color=''; btn.style.boxShadow=''; btn.onclick=initiatePull;
+      const cc=document.getElementById('cascadeCount'); if(cc) cc.style.color='';
+      alt2SelectedIdx=-1; clearFork();
+    }
+  },1000);
+}
+
+// ─── JSON EXPORT ───────────────────────────────────────────────────────────────
+function exportJSON() {
+  if(!DATA) return;
+  const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=(DATA.name||'timeline').toLowerCase().replace(/\s+/g,'_')+'_timeline.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ─── SHARE ────────────────────────────────────────────────────────────────────
+async function shareTimeline() {
+  const forkEv = EVENTS[forkIdx];
+  const forkTitle = forkEv ? forkEv.title : 'a different path';
+  const name = DATA?.name || 'Someone';
+
+  // Build the alternate events list (first 5 key moments)
+  const altLines = altPhysEvents.slice(0, 5).map(ape =>
+    `${ape.ev.year}  ${ape.ev.title || ''}`
+  ).filter(l => l.trim()).join('\n');
+
+  // Grab narrative from the AI output box (strip leading prompt text)
+  const rawOutput = (document.getElementById('aiOutput')?.textContent || '').trim();
+  const narrative = rawOutput
+    .replace(/^>\s*.+\n?/gm, '')   // strip "> ASK ANYTHING..." prompt lines
+    .trim();
+
+  const shareText = [
+    `WHAT IF: ${name.toUpperCase()} — "${forkTitle}"`,
+    '',
+    narrative ? narrative.slice(0, 600) + (narrative.length > 600 ? '…' : '') : '',
+    altLines ? `\nALTERNATE PATH:\n${altLines}` : '',
+    '',
+    '— STRING THEORY  stringtheory.app',
+  ].filter(l => l !== null).join('\n').trim();
+
+  const btn = document.getElementById('shareBtn');
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: `What if ${name}: ${forkTitle}`, text: shareText });
+    } catch (e) { /* user cancelled */ }
+  } else {
+    try {
+      await navigator.clipboard.writeText(shareText);
+      btn.textContent = '✓ COPIED TO CLIPBOARD';
+      setTimeout(() => { btn.textContent = '↗ SHARE THIS ALTERNATE PATH WITH FRIENDS'; }, 2500);
+    } catch {
+      prompt('Copy this:', shareText);
+    }
+  }
+}
+
+// ─── DEV ──────────────────────────────────────────────────────────────────────
+function devClear() {
+  ['st_timeline_data','st_quiz_v2','st_api_key','st_gate_passed','st_gate_email'].forEach(k=>localStorage.removeItem(k));
+  window.location.href='quiz.html';
+}
+
+// ─── RESIZE + ORIENTATION ─────────────────────────────────────────────────────
+window.addEventListener('resize', () => { resize(); resizeOverlay(); buildYearAxis(); });
+window.addEventListener('orientationchange', () => {
+  // Short delay for browser to update dimensions
+  setTimeout(() => { resize(); resizeOverlay(); buildYearAxis(); }, 120);
+});
+
+// ─── START ────────────────────────────────────────────────────────────────────
+(async function start() {
+  // Check for ?t= token in URL — load from DB if present
+  const urlToken = new URLSearchParams(location.search).get('t');
+  if (urlToken) {
+    try {
+      const res = await fetch(`/api/load?token=${encodeURIComponent(urlToken)}`);
+      const d = await res.json();
+      if (d.found && d.data) {
+        localStorage.setItem('st_timeline_data', JSON.stringify(d.data));
+        localStorage.setItem('st_token', urlToken);
+      }
+    } catch (_) { /* fall through to localStorage */ }
+  }
+  init();
+
+  // Auto-pull shared fork if ?fork= param present
+  const urlFork = new URLSearchParams(location.search).get('fork');
+  if (urlFork !== null) {
+    const forkI = parseInt(urlFork);
+    if (!isNaN(forkI) && forkI >= 0) {
+      // Wait for events to be built and canvas to render
+      setTimeout(() => {
+        if (EVENTS[forkI]) {
+          setFork(forkI);
+          initiatePull();
+        }
+      }, 800);
+    }
+  }
+})();
+
+// ─── SAVE MODAL ──────────────────────────────────────────────────────────────
+function openSaveModal() {
+  const modal = document.getElementById('saveModal');
+  modal.style.display = 'flex';
+  // Pre-fill email if saved before
+  const savedEmail = localStorage.getItem('st_email');
+  if (savedEmail) {
+    document.getElementById('saveModalEmail').value = savedEmail;
+    document.getElementById('saveModalConsent').checked = true;
+    updateSaveModalBtn();
+  }
+}
+function closeSaveModal() {
+  document.getElementById('saveModal').style.display = 'none';
+}
+function updateSaveModalBtn() {
+  const checked = document.getElementById('saveModalConsent').checked;
+  const btn = document.getElementById('saveModalBtn');
+  btn.disabled = !checked;
+  btn.style.background = checked ? 'rgba(255,184,0,0.15)' : 'rgba(255,184,0,0.08)';
+  btn.style.borderColor = checked ? 'rgba(255,184,0,0.4)' : 'rgba(255,184,0,0.2)';
+  btn.style.color = checked ? 'rgba(255,184,0,0.9)' : 'rgba(255,184,0,0.4)';
+  btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+}
+async function doModalSave() {
+  const email = document.getElementById('saveModalEmail').value.trim();
+  const status = document.getElementById('saveModalStatus');
+  if (!email || !email.includes('@')) { status.textContent = '// enter a valid email'; return; }
+  const data = JSON.parse(localStorage.getItem('st_timeline_data') || 'null');
+  if (!data) { status.textContent = '// no timeline data found'; return; }
+  status.textContent = '// saving…';
+  document.getElementById('saveModalBtn').disabled = true;
+  try {
+    const res = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, data, consent: true }),
+    });
+    const d = await res.json();
+    if (d.ok && d.token) {
+      localStorage.setItem('st_email', email);
+      localStorage.setItem('st_token', d.token);
+      const link = `${location.origin}/viz.html?t=${d.token}`;
+      document.getElementById('saveModalBody').innerHTML = `
+        <div style="font-family:monospace;font-size:9px;letter-spacing:2px;color:rgba(0,255,65,0.7);margin-bottom:12px;">// SAVED ✓ — YOUR UNIQUE LINK</div>
+        <div style="font-family:monospace;font-size:11px;color:#e8e8e0;word-break:break-all;background:rgba(0,255,65,0.05);border:1px solid rgba(0,255,65,0.2);padding:12px;margin-bottom:14px;line-height:1.7;">${link}</div>
+        <div style="font-family:monospace;font-size:9px;color:rgba(232,232,224,0.35);line-height:1.7;margin-bottom:14px;">Bookmark this to return on any device.</div>
+        <button onclick="navigator.clipboard.writeText('${link}').then(()=>{ this.textContent='COPIED ✓'; setTimeout(()=>this.textContent='COPY LINK',2000); })"
+          style="width:100%;font-family:monospace;font-size:10px;letter-spacing:2px;background:transparent;border:1px solid rgba(0,255,65,0.3);color:rgba(0,255,65,0.7);padding:10px;cursor:pointer;">
+          COPY LINK
+        </button>
+      `;
+    } else {
+      status.textContent = '// error: ' + (d.error || 'try again');
+      document.getElementById('saveModalBtn').disabled = false;
+    }
+  } catch(err) {
+    status.textContent = '// network error — try again';
+    document.getElementById('saveModalBtn').disabled = false;
+  }
+}
+</script>
+</body>
+</html>

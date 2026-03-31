@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRING THEORY — Pivotal Strings</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a12;
+  --bg2: #12121e;
+  --panel: #16162a;
+  --amber: #ffb800;
+  --cyan: #00f0ff;
+  --green: #00ff41;
+  --red: #ff2222;
+  --purple: #b87fff;
+  --orange: #ff6633;
+  --white: #e8e8e0;
+  --dim: rgba(232,232,224,0.4);
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-m: 'Share Tech Mono', monospace;
+  --font-b: 'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; }
+body { background:var(--bg); color:var(--white); font-family:var(--font-b); overflow-x:hidden; }
+
+/* ─── TOPBAR ─────────────────────────────────────────────────────────────────── */
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px;
+  background:rgba(10,10,18,0.96);
+  border-bottom:1px solid rgba(255,184,0,0.15);
+  backdrop-filter:blur(8px);
+  position:sticky; top:0; z-index:200;
+}
+.topbar-logo { font-family:var(--font-d); font-size:22px; letter-spacing:4px; color:var(--green); }
+.topbar-logo span { color:var(--red); }
+.topbar-tag { font-family:var(--font-m); font-size:10px; color:var(--dim); letter-spacing:2px; }
+.topbar-cta {
+  font-family:var(--font-m); font-size:11px; letter-spacing:2px;
+  padding:7px 18px;
+  background:transparent;
+  border:1px solid rgba(255,184,0,0.4);
+  color:var(--amber);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.topbar-cta:hover { background:rgba(255,184,0,0.1); border-color:var(--amber); }
+
+/* ─── HERO ────────────────────────────────────────────────────────────────────── */
+.hero {
+  text-align:center;
+  padding:60px 24px 32px;
+  border-bottom:1px solid rgba(255,184,0,0.06);
+}
+.hero-eyebrow {
+  font-family:var(--font-m); font-size:11px; letter-spacing:4px;
+  color:var(--orange); margin-bottom:14px;
+}
+.hero-title {
+  font-family:var(--font-d); font-size:clamp(40px,7vw,80px);
+  letter-spacing:6px; line-height:1;
+  color:var(--white); margin-bottom:16px;
+}
+.hero-title span { color:var(--amber); }
+.hero-sub {
+  font-family:var(--font-m); font-size:13px; color:var(--dim);
+  max-width:600px; margin:0 auto 28px; line-height:1.7; letter-spacing:0.5px;
+}
+.hero-examples {
+  font-family:var(--font-m); font-size:11px; color:rgba(232,232,224,0.38);
+  max-width:680px; margin:0 auto 16px; line-height:1.8; letter-spacing:0.3px;
+  font-style:italic;
+}
+.hero-fork-types {
+  font-family:var(--font-m); font-size:11px; color:rgba(255,184,0,0.45);
+  letter-spacing:2px; margin-bottom:20px;
+}
+.hero-fork-types span { color:rgba(255,184,0,0.75); }
+.hero-hint {
+  font-family:var(--font-m); font-size:10px; color:rgba(0,240,255,0.5);
+  letter-spacing:2px;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+/* ─── CELEBRITY SELECTOR ─────────────────────────────────────────────────────── */
+.selector-wrap {
+  display:flex; gap:0; flex-wrap:wrap; justify-content:center;
+  padding:24px 16px 0;
+  max-width:1100px; margin:0 auto;
+}
+.cel-btn {
+  font-family:var(--font-m); font-size:11px; letter-spacing:1px;
+  padding:10px 18px;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.08);
+  border-right:none;
+  color:var(--dim);
+  cursor:pointer;
+  transition:all 0.15s;
+  position:relative;
+}
+.cel-btn:last-child { border-right:1px solid rgba(255,255,255,0.08); }
+.cel-btn:hover { color:var(--white); border-color:rgba(255,184,0,0.3); background:rgba(255,184,0,0.04); z-index:1; }
+.cel-btn.active {
+  color:var(--amber); border-color:var(--amber);
+  background:rgba(255,184,0,0.06); z-index:1;
+}
+.cel-btn.pulled { color:var(--cyan); border-color:rgba(0,240,255,0.35); }
+.cel-btn .dot {
+  display:inline-block; width:5px; height:5px;
+  border-radius:50%; margin-right:7px;
+  background:currentColor; opacity:0.6;
+  vertical-align:middle;
+}
+
+/* ─── STAGE ───────────────────────────────────────────────────────────────────── */
+.stage {
+  max-width:1100px; margin:0 auto;
+  padding:0 0 16px;
+}
+
+/* ─── FORK WHY MODULE ─────────────────────────────────────────────────────────── */
+.fork-why {
+  margin:0 24px 0;
+  padding:12px 18px;
+  background:rgba(184,127,255,0.04);
+  border:1px solid rgba(184,127,255,0.12);
+  border-left:3px solid rgba(184,127,255,0.5);
+  display:grid; grid-template-columns:auto 1fr; gap:12px 16px; align-items:start;
+}
+.fork-why-type {
+  font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+  color:var(--purple); padding:3px 8px;
+  border:1px solid rgba(184,127,255,0.3);
+  white-space:nowrap; margin-top:1px;
+}
+.fork-why-text {
+  font-family:var(--font-m); font-size:10px; line-height:1.65;
+  color:rgba(232,232,224,0.55); letter-spacing:0.3px;
+}
+.fork-why-text strong { color:rgba(232,232,224,0.8); font-weight:normal; font-style:normal; }
+
+/* ─── CELEBRITY HEADER ─────────────────────────────────────────────────────────── */
+.cel-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  padding:20px 24px 12px;
+  border-bottom:1px solid rgba(255,184,0,0.07);
+}
+.cel-name {
+  font-family:var(--font-d); font-size:clamp(24px,4vw,40px); letter-spacing:4px; color:var(--white);
+}
+.cel-born { font-family:var(--font-m); font-size:10px; color:var(--dim); letter-spacing:2px; margin-top:3px; }
+.cel-summary {
+  font-family:var(--font-b); font-size:12px; line-height:1.65;
+  color:rgba(232,232,224,0.55); max-width:440px; text-align:right; font-style:italic;
+}
+
+/* ─── FORK LABEL ─────────────────────────────────────────────────────────────── */
+.fork-label {
+  display:flex; align-items:center; gap:12px;
+  padding:8px 24px;
+  background:rgba(255,184,0,0.04);
+  border-bottom:1px solid rgba(255,184,0,0.1);
+}
+.fork-label-tag {
+  font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+  color:rgba(255,184,0,0.5); white-space:nowrap;
+}
+.fork-label-name {
+  font-family:var(--font-m); font-size:11px; color:var(--amber); letter-spacing:1px;
+}
+.world-event-tag {
+  margin-left:auto;
+  font-family:var(--font-m); font-size:9px; letter-spacing:1.5px;
+  padding:3px 10px;
+  border:1px solid rgba(255,102,51,0.35);
+  color:var(--orange);
+}
+
+/* ─── CANVAS AREA ─────────────────────────────────────────────────────────────── */
+.canvas-wrap {
+  position:relative; width:100%; background:var(--bg); overflow:hidden;
+  border-bottom:1px solid rgba(255,184,0,0.06);
+}
+.stage-canvas { display:block; width:100%; cursor:crosshair; }
+.canvas-tooltip {
+  position:absolute; pointer-events:none;
+  background:rgba(10,10,18,0.92); border:1px solid rgba(255,184,0,0.25);
+  padding:8px 12px; font-family:var(--font-m); font-size:11px;
+  display:none; z-index:10; max-width:220px;
+}
+.canvas-tooltip.visible { display:block; }
+.tt-year { color:var(--amber); font-size:13px; margin-bottom:2px; }
+.tt-cat { color:var(--dim); font-size:9px; margin-top:4px; letter-spacing:1px; }
+
+/* ─── YEAR AXIS ──────────────────────────────────────────────────────────────── */
+.year-axis {
+  display:flex; justify-content:space-between;
+  padding:4px 40px;
+  background:var(--bg);
+  border-bottom:1px solid rgba(255,184,0,0.05);
+}
+.year-axis span { font-family:var(--font-m); font-size:9px; color:rgba(255,184,0,0.3); letter-spacing:1px; }
+
+/* ─── PULL ZONE ────────────────────────────────────────────────────────────────── */
+.pull-zone {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 24px;
+  background:rgba(255,184,0,0.03);
+  border-bottom:1px solid rgba(255,184,0,0.07);
+  min-height:52px;
+}
+.pull-hint { font-family:var(--font-m); font-size:10px; color:var(--dim); letter-spacing:1px; }
+.pull-hint em { color:var(--amber); font-style:normal; }
+.btn-pull {
+  font-family:var(--font-m); font-size:11px; letter-spacing:2px;
+  padding:9px 22px;
+  background:transparent; border:1px solid rgba(255,184,0,0.5);
+  color:var(--amber); cursor:pointer; transition:all 0.2s;
+}
+.btn-pull:hover:not(:disabled) { background:rgba(255,184,0,0.1); border-color:var(--amber); box-shadow:0 0 16px rgba(255,184,0,0.2); }
+.btn-pull:disabled { opacity:0.3; cursor:default; }
+.btn-pull.pulled { border-color:rgba(0,240,255,0.4); color:var(--cyan); }
+.dim-badge {
+  font-family:var(--font-m); font-size:10px; letter-spacing:2px;
+  padding:4px 12px;
+  border:1px solid rgba(184,127,255,0.3); color:var(--purple);
+  background:rgba(184,127,255,0.05);
+  transition:all 0.4s;
+}
+.dim-badge.alt { border-color:rgba(0,240,255,0.4); color:var(--cyan); background:rgba(0,240,255,0.06); }
+
+/* ─── BRANCH AREA ─────────────────────────────────────────────────────────────── */
+.branch-area {
+  padding:0 24px 0;
+  display:none;
+}
+.branch-area.visible { display:block; }
+.branch-header {
+  display:flex; gap:0; border-bottom:1px solid rgba(255,184,0,0.08); margin-bottom:0;
+}
+.branch-col-label {
+  flex:1; padding:8px 16px; font-family:var(--font-m); font-size:9px; letter-spacing:2px;
+}
+.branch-col-label.real { color:rgba(184,127,255,0.6); border-right:1px solid rgba(255,184,0,0.06); }
+.branch-col-label.alt  { color:rgba(0,240,255,0.65); }
+.branch-tracks {
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+}
+.branch-col { padding:12px 0; }
+.branch-col.real-col { border-right:1px solid rgba(255,184,0,0.06); padding-right:16px; }
+.branch-col.alt-col  { padding-left:16px; }
+.event-card {
+  padding:10px 12px; margin-bottom:6px;
+  border-left:2px solid transparent;
+  background:rgba(255,255,255,0.02);
+  opacity:0; transform:translateY(8px);
+  transition:all 0.3s ease;
+}
+.event-card.visible { opacity:1; transform:translateY(0); }
+.event-card.real-path { border-left-color:rgba(184,127,255,0.4); }
+.event-card.alt-path  { border-left-color:rgba(0,240,255,0.4); }
+.card-year { font-family:var(--font-m); font-size:10px; color:var(--amber); margin-bottom:2px; }
+.card-title { font-family:var(--font-m); font-size:11px; color:var(--white); margin-bottom:3px; }
+.card-desc { font-size:11px; color:var(--dim); line-height:1.5; }
+.card-reason { font-family:var(--font-m); font-size:9px; color:rgba(0,240,255,0.5); margin-top:4px; }
+
+/* ─── AI SUMMARY ─────────────────────────────────────────────────────────────── */
+.ai-summary {
+  margin:0 24px 16px;
+  padding:14px 18px;
+  background:rgba(0,240,255,0.03);
+  border:1px solid rgba(0,240,255,0.12);
+  border-left:3px solid var(--cyan);
+  font-family:var(--font-m); font-size:11px;
+  line-height:1.7; color:rgba(232,232,224,0.75);
+  display:none;
+}
+.ai-summary.visible { display:block; }
+.ai-summary .dim-tag {
+  font-size:9px; color:var(--cyan); letter-spacing:2px; margin-bottom:8px;
+}
+.ai-cursor { border-right:2px solid var(--cyan); animation:blink 0.5s infinite; }
+@keyframes blink { 50%{opacity:0} }
+
+/* ─── WORLD EVENT CALLOUT ─────────────────────────────────────────────────────── */
+.world-callout {
+  margin:8px 24px;
+  padding:10px 14px;
+  background:rgba(255,102,51,0.05);
+  border:1px solid rgba(255,102,51,0.2);
+  border-left:3px solid var(--orange);
+  font-family:var(--font-m); font-size:10px; color:rgba(255,102,51,0.8);
+  line-height:1.6; letter-spacing:0.5px;
+  display:none;
+}
+.world-callout.visible { display:block; }
+
+/* ─── DEMO BOTTOM ─────────────────────────────────────────────────────────────── */
+.demo-cta {
+  text-align:center;
+  padding:48px 24px 60px;
+  border-top:1px solid rgba(255,184,0,0.08);
+  margin-top:20px;
+}
+.demo-cta-title {
+  font-family:var(--font-d); font-size:clamp(28px,5vw,52px); letter-spacing:4px;
+  color:var(--white); margin-bottom:12px;
+}
+.demo-cta-title span { color:var(--amber); }
+.demo-cta-sub {
+  font-family:var(--font-m); font-size:12px; color:var(--dim);
+  max-width:500px; margin:0 auto 28px; line-height:1.7; letter-spacing:0.5px;
+}
+.btn-big {
+  font-family:var(--font-d); font-size:18px; letter-spacing:4px;
+  padding:16px 48px;
+  background:var(--amber); color:#000; border:none; cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-big:hover { background:#ffd040; box-shadow:0 0 32px rgba(255,184,0,0.4); }
+.btn-big-sub { font-family:var(--font-m); font-size:10px; color:var(--dim); margin-top:12px; letter-spacing:2px; }
+
+/* ─── BUTTERFLY OVERLAY ────────────────────────────────────────────────────────── */
+#butterflyOverlay {
+  position:fixed; inset:0; pointer-events:none; z-index:1000;
+  display:none;
+}
+#butterflyOverlay.active { display:block; }
+
+/* ─── TIMELINE BREAK ──────────────────────────────────────────────────────────── */
+#timelineBreak {
+  position:fixed; inset:0; z-index:99999;
+  background:#000; display:none; flex-direction:column;
+  align-items:center; justify-content:center; overflow:hidden;
+}
+#timelineBreak.active { display:flex; }
+.tb-glitch-wrap { position:relative; }
+.tb-glitch {
+  font-family:var(--font-d); font-size:clamp(36px,7vw,80px);
+  letter-spacing:6px; color:var(--red);
+  text-shadow:0 0 20px #ff2222,4px 0 0 rgba(0,240,255,0.7),-4px 0 0 rgba(184,127,255,0.7);
+  animation:tbGlitch 0.2s infinite;
+}
+@keyframes tbGlitch {
+  0%{clip-path:inset(0 0 95% 0);transform:translate(-4px,0)}
+  20%{clip-path:inset(60% 0 20% 0);transform:translate(-2px,0)}
+  50%{clip-path:inset(0 0 0 0);transform:translate(0,0)}
+  100%{clip-path:inset(0 0 0 0);transform:translate(0,0)}
+}
+.tb-sub { font-family:var(--font-m); font-size:14px; color:rgba(255,184,0,0.85); letter-spacing:2px; margin-top:16px; }
+.tb-countdown { font-family:var(--font-d); font-size:20px; color:rgba(255,184,0,0.4); letter-spacing:4px; margin-top:12px; }
+
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────────────── */
+@media(max-width:700px) {
+  .cel-header { flex-direction:column; gap:10px; }
+  .cel-summary { text-align:left; max-width:100%; }
+  .branch-tracks { grid-template-columns:1fr; }
+  .branch-col.real-col { border-right:none; border-bottom:1px solid rgba(255,184,0,0.06); }
+}
+
+/* ─── LAYOUT TOGGLE ─────────────────────────────────────────────────────────────── */
+.btn-layout {
+  font-family:var(--font-m); font-size:10px; letter-spacing:1.5px;
+  padding:4px 10px; background:transparent;
+  color:rgba(0,240,255,0.6); border:1px solid rgba(0,240,255,0.2);
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-layout:hover, .btn-layout.active { color:var(--cyan); border-color:rgba(0,240,255,0.5); background:rgba(0,240,255,0.06); }
+.canvas-wrap.layout-vertical { overflow-y:auto; overflow-x:hidden; max-height:70vh; }
+#stringCanvas.layout-vertical { height:auto !important; }
+.year-axis.layout-vertical { display:none; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">STRING<span>THEORY</span></div>
+  <div class="topbar-tag">PIVOTAL STRINGS · CELEBRITY DEMO</div>
+  <button class="topbar-cta" onclick="window.location.href='quiz.html?new=1'">BUILD YOURS →</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">// DYSTOPIC LABS · EXPERIMENT 001</div>
+  <div class="hero-title">THE <span>PIVOTAL</span> STRING</div>
+  <div class="hero-sub">Every life has one moment where everything hinged. One choice, one loss, one silence — and all downstream events rewrite. These are eight of them. One pull each. No resets.</div>
+  <div class="hero-examples">If Elon stayed at OpenAI, maybe xAI never exists. If Leo stayed with Gisele, an entire public pattern disappears. If Taylor speaks up in 2016, Reputation is never written. If Steve Jobs isn't fired in 1985, there's no Pixar and no second act.</div>
+  <div class="hero-fork-types">Choose a fork type: <span>love</span> · <span>grief</span> · <span>career gamble</span> · <span>identity</span> · <span>power</span> · <span>world events</span></div>
+  <div class="hero-hint">↓ SELECT A SUBJECT · CLICK THEIR FORK POINT · PULL THE STRING</div>
+</div>
+
+<!-- SELECTOR -->
+<div class="selector-wrap" id="selectorWrap"></div>
+
+<!-- STAGE -->
+<div class="stage" id="stage">
+  <!-- Butterfly overlay (shared) -->
+  <canvas id="butterflyOverlay"></canvas>
+
+  <!-- Celebrity header -->
+  <div class="cel-header" id="celHeader">
+    <div>
+      <div class="cel-name" id="celName">—</div>
+      <div class="cel-born" id="celBorn">—</div>
+    </div>
+    <div class="cel-summary" id="celSummary">—</div>
+  </div>
+
+  <!-- Fork label -->
+  <div class="fork-label" id="forkLabel">
+    <div class="fork-label-tag">PIVOTAL FORK →</div>
+    <div class="fork-label-name" id="forkLabelName">—</div>
+    <div class="world-event-tag" id="worldEventTag" style="display:none;"></div>
+  </div>
+
+  <!-- Fork why -->
+  <div class="fork-why" id="forkWhy">
+    <div class="fork-why-type" id="forkWhyType">CAREER</div>
+    <div class="fork-why-text" id="forkWhyText">—</div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas class="stage-canvas" id="stringCanvas"></canvas>
+    <div class="canvas-tooltip" id="tooltip">
+      <div class="tt-year" id="ttYear"></div>
+      <div id="ttTitle"></div>
+      <div class="tt-cat" id="ttCat"></div>
+    </div>
+  </div>
+
+  <!-- Year axis -->
+  <div class="year-axis" id="yearAxis"></div>
+
+  <!-- World event callout -->
+  <div class="world-callout" id="worldCallout"></div>
+
+  <!-- Pull zone -->
+  <div class="pull-zone">
+    <div class="pull-hint" id="pullHint">Click <em>the highlighted node</em> to select the fork point, then pull.</div>
+    <button class="btn-layout" id="layoutBtn" onclick="toggleLayout()" title="Toggle layout">⟷</button>
+    <div class="dim-badge" id="dimBadge">DIMENSION C-137 · PRIME</div>
+    <button class="btn-pull" id="pullBtn" onclick="pullString()" disabled>↗ PULL THIS STRING</button>
+  </div>
+
+  <!-- AI Summary -->
+  <div class="ai-summary" id="aiSummary">
+    <div class="dim-tag" id="aiDimTag">—</div>
+    <div id="aiText"></div>
+  </div>
+
+  <!-- Branches -->
+  <div class="branch-area" id="branchArea">
+    <div class="branch-header">
+      <div class="branch-col-label real">// REAL PATH · WHAT HAPPENED</div>
+      <div class="branch-col-label alt">// ALT PATH · WHAT COULD HAVE</div>
+    </div>
+    <div class="branch-tracks">
+      <div class="branch-col real-col" id="realCards"></div>
+      <div class="branch-col alt-col"  id="altCards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO CTA -->
+<div class="demo-cta">
+  <div class="demo-cta-title">WHAT'S YOUR <span>PIVOTAL STRING?</span></div>
+  <div class="demo-cta-sub">These are famous lives. You have one too. Build your timeline, find the fork that changes everything, and pull your string.</div>
+  <button class="btn-big" onclick="window.location.href='quiz.html?new=1'">BUILD MY TIMELINE</button>
+  <div class="btn-big-sub">NO SIGNUP · WORKS IN BROWSER · BRING YOUR OWN AI KEY</div>
+</div>
+
+<!-- Timeline Break overlay -->
+<div id="timelineBreak">
+  <canvas id="tbCanvas"></canvas>
+  <div style="position:relative;z-index:2;text-align:center;">
+    <div class="tb-glitch-wrap"><div class="tb-glitch">TIMELINE CORRUPTED</div></div>
+    <div class="tb-sub" id="tbSub">PARADOX DETECTED</div>
+    <div class="tb-countdown" id="tbCountdown">REBOOTING IN 3…</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA — 8 CELEBRITY TIMELINES
+// ═══════════════════════════════════════════════════════════════════════════════
+const CELEBRITY_DATA = {
+
+  taylor: {
+    name: 'Taylor Swift',
+    born: '1989 · West Reading, PA',
+    summary: 'Every breakup became an album. Every album changed the conversation. The version who speaks up in 2016 never writes Reputation. The one who accepts the NDA in 2019 never re-records anything. Both paths are worse.',
+    forkYear: 2016,
+    forkLabel: '2016 · The Silence / Trump elected',
+    forkType: 'IDENTITY · WORLD EVENT',
+    forkWhy: 'She had the biggest platform in music. She chose silence over risk. That silence became Reputation — the armour album. The question is whether the political voice she built in 2018 and 2024 would have been more powerful if it came two years earlier, when it might have actually changed something.',
+    worldEventId: 'trump_2016',
+    worldEventLabel: '🇺🇸 Trump Elected 2016 — the silence that defined her era',
+    worldEventDesc: 'Taylor publicly supported Clinton but ultimately stayed silent. She later said she regretted it. "I watched Dixie Chicks get destroyed and I was not going to help elect the man." In the alt path, she speaks.',
+    timelineMin: 1989, timelineMax: 2030,
+    events: [
+      { year:1989, cat:'identity',      title:'Born in West Reading, PA',          desc:'December. Christmas tree farm. The origin story she puts on an album cover.' },
+      { year:2004, cat:'career',        title:'Signs with Big Machine at 14',       desc:'Scott Borchetta offers a deal. She signs away masters of her first six albums. A 14-year-old doesn\'t know why this matters. It will.' },
+      { year:2008, cat:'relationship',  title:'Joe Jonas — 27-second breakup',      desc:'He calls. 27 seconds. She tells Ellen. She writes three songs. Forever on the record.' },
+      { year:2009, cat:'identity',      title:'Kanye interrupts VMAs',              desc:'"Imma let you finish." She is frozen onstage. The feud begins. Seeds planted.' },
+      { year:2012, cat:'relationship',  title:'Harry Styles — "Out of the Woods"',  desc:'Three months. One beanie. Half of 1989 in debt to this winter.' },
+      { year:2014, cat:'career',        title:'1989 — removes from Spotify',        desc:'Full pop pivot. Proves the album model isn\'t dead. Billboard calls it the year.' },
+      { year:2015, cat:'relationship',  title:'Calvin Harris — 15 months',          desc:'Longest relationship to date. Clean breakup. Both move on. She writes 12 songs about it.' },
+      { year:2016, cat:'identity',      title:'THE SILENCE — Trump elected',        desc:'She has publicly said she regrets not endorsing Clinton. She watched the Dixie Chicks get destroyed for political speech and chose silence. Reputation is written from this wound.', isFork:true, isWorld:true },
+      { year:2017, cat:'career',        title:'Reputation — written from retreat',  desc:'The album is armour. It works commercially but cost something real.' },
+      { year:2018, cat:'identity',      title:'Breaks silence — endorses Tennessee Dems', desc:'Two years late. Still meaningful. The cultural footprint is smaller than 2016 would have been.' },
+      { year:2019, cat:'career',        title:'Scooter Braun buys masters — $300M', desc:'She announces re-recordings three weeks later. The war begins.' },
+      { year:2020, cat:'career',        title:'folklore — pandemic pivot',          desc:'Recorded in secret. Best-reviewed album of her career. Stripped bare of reputation-armour.' },
+      { year:2021, cat:'career',        title:'Fearless (TV) released',             desc:'First re-recording. The project works. She owns the master now.' },
+      { year:2023, cat:'career',        title:'Eras Tour — first $1B concert tour', desc:'The largest tour in history. The armour becomes a suit.' },
+      { year:2025, cat:'career',        title:'Masters finally purchased',          desc:'Shamrock Holdings sells back. May 30, 2025. She owns her catalogue. The war ends.' },
+    ],
+    altNarrative: {
+      dim: 'C-SWIFT-2016',
+      summary: 'In this dimension, she posts the endorsement on October 3, 2016 — same day she\'d eventually post it in 2018, but two years earlier. The Dixie Chicks fear loses. Clinton gains 2% in Tennessee, loses anyway. But the cultural moment is different: Taylor as political voice, not retreating artist. Reputation is never written. folklore comes anyway — better, angrier, freer.',
+      events: [
+        { year:2016, cat:'identity',    title:'Endorses Clinton — October 3rd',     desc:'Posts to Instagram. 12M likes. Tennessee cable news loses their mind. She does not delete it.', reason:'↳ The fork: chose voice over silence' },
+        { year:2017, cat:'career',      title:'No Reputation album',                desc:'Without the retreat-into-armour narrative, the album she writes is rawer. Capitol says pass. She sits on it.', reason:'↳ No wound = no Reputation' },
+        { year:2018, cat:'career',      title:'Political voice — midterm campaigns', desc:'She endorses seven Senate races. Three win. The Swifties become a voting bloc.', reason:'↳ 2016 set the template' },
+        { year:2019, cat:'career',      title:'Scooter Braun still buys masters',   desc:'The masters war still happens — political voice doesn\'t change the Scott Borchetta deal.', reason:'↳ Some things are constant across dimensions' },
+        { year:2020, cat:'career',      title:'folklore — still released',           desc:'The pandemic album still happens. But from a position of power, not retreat. Even better.', reason:'↳ Folk pivot was creative, not defensive' },
+        { year:2024, cat:'identity',    title:'Endorsed Harris — February 2024',    desc:'On Super Tuesday. The Swiftie-to-voter pipeline mattered. Different election, different margin.', reason:'↳ Endorsing earlier made the 2024 endorsement more credible' },
+        { year:2025, cat:'career',      title:'Masters purchased on her own terms', desc:'The Scooter deal resolves the same way. She owns the catalogue. But she also owns the political legacy.', reason:'↳ Both paths converge here — this was always ending this way' },
+      ]
+    }
+  },
+
+  britney: {
+    name: 'Britney Spears',
+    born: '1981 · McComb, MS',
+    summary: 'She made $100M+ under a conservatorship she testified felt like sex trafficking. The armour was the career. When they finally removed it, the career was what she lost.',
+    forkYear: 2008,
+    forkLabel: '2008 · Conservatorship begins',
+    forkType: 'IDENTITY · PUBLIC PRESSURE',
+    forkWhy: 'A 26-year-old was placed under a legal arrangement typically reserved for the elderly or severely incapacitated. She then made $100M+ under it — more than most people will earn in ten lifetimes. The alt path where she retains autonomy in 2008 is probably less financially successful and almost certainly less traumatic. The math is not complicated.',
+    worldEventId: 'metoo',
+    worldEventLabel: '⚡ #MeToo 2017 — arrived 9 years too late for her',
+    worldEventDesc: '#MeToo (2017) arrived after the conservatorship was already 9 years old. Had it come earlier — or had it named her situation directly — the legal and public calculus might have been different.',
+    timelineMin: 1981, timelineMax: 2030,
+    events: [
+      { year:1981, cat:'identity',      title:'Born in McComb, Mississippi',        desc:'Small town, big voice, early talent shows. The industry finds her at 11.' },
+      { year:1993, cat:'career',        title:'Mickey Mouse Club',                  desc:'With Christina Aguilera, Justin Timberlake, Ryan Gosling. The factory that made the 2000s.' },
+      { year:1999, cat:'career',        title:'...Baby One More Time — #1 globally', desc:'Biggest debut by a female artist at the time. Schoolgirl video. The industry doesn\'t know how to handle what it created.' },
+      { year:2004, cat:'relationship',  title:'Marries Kevin Federline',            desc:'Whirlwind. Reality show. Two kids. Three years.' },
+      { year:2006, cat:'relationship',  title:'Divorce — custody battle begins',    desc:'Kevin gets custody. She spirals publicly. The tabloids circle.' },
+      { year:2007, cat:'identity',      title:'The Breakdown — shaved head',        desc:'Umbrella. Head shaved. Rehab. The most photographed mental health crisis in history.' },
+      { year:2008, cat:'identity',      title:'CONSERVATORSHIP BEGINS — Feb 1',    desc:'Father Jamie granted legal control of all finances and personal decisions. She is 26. She reportedly "agreed not to oppose it." She did not understand it would be permanent.', isFork:true },
+      { year:2008, cat:'career',        title:'Circus — recorded under conservatorship', desc:'Hit album. Comeback. $507k/show residency later. The machine works. The person inside it does not consent.' },
+      { year:2013, cat:'career',        title:'Las Vegas residency begins',         desc:'Planet Hollywood. Four years. $137M gross. The highest-paid act on the strip. All of it controlled by Jamie.' },
+      { year:2017, cat:'identity',      title:'#FreeBritney movement starts',       desc:'Fans notice inconsistencies. The world starts listening, slowly.' },
+      { year:2019, cat:'career',        title:'Indefinite hiatus announced',        desc:'Jamie hospitalised. She refuses to perform while he\'s in control. The machinery stops.' },
+      { year:2021, cat:'identity',      title:'Testifies — "like sex trafficking"', desc:'June 23. Forced medication, IUD, no marriage allowed, 7-day work weeks. The world is horrified.' },
+      { year:2021, cat:'identity',      title:'Conservatorship terminated — Nov 12',desc:'After 13 years. 4,748 days. A judge ends it in 20 minutes.' },
+      { year:2023, cat:'career',        title:'"The Woman in Me" — #1 NYT Bestseller', desc:'She tells the story in her own words. First time.' },
+    ],
+    altNarrative: {
+      dim: 'C-BRITNEY-2008',
+      summary: 'In this dimension, she gets proper psychiatric care and retains autonomy in 2007-2008. She probably doesn\'t make Circus. She doesn\'t do the Vegas residency. She likely doesn\'t make $100M+ under someone else\'s control. Whether she\'s happier: yes. Obviously. The math is not actually complicated here.',
+      events: [
+        { year:2008, cat:'identity',    title:'Voluntary psychiatric care — own terms', desc:'Same hospitalisation. Different outcome: she chooses her own treatment team, keeps legal autonomy.', reason:'↳ The fork: court denies conservatorship, appoints independent advocate instead' },
+        { year:2009, cat:'career',      title:'Extended hiatus — on her own terms',  desc:'She steps back from performing. No Circus. No rushed comeback. The industry is annoyed. She doesn\'t notice.', reason:'↳ No conservatorship = no machine demanding output' },
+        { year:2011, cat:'relationship', title:'Quieter life — Louisiana',           desc:'Returns to family in Louisiana. Less media. Some music. No Vegas deal.', reason:'↳ Without the financial conservatorship, the Vegas deal never happens' },
+        { year:2013, cat:'career',      title:'Returns on her own terms',            desc:'Small tour. Well-received. No residency. She owns the shows.', reason:'↳ Voluntary re-entry vs. forced labour' },
+        { year:2017, cat:'career',      title:'Honest memoir — first draft',         desc:'Starts writing. Gets a real literary agent. Tells the truth without a court battle first.', reason:'↳ No NDA regime = she could always speak' },
+        { year:2021, cat:'identity',    title:'Watches #FreeBritney — from freedom', desc:'The movement exists in this dimension too — but she\'s already free. She watches with a different feeling.', reason:'↳ She knows she was lucky' },
+        { year:2023, cat:'career',      title:'"The Woman in Me" — still #1',       desc:'The book still exists. But the story is different: survival, not captivity. Both versions are necessary.', reason:'↳ Some stories need to be told regardless' },
+      ]
+    }
+  },
+
+  meghan: {
+    name: 'Meghan Markle',
+    born: '1981 · Los Angeles, CA',
+    summary: 'She was the first mixed-race woman to marry into the British royal family. She left 20 months later. The institution refused to adapt. The question is: what would staying have cost.',
+    forkYear: 2020,
+    forkLabel: '2020 · The exit — step back from royal duties',
+    forkType: 'LOVE · IDENTITY',
+    forkWhy: 'The palace offered no compromise. The half-in/half-out arrangement was rejected. She left an institution 1,000 years old. The question isn\'t whether she was right to leave — most evidence says yes. The question is what staying would have cost her, specifically, and whether the platform she built post-exit was worth the price she paid for it.',
+    worldEventId: 'brexit',
+    worldEventLabel: '🇬🇧 Brexit 2016 — Britain\'s identity politics were the context',
+    worldEventDesc: 'Brexit hardened British nationalist identity in 2016. Meghan arrived in 2017 into a media and political environment that had just spent a year arguing about who belongs. The coverage of her departure tracked closely with post-Brexit culture war fault lines.',
+    timelineMin: 1981, timelineMax: 2030,
+    events: [
+      { year:1981, cat:'identity',      title:'Born in Los Angeles — mixed race',   desc:'Father Caucasian, mother African American. She describes navigating "two boxes, neither quite fitting" from childhood.' },
+      { year:2003, cat:'career',        title:'Northwestern University — theatre',  desc:'Studied theatre. Worked as a calligrapher for extra income. Small roles for years.' },
+      { year:2011, cat:'career',        title:'Suits — Rachel Zane',                desc:'Seven seasons. Becomes known in the US, Canada. In the UK, nobody knows her yet.' },
+      { year:2011, cat:'relationship',  title:'Marries Trevor Engelson',            desc:'Film producer. Marriage lasts three years. Ends post-Suits success. He later jokes "she upgraded."' },
+      { year:2014, cat:'identity',      title:'The Tig — lifestyle blog',           desc:'Food, travel, feminism. She builds her own platform. 2014-2017. Then she deletes it for a prince.' },
+      { year:2016, cat:'relationship',  title:'Blind date with Harry — Soho House', desc:'Mutual friend Violet von Westenholz. First question: "Is he kind?" He is. They know by the third date.', isWorld:true },
+      { year:2017, cat:'identity',      title:'Relationship public — Harry\'s statement', desc:'Harry issues rare statement condemning "racist and sexist" media coverage of his girlfriend. Week one.' },
+      { year:2018, cat:'identity',      title:'Royal wedding — May 19',             desc:'First mixed-race woman in the royal family. First American since Wallis Simpson. Bishop Michael Curry. "Love."' },
+      { year:2019, cat:'identity',      title:'Archie born — no HRH title given',  desc:'The palace declined to give Archie a prince title. Race question "raised by a family member." All noted.' },
+      { year:2020, cat:'identity',      title:'THE EXIT — step back announced',    desc:'January 2020. "Senior royal" status relinquished. The palace refused a "half-in, half-out" arrangement. They leave.', isFork:true },
+      { year:2020, cat:'location',      title:'Montecito, California',              desc:'Netflix deal. Archewell. The American chapter reopens.' },
+      { year:2021, cat:'identity',      title:'Oprah interview — the race question', desc:'An unnamed royal raised concerns about Archie\'s skin colour. The interview is watched by 49M people.' },
+      { year:2022, cat:'career',        title:'Harry & Meghan — Netflix docuseries', desc:'Their side of the story. Watchers divided along pre-existing lines, as predicted.' },
+      { year:2025, cat:'career',        title:'"As Ever" lifestyle brand launched', desc:'April 2025. Her own lane. No institution required.' },
+    ],
+    altNarrative: {
+      dim: 'C-MEGHAN-2020',
+      summary: 'The palace offered a "half-in, half-out" arrangement in private negotiations. They refused it publicly while briefly considering it privately. In this dimension, they accept. Meghan stays. Does protected overseas work. Navigates the institution. The trade-off: she stays palatable, keeps the platform, loses the freedom and the voice that made her brand post-exit.',
+      events: [
+        { year:2020, cat:'identity',    title:'Half-in / half-out — accepted',      desc:'The compromise holds. They split time between UK and California. She keeps HRH. Harry keeps military appointments.', reason:'↳ The fork: institution bends slightly instead of not at all' },
+        { year:2021, cat:'career',      title:'Commonwealth tour — alone',          desc:'She does the Australian tour without Harry. She is genuinely good at this. The media is confused.', reason:'↳ Staying gave her the institutional access' },
+        { year:2021, cat:'identity',    title:'No Oprah interview',                 desc:'The interview doesn\'t happen. The race question stays private. The institution breathes.', reason:'↳ They\'re still inside the system' },
+        { year:2022, cat:'career',      title:'First solo charity initiative — vetted', desc:'Women\'s economic empowerment. The palace approves. It\'s smaller than she wanted. She accepts.', reason:'↳ Institutional constraints = smaller platform' },
+        { year:2023, cat:'identity',    title:'Quiet frustration, public composure', desc:'The institution still hasn\'t changed. She knows it. She does her work. She is smiling in photos.', reason:'↳ The deal held, but the dynamic didn\'t change' },
+        { year:2025, cat:'career',      title:'No "As Ever" brand — still HRH',    desc:'The lifestyle brand doesn\'t exist. She\'s a working royal. That\'s the whole job.', reason:'↳ Royal title and independent brand are incompatible' },
+        { year:2027, cat:'identity',    title:'Still inside — still managing',       desc:'She made it work. The question of whether it was worth it is on her face at every official function.', reason:'↳ Survival is not the same as thriving' },
+      ]
+    }
+  },
+
+  cardi: {
+    name: 'Cardi B',
+    born: '1992 · South Bronx, NY',
+    summary: 'She was a stripper in the Bronx to escape an abusive relationship. Then she was on reality TV. Then she was the first solo female rapper to top the Hot 100 since 1998. The pivot is cleaner than it sounds.',
+    forkYear: 2016,
+    forkLabel: '2016 · Leaves Love & Hip Hop for music',
+    forkType: 'CAREER GAMBLE',
+    forkWhy: 'She was the biggest personality on a hit reality show. She had brand deals, a growing audience, and a safe platform. She chose the uncertain path — a major label deal with terms she negotiated herself. The music career that followed was not inevitable. It required the Atlantic deal, the right single, and the discipline to execute when the moment came.',
+    worldEventId: null,
+    worldEventLabel: null,
+    worldEventDesc: null,
+    timelineMin: 1992, timelineMax: 2030,
+    events: [
+      { year:1992, cat:'identity',      title:'Born in the South Bronx',            desc:'Dominican and Trinidadian. Named Belcalis. Called Bacardi because her sister was Hennessy. Eventually: Cardi B.' },
+      { year:2011, cat:'identity',      title:'Begins stripping at 19',             desc:'To escape an abusive relationship and make money fast. She is honest about this in every interview. Always.' },
+      { year:2015, cat:'career',        title:'Love & Hip Hop: New York — joins',   desc:'VH1 reality show. She is loud, funny, real. The internet finds her. First viral clips.' },
+      { year:2016, cat:'career',        title:'Gangsta Bitch Music Vol. 1',         desc:'First mixtape. Real rapping. People notice she can actually do this.' },
+      { year:2016, cat:'career',        title:'LEAVES LOVE & HIP HOP — Dec 30',   desc:'Announces she\'s leaving the show to focus on music. Atlantic Records is paying attention.', isFork:true },
+      { year:2017, cat:'career',        title:'Signs Atlantic Records — February',  desc:'Her terms: they gave her "the best offer with the least I owe them." She got the money AND the creative control.' },
+      { year:2017, cat:'career',        title:'"Bodak Yellow" — June 16',           desc:'First single. Summer 2017 anthem. The NYT calls it "the rap anthem of the summer."' },
+      { year:2017, cat:'career',        title:'"Bodak Yellow" — #1 Hot 100, Sept 25', desc:'First solo female rapper to top the chart since Lauryn Hill in 1998. 19-year gap, closed.', isMilestone:true },
+      { year:2017, cat:'relationship',  title:'Secretly marries Offset — Sept 20',  desc:'No announcement. They are "just dating" publicly. She reveals the marriage 10 months later.' },
+      { year:2018, cat:'career',        title:'Invasion of Privacy — April 6',      desc:'Debut album. All tracks platinum-certified. First in history.' },
+      { year:2019, cat:'career',        title:'Grammy — Best Rap Album',            desc:'First solo female rapper to win. Her speech: "I worked hard for this."' },
+      { year:2020, cat:'career',        title:'"WAP" — 93M streams opening week',   desc:'Record at the time. Megan Thee Stallion. The cultural moment is enormous.' },
+      { year:2023, cat:'relationship',  title:'Separated from Offset — December',  desc:'Filed divorce 2020, called off. Separated again 2023. Third child Blossom born 2024.'},
+      { year:2025, cat:'career',        title:'"Am I the Drama?" — sophomore album', desc:'Seven years between albums. The wait was noted. The album lands.' },
+    ],
+    altNarrative: {
+      dim: 'C-CARDI-2016',
+      summary: 'She stays on Love & Hip Hop. Season 7, 8, 9. She\'s still famous — the show has a large audience and her personality is impossible to contain. But she doesn\'t sign with Atlantic. The major label deal doesn\'t come from reality TV fame, it comes from music. Without the music, the deal doesn\'t come. She becomes a TV personality who raps. Different ceiling.',
+      events: [
+        { year:2017, cat:'career',      title:'Love & Hip Hop — Season 7 continues', desc:'She stays. Biggest personality on the show. Social media grows. The rapping is a side note.', reason:'↳ The fork: chose the safe platform over the uncertain music path' },
+        { year:2018, cat:'career',      title:'Brand deals — TV personality',        desc:'Fashion Nova. Spirit. The deals come because of the show, not the music. She\'s comfortable.', reason:'↳ Reality TV fame → brand partnerships' },
+        { year:2018, cat:'career',      title:'Independent mixtape — no major label', desc:'She still raps. Releases independently. Gets streams. Doesn\'t crack the Hot 100 without Atlantic\'s push.', reason:'↳ Without the Atlantic deal, the promotion machine doesn\'t exist' },
+        { year:2019, cat:'identity',    title:'VH1 tries to make her a host',         desc:'Her own show. She\'s good at it. The music is still happening, quieter now.', reason:'↳ Television absorbed the career energy' },
+        { year:2021, cat:'career',      title:'Still grinding — no "Bodak Yellow"',  desc:'In this dimension the Lauryn Hill record stands. She\'s still a rapper. Just not that one.', reason:'↳ The major label infrastructure was the difference' },
+        { year:2023, cat:'identity',    title:'Regrets the path — goes back to music', desc:'She\'s said in interviews she always wanted the music. In this dimension she comes back to it harder, later.', reason:'↳ Delayed arrival at the original destination' },
+        { year:2025, cat:'career',      title:'Independent music career — late bloom',desc:'Without the 2017 rocket, the trajectory is slower. Still talented. Still real. Smaller orbit.', reason:'↳ Talent is constant. Distribution is a variable.' },
+      ]
+    }
+  },
+
+  leo: {
+    name: 'Leonardo DiCaprio',
+    born: '1974 · Los Angeles, CA',
+    summary: 'His age goes up 30 years. The women he dates stay 22-24. Gisele, Bar, Blake, Erin, Toni, Kelly, Nina, Camila — every one leaves when she turns 25. The math is the plot.',
+    forkYear: 2005,
+    forkLabel: '2005 · Gisele turns 25 — the rule revealed',
+    forkType: 'LOVE · PATTERN',
+    forkWhy: 'The pattern is the story. He turns 50. They stay 22-24. Every time one leaves, the next one appears at the same age. If the pattern breaks in 2005 — the first documented instance — there is no pattern. No tabloid thesis. No meme. Just a man who had a long relationship and moved on. The under-25 rule only exists because it happened more than once.',
+    worldEventId: 'climate',
+    worldEventLabel: '🌍 Climate crisis — his actual cause',
+    worldEventDesc: 'Leo has been a climate activist since the late 1990s. His foundation (1998) and films (Before the Flood, 2016) are the serious through-line. The dating pattern is tabloid fodder. The climate work is the durable legacy.',
+    timelineMin: 1974, timelineMax: 2035,
+    events: [
+      { year:1974, cat:'identity',      title:'Born in Los Angeles',                desc:'Germano-Russian descent. Named after Leonardo da Vinci. His mother saw a da Vinci painting when he kicked in the womb. She decided that day.' },
+      { year:1993, cat:'career',        title:'What\'s Eating Gilbert Grape',        desc:'Age 19. First Oscar nomination. Robert De Niro calls it "the best performance I\'ve seen in years." He doesn\'t win.' },
+      { year:1997, cat:'career',        title:'Titanic — $2.2B worldwide',           desc:'Biggest film of the century (until Avatar). He is 23. The world belongs to him.' },
+      { year:1998, cat:'identity',      title:'Leonardo DiCaprio Foundation',        desc:'Environmental work begins at 24. This is the serious thread that runs through everything.' },
+      { year:2000, cat:'relationship',  title:'Gisele Bündchen — begins',            desc:'She is 19. He is 26. They are superhumanly attractive. It works for 5 years.' },
+      { year:2005, cat:'relationship',  title:'GISELE TURNS 25 — they break up',    desc:'She turns 25. They break up. Coincidence? He starts dating Bar Refaeli (20) within months. The pattern is now visible.', isFork:true },
+      { year:2010, cat:'relationship',  title:'Bar Refaeli turns 25 — they break up', desc:'She turns 25. Same script. Blake Lively appears. She is 24.' },
+      { year:2016, cat:'career',        title:'Oscar — finally — for The Revenant', desc:'Sixth nomination. First win. February 28, 2016. The meme cycle is complete.' },
+      { year:2017, cat:'relationship',  title:'Camila Morrone — begins (age 20)',    desc:'She is 20. He is 43. The foundation does good work.' },
+      { year:2022, cat:'relationship',  title:'Camila turns 25 — they break up',    desc:'She turns 25. Two months later, they split. August 2022. He is 47. She had her 25th birthday in June.' },
+      { year:2023, cat:'relationship',  title:'Vittoria Ceretti (26) — breaking the pattern', desc:'She is 26 when they start. Then 27. The curse may actually be ending.' },
+      { year:2025, cat:'relationship',  title:'Still with Vittoria (27)',            desc:'She is 27. They are still together. Climate work continues. The Foundation logs another year.' },
+    ],
+    altNarrative: {
+      dim: 'C-LEO-2005',
+      summary: 'They stayed together past 25. Gisele and Leo marry in 2006. She is 26. He is 32. The supermodel and the Oscar-chasing actor. In this dimension, there is no Tom Brady. There is no Under-25 Rule. There is no pattern. There is also no Gigi Hadid, no Camila Morrone, no eight-year rotating door. Whether he\'s happier: genuinely unclear.',
+      events: [
+        { year:2006, cat:'relationship', title:'Leo & Gisele — stay together',       desc:'She turns 25. He doesn\'t leave. They make it work. This surprises everyone including them.', reason:'↳ The fork: broke the self-imposed rule' },
+        { year:2007, cat:'career',       title:'No Blood Diamond Oscar nod',         desc:'He\'s still making great films, but the emotional processing that drives some of his best work shifts.', reason:'↳ Relationship stability changes the artistic energy' },
+        { year:2009, cat:'relationship', title:'Married in Malibu',                  desc:'Small ceremony. She\'s 29, he\'s 35. The tabloids are furious there\'s nothing to report.', reason:'↳ Stayed past the threshold → commitment → marriage' },
+        { year:2012, cat:'relationship', title:'First child',                         desc:'A daughter. He names the foundation in her honour. The environmental work doubles.', reason:'↳ Parenthood changed the Foundation\'s urgency' },
+        { year:2016, cat:'career',       title:'Oscar — still wins',                 desc:'Some things are inevitable. Revenant still gets made. The Oscar still comes. Still cried.', reason:'↳ Talent constants across dimensions' },
+        { year:2018, cat:'identity',     title:'No Tom Brady — different Gisele',    desc:'In this dimension, Tom Brady married someone else in 2009. The Brady-Bündchen saga doesn\'t exist. That\'s a lot of tabloid oxygen reassigned.', reason:'↳ Leo stayed with Gisele in 2005 → no opening for Brady' },
+        { year:2025, cat:'identity',     title:'Leo (51) + Gisele (45) — still here', desc:'Two decades. The supermodel and the actor and the Foundation. The pattern never existed. This is just a life.', reason:'↳ The fork was the whole story' },
+      ]
+    }
+  },
+
+  elon: {
+    name: 'Elon Musk',
+    born: '1971 · Pretoria, South Africa',
+    summary: 'He built four companies worth more than most nations. He left the OpenAI board in 2018. Then spent $44B buying Twitter. Then started a competing AI company. The irony is structural.',
+    forkYear: 2018,
+    forkLabel: '2018 · Leaves OpenAI board',
+    forkType: 'POWER · WORLD IMPACT',
+    forkWhy: 'He co-founded the organisation that shipped GPT-4 and changed the world. He then left, spent years suing it, and built a competing company. The AI revolution he partly caused is the one he is now trying to regulate, stop, or redirect depending on the week. One board seat in 2018 is the hinge point for how the most consequential technology in decades gets governed.',
+    worldEventId: 'ai_revolution',
+    worldEventLabel: '🤖 AI Revolution 2023 — he co-founded OpenAI then left',
+    worldEventDesc: 'Elon co-founded OpenAI in 2015, left the board in 2018, then spent years trying to stop it via lawsuits and a competing company (xAI, 2023). The AI revolution he partly caused is the one he\'s now fighting.',
+    timelineMin: 1971, timelineMax: 2030,
+    events: [
+      { year:1971, cat:'identity',      title:'Born in Pretoria, South Africa',     desc:'Father Errol: engineer. Mother Maye: model, dietitian. Childhood: "I was raised by books." Leaves SA at 17 to avoid apartheid military service.' },
+      { year:1995, cat:'career',        title:'Zip2 — first startup',               desc:'Online city guide. $22M seed from his father. Compaq buys it in 1999 for $307M. His share: $22M. He is 28.' },
+      { year:1999, cat:'career',        title:'X.com → PayPal — $165M to Musk',    desc:'eBay acquires PayPal in 2002 for $1.5B. Musk gets $165M. Two exits before 30.' },
+      { year:2002, cat:'career',        title:'SpaceX founded',                     desc:'Goal: Mars. First three launches failed. Went down to final funds. Fourth launch succeeded. He cried.' },
+      { year:2004, cat:'career',        title:'Tesla — joins as chairman/investor', desc:'He didn\'t found it. He invested $6.5M in Series A, became chairman, eventually CEO in 2008.' },
+      { year:2015, cat:'career',        title:'OpenAI co-founded',                  desc:'With Sam Altman, Greg Brockman. $1B committed. Safety-focused nonprofit. He is a co-founder.' },
+      { year:2018, cat:'career',        title:'LEAVES OPENAI BOARD',               desc:'February 2018. Cited "conflicts with Tesla AI." Also reportedly lost internal power struggle with Altman. Walks away from the organisation he founded.', isFork:true },
+      { year:2022, cat:'career',        title:'Buys Twitter for $44B',              desc:'April-October. Calls it "the digital town square." Fires 75% of staff. Renames it X.' },
+      { year:2023, cat:'career',        title:'xAI founded — Grok',                desc:'July 2023. Competing AI company. Named Grok. Sues OpenAI for "abandoning its mission."' },
+      { year:2024, cat:'career',        title:'DOGE — Trump administration',        desc:'Department of Government Efficiency. First private citizen to direct federal budget cuts. Net worth hits $400B.' },
+      { year:2025, cat:'career',        title:'Exits DOGE',                         desc:'Steps back from formal government role. "Mission accomplished." The government disagrees about the mission.' },
+      { year:2026, cat:'finance',       title:'Net worth — $852B (March 2026)',     desc:'Largest individual wealth in history. SpaceX, Tesla, X, xAI compounding simultaneously.' },
+    ],
+    altNarrative: {
+      dim: 'C-ELON-2018',
+      summary: 'He stays on the OpenAI board. The power struggle with Altman resolves differently — maybe Musk wins, maybe compromise. In this dimension, he is inside the organisation when GPT-4 ships. No xAI. No lawsuit. Possibly no Grok. The $44B Twitter acquisition probably still happens — that\'s a separate instinct. But the AI war is internal instead of external.',
+      events: [
+        { year:2018, cat:'career',      title:'Stays on OpenAI board',              desc:'Doesn\'t leave. The internal dispute with Altman gets mediated. He holds 30% board influence.', reason:'↳ The fork: doesn\'t walk away from the seat' },
+        { year:2020, cat:'career',      title:'GPT-3 — Musk co-signs release',      desc:'He\'s still on the board when GPT-3 ships. His name is on the announcement.', reason:'↳ Inside the process = credit and influence' },
+        { year:2022, cat:'career',      title:'Twitter acquisition — still happens', desc:'The Twitter purchase is a separate instinct. OpenAI membership doesn\'t stop it. He still buys it.', reason:'↳ Some decisions are personality-driven, not strategic' },
+        { year:2023, cat:'career',      title:'No xAI — different AI landscape',   desc:'Without the departure-and-lawsuit narrative, xAI doesn\'t exist. Grok doesn\'t exist. The AI field has one fewer major player.', reason:'↳ Staying inside = no external competing company needed' },
+        { year:2023, cat:'identity',    title:'OpenAI + Musk — still together',     desc:'GPT-4 ships. He\'s a co-founder of the most important technology in decades. The irony structure of this dimension is different.', reason:'↳ He stayed on the inside of history instead of trying to stop it from outside' },
+        { year:2025, cat:'career',      title:'Still DOGE — but also OpenAI chair', desc:'In this dimension he holds both. The conflict of interest is enormous. Nobody is surprised.', reason:'↳ Consolidation of influence instead of fragmentation' },
+      ]
+    }
+  },
+
+  kanye: {
+    name: 'Kanye West / Ye',
+    born: '1977 · Atlanta, GA',
+    summary: 'He made the best album of the 2000s, married the most famous woman alive, lost $1.5B in a week for antisemitism, and apologised in the Wall Street Journal. The string broke visibly.',
+    forkYear: 2007,
+    forkLabel: '2007 · Donda West dies',
+    forkType: 'GRIEF · SELF-DESTRUCTION',
+    forkWhy: 'Every serious analysis of the radicalization timeline traces back to this. She was 58. He was 30. She had been his anchor, his first audience, his collaborator. Time magazine directly noted that after the divorce, his posts became more frequent and more extreme. The divorce was October 2022. The antisemitic tweets were October 2022. The grief that started in 2007 is the thread that connects everything.',
+    worldEventId: null,
+    worldEventLabel: null,
+    worldEventDesc: null,
+    timelineMin: 1977, timelineMax: 2030,
+    events: [
+      { year:1977, cat:'identity',      title:'Born in Atlanta, raised Chicago',    desc:'Mother Donda: English professor. Father Ray: photojournalist. Marriage ends when Kanye is 3. Raised by mother.' },
+      { year:2002, cat:'career',        title:'Car crash — "Through the Wire"',     desc:'Jaw wired shut. He records the song with his mouth wired. Donda is there. First sign of what he\'ll do with pain.' },
+      { year:2004, cat:'career',        title:'The College Dropout',                desc:'Samples chipmunks. Wears backpacks. Raps about Jesus and Spongebob. Critics invent new vocabulary.' },
+      { year:2006, cat:'career',        title:'Late Registration — second masterpiece', desc:'Hurricane Katrina. "George Bush doesn\'t care about black people." Live on NBC. Mike Myers\' face.' },
+      { year:2007, cat:'identity',      title:'DONDA WEST DIES — November 10',     desc:'Complications from cosmetic surgery. She was 58. He was 30. Every honest analysis of what follows traces back here.', isFork:true },
+      { year:2008, cat:'career',        title:'808s & Heartbreak',                 desc:'All autotune. All grief. All wrong for 2008. Correct for everything that came after. He invented the emotional rap mode that Drake built a career on.' },
+      { year:2010, cat:'career',        title:'My Beautiful Dark Twisted Fantasy',  desc:'Peak. The most reviewed album of the decade. 10/10 everywhere. He was living in Hawaii making something everyone agreed was perfect.' },
+      { year:2016, cat:'identity',      title:'Bipolar diagnosis — stops medication', desc:'Believes it limits his creativity. This is a documented statement. The timeline after this is the result.' },
+      { year:2018, cat:'identity',      title:'MAGA hat — White House visit',       desc:'Oval Office. Hugs Trump. Rants for 10 minutes. Kim watches. It is October 2018. They are still married.' },
+      { year:2021, cat:'relationship',  title:'Kim files for divorce — February',   desc:'Certified irreconcilable. The anchor is gone. What follows is documented.' },
+      { year:2022, cat:'identity',      title:'"Death con 3 on Jewish people"',     desc:'October 3. Tweet. Three weeks later: Adidas drops him. $1.5B gone in days. Net worth: $6.6B → $400M.', isRegret:true },
+      { year:2022, cat:'relationship',  title:'Informal ceremony with Bianca Censori', desc:'January. No legal standing. She is 27. Architectural designer. The coverage is relentless.' },
+      { year:2026, cat:'identity',      title:'WSJ apology letter — January 2026', desc:'Apologised to Jewish community in the Wall Street Journal. The letter exists. Context: he\'s trying to get Adidas back.' },
+    ],
+    altNarrative: {
+      dim: 'C-KANYE-2007',
+      summary: 'Donda doesn\'t die. The 2008 album is different — not grief-driven autotune, but whatever he was going to make from stability. MBDTF probably still happens (Hawaii was always coming). The question is what 2016-2022 looks like without the unprocessed loss that powered and destabilised everything. Time magazine directly linked the divorce to the radicalization. The divorce was October 2022. The tweets were October 2022.',
+      events: [
+        { year:2007, cat:'identity',    title:'Donda survives — different recovery', desc:'The surgery has complications, she recovers. He still cancels the Glow In The Dark tour briefly. She lives.', reason:'↳ The fork: complications managed, she survives' },
+        { year:2008, cat:'career',      title:'808s is different — not all grief',  desc:'The album exists but the ALL-autotune approach softens. He still experiments. The imitators still come.', reason:'↳ Less catastrophic grief → different emotional register' },
+        { year:2010, cat:'career',      title:'MBDTF — still perfect',              desc:'Hawaii. The ambition was always there. Donda alive doesn\'t remove it. Still 10/10.', reason:'↳ Talent constants across dimensions' },
+        { year:2016, cat:'identity',    title:'Bipolar diagnosis — managed differently', desc:'Donda was his anchor. With her alive, the treatment compliance is different. Not perfectly managed. Better managed.', reason:'↳ Her influence on his treatment decisions was documented' },
+        { year:2018, cat:'identity',    title:'MAGA hat — maybe, maybe not',         desc:'The radicalization pathway without the unprocessed grief is different. Possibly still happens — the ideology found other entry points. But the urgency is muted.', reason:'↳ Grief and loss are documented accelerants for his radicalization' },
+        { year:2021, cat:'relationship', title:'Kim and Ye — different trajectory', desc:'The marriage is still strained by 2021 — fame, kids, different directions. But the anchor matters. Different outcome uncertain.', reason:'↳ Time magazine: "after the divorce, his posts became more frequent and controversial"' },
+        { year:2025, cat:'identity',    title:'Donda — still here',                  desc:'She is 76. He calls her every day. She reads the drafts. She tells him when something is wrong. He listens more than he admits.', reason:'↳ Her presence was the regulating force' },
+      ]
+    }
+  },
+
+  jobs: {
+    name: 'Steve Jobs',
+    born: '1955 · San Francisco, CA',
+    summary: 'He was fired from Apple in 1985. He used the exile to found Pixar and NeXT. Apple bought NeXT in 1997. He came back. The firing created the second act. The question is: without the wound, does the legend exist.',
+    forkYear: 1985,
+    forkLabel: '1985 · Fired from Apple by the board',
+    forkType: 'CAREER GAMBLE',
+    forkWhy: 'This is the cleanest example in any famous life of a setback that created the legend. Jobs was fired from the company he co-founded at 30. He spent 12 years building Pixar and NeXT. Apple bought NeXT in 1997. He became CEO. Then came iMac, iPod, iPhone, iPad. The exile was the curriculum. Without it, the second act doesn\'t exist — and the second act is the one that changed everything.',
+    worldEventId: null,
+    worldEventLabel: null,
+    worldEventDesc: null,
+    timelineMin: 1955, timelineMax: 2015,
+    events: [
+      { year:1955, cat:'identity',      title:'Born — adopted in San Francisco',    desc:'Biological parents were a Syrian graduate student and an American. Adopted by Paul and Clara Jobs. He\'ll reference this adoption story for decades.' },
+      { year:1972, cat:'identity',      title:'Reed College — drops out after 6 months', desc:'Keeps attending classes informally for 18 months. Takes calligraphy. "If I had never dropped in on that single course, the Mac would never have had beautiful typography."' },
+      { year:1976, cat:'career',        title:'Apple Computer — co-founded with Woz', desc:'Garage. Wozniak builds it. Jobs sells it. Age 21. The partnership that defines the origin story.' },
+      { year:1980, cat:'finance',       title:'Apple IPO — Jobs worth $256M',       desc:'Age 25. Largest IPO since Ford in 1956. He is wearing a bow tie.' },
+      { year:1983, cat:'career',        title:'Hires John Sculley from Pepsi',       desc:'"Do you want to spend the rest of your life selling sugared water, or do you want a chance to change the world?" Sculley comes. This is the mistake.' },
+      { year:1985, cat:'career',        title:'FIRED BY THE BOARD — May 31',       desc:'After a power struggle with Sculley. The board sides with the CEO. Jobs is stripped of all responsibilities. He is 30. He owns 11% of Apple stock. He sells almost all of it.', isFork:true, isRegret:true },
+      { year:1986, cat:'career',        title:'Buys Pixar from Lucasfilm — $5M',   desc:'He thinks he\'s buying a hardware company. It becomes the most successful animation studio in history. George Lucas needed cash for a divorce settlement.' },
+      { year:1988, cat:'career',        title:'NeXT Computer — founded',            desc:'Builds the computer he wanted to build at Apple. Too expensive for consumers. Used in universities. Tim Berners-Lee writes the first web browser on a NeXT machine.' },
+      { year:1991, cat:'relationship',  title:'Marries Laurene Powell',             desc:'At Yosemite. She\'s a Stanford MBA student. The marriage lasts the rest of his life.' },
+      { year:1995, cat:'career',        title:'Toy Story — Pixar\'s first feature',  desc:'$192M worldwide. First fully computer-animated feature film. Academy Award. Jobs is vindicated.' },
+      { year:1996, cat:'career',        title:'Apple acquires NeXT for $429M',      desc:'Gil Amelio buys NeXT to get its OS. He also gets Jobs. This is the mistake Gil Amelio made, from Apple\'s perspective. From history\'s perspective: the correct mistake.' },
+      { year:1997, cat:'career',        title:'Returns to Apple — interim CEO',     desc:'"iCEO." Fires most of the board. Cuts product lines from 40 to 4. Calls it the "focus" strategy.' },
+      { year:1998, cat:'career',        title:'iMac — saves Apple',                 desc:'Translucent plastic. "i" prefix. $1,299. Apple goes from near-bankruptcy to profit in 12 months.' },
+      { year:2001, cat:'career',        title:'iPod + iTunes — the pivot begins',   desc:'A thousand songs in your pocket. The music industry is never the same. Apple is no longer just a computer company.' },
+      { year:2003, cat:'identity',      title:'Pancreatic cancer — diagnosed',      desc:'Delays surgery for 9 months trying alternative treatments. His oncologist says this was the mistake. Jobs later agrees.' },
+      { year:2007, cat:'career',        title:'iPhone — changes the industry',      desc:'"Every once in a while a revolutionary product comes along that changes everything." He wasn\'t wrong.' },
+      { year:2011, cat:'identity',      title:'Dies — October 5',                   desc:'Age 56. Pancreatic cancer. Six weeks after resigning as CEO. Tim Cook takes over.' },
+    ],
+    altNarrative: {
+      dim: 'C-JOBS-1985',
+      summary: 'He isn\'t fired. The Sculley power struggle resolves in his favour — the board backs Jobs. No exile. No Pixar. No NeXT. He stays at Apple through the late 1980s and 1990s. The company continues its slow decline. He doesn\'t have the 12 years of building-in-obscurity that gave him the insight to return transformed. The iPhone probably still gets invented — the vision was always there. But it\'s five years later, and Microsoft has already dominated mobile, and it doesn\'t land the same way.',
+      events: [
+        { year:1985, cat:'career',      title:'Board sides with Jobs — Sculley fired', desc:'The power struggle inverts. Sculley is asked to leave. Jobs is 30 and in full control.', reason:'↳ The fork: board trusts the founder over the professional CEO' },
+        { year:1986, cat:'career',      title:'No Pixar purchase',                  desc:'He doesn\'t need side projects. He\'s still running Apple. Pixar stays part of Lucasfilm. George Lucas\'s divorce settlement is someone else\'s problem.', reason:'↳ No exile = no opportunity to buy Pixar' },
+        { year:1989, cat:'career',      title:'Apple continues declining',           desc:'Without the Sculley discipline and without the exile-driven reinvention, Apple drifts. Good products. No focus. The Jobs of 1985 wasn\'t yet the Jobs of 1997.', reason:'↳ The exile was the curriculum. Without it, the comeback version doesn\'t exist.' },
+        { year:1991, cat:'career',      title:'Windows 3.0 dominates',              desc:'Microsoft wins the OS war in this dimension too. Apple\'s share drops to 4%. The board starts asking questions.', reason:'↳ No NeXT OS means no coherent Apple OS strategy in the 1990s' },
+        { year:1995, cat:'career',      title:'No Toy Story',                       desc:'Pixar, still at Lucasfilm, doesn\'t have a Jobs-funded runway for experimental computer animation. The film gets made differently, later, or not at all.', reason:'↳ No Pixar investment = different animation history' },
+        { year:1999, cat:'career',      title:'iPhone — 8 years late',              desc:'The vision is still there. Jobs still sees it. But the 12 years of humility, of being wrong in public, of building Pixar\'s collaborative culture — that\'s missing. The execution is messier.', reason:'↳ The exile built the patience and the team-building philosophy that made Apple 2.0 work' },
+        { year:2011, cat:'identity',    title:'Same diagnosis — different outcomes?', desc:'The cancer is biological, not biographical. It probably still happens. But in this dimension, without the peace of Pixar and the second-act vindication, we can\'t say whether the 9-month delay on surgery still occurs.', reason:'↳ Some things are constants. Some aren\'t.' },
+      ]
+    }
+  }
+};
+
+// World event metadata for callouts
+const WORLD_EVENTS_META = {
+  trump_2016: { year:2016, emoji:'🇺🇸' },
+  metoo:      { year:2017, emoji:'⚡' },
+  brexit:     { year:2016, emoji:'🇬🇧' },
+  covid:      { year:2020, emoji:'🦠' },
+  ai_revolution: { year:2023, emoji:'🤖' },
+  climate:    { year:2019, emoji:'🌍' },
+};
+
+const CAT_COLOR = {
+  career:'#ffb800', relationship:'#ff2222', location:'#00ff41',
+  identity:'#e8e8e0', custom:'#00f0ff', alternate:'#b87fff',
+  health:'#ff9966', finance:'#ccff44', world:'#ff6633', future:'#6699ff',
+};
+
+const STRANDS = [
+  { color:'#ffffff', alpha:0.85, amp:1.0, phase:0,   thick:1.5 },
+  { color:'#ffb800', alpha:0.20, amp:1.4, phase:0.8, thick:1 },
+  { color:'#b87fff', alpha:0.15, amp:1.2, phase:1.6, thick:1 },
+  { color:'#00f0ff', alpha:0.12, amp:1.0, phase:2.4, thick:1 },
+  { color:'#ff2222', alpha:0.10, amp:0.8, phase:3.2, thick:1 },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let currentCelKey = 'taylor';
+let currentCel    = null;
+let currentEvents = [];
+let physEvents    = [];
+let altPhysEvents = [];
+let worldPhysX    = null; // world event X position on canvas
+
+let forkIdx     = -1;
+let pulled      = false;
+let strandPhase = 0;
+let hoveredIdx  = -1;
+let hoveredAltIdx = -1;
+let butterflyActive = false;
+let butterflyT  = 0;
+let altDim      = 'C-137';
+let rafId       = null;
+let currentLayout = localStorage.getItem('st_layout') || 'horizontal';
+const TOP_PAD_V = 60, BOTTOM_PAD_V = 60;
+
+// Per-celebrity pull tracking
+const pulledCelebs = {};
+
+// Canvas / ctx
+const canvas  = document.getElementById('stringCanvas');
+const ctx     = canvas.getContext('2d');
+const wrap    = document.getElementById('canvasWrap');
+const tooltip = document.getElementById('tooltip');
+const bOverlay = document.getElementById('butterflyOverlay');
+const bCtx     = bOverlay.getContext('2d');
+let swarm = []; let swarmActive = false;
+
+const BFLY_PALETTES = [
+  ['#ffb800','rgba(255,184,0,0.8)','rgba(255,140,0,0.6)'],
+  ['#00f0ff','rgba(0,240,255,0.8)','rgba(0,160,220,0.6)'],
+  ['#b87fff','rgba(184,127,255,0.8)','rgba(120,80,200,0.6)'],
+  ['#ff2222','rgba(255,60,60,0.8)','rgba(200,0,80,0.6)'],
+  ['#00ff41','rgba(0,255,65,0.8)','rgba(0,180,30,0.6)'],
+];
+
+let isDragging = false;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════════════════════════════════════
+function buildSelector() {
+  const wrap = document.getElementById('selectorWrap');
+  const order = ['taylor','britney','meghan','cardi','leo','elon','kanye','jobs'];
+  const labels = {
+    taylor:'TAYLOR SWIFT', britney:'BRITNEY SPEARS', meghan:'MEGHAN MARKLE',
+    cardi:'CARDI B', leo:'LEONARDO DiCAPRIO', elon:'ELON MUSK',
+    kanye:'KANYE WEST', jobs:'STEVE JOBS'
+  };
+  wrap.innerHTML = order.map(key => {
+    return `<button class="cel-btn" id="selbtn-${key}" onclick="loadCelebrity('${key}')">
+      <span class="dot"></span>${labels[key]}
+    </button>`;
+  }).join('');
+}
+
+function loadCelebrity(key) {
+  if (currentCelKey === key) return;
+  currentCelKey = key;
+  currentCel = CELEBRITY_DATA[key];
+  currentEvents = currentCel.events;
+
+  // Update selector buttons
+  document.querySelectorAll('.cel-btn').forEach(b => b.classList.remove('active'));
+  const selBtn = document.getElementById('selbtn-' + key);
+  if (selBtn) selBtn.classList.add('active');
+  if (pulledCelebs[key]) selBtn && selBtn.classList.add('pulled');
+
+  // Header
+  document.getElementById('celName').textContent = currentCel.name;
+  document.getElementById('celBorn').textContent = currentCel.born;
+  document.getElementById('celSummary').textContent = currentCel.summary;
+  document.getElementById('forkLabelName').textContent = currentCel.forkLabel;
+
+  // Fork-why explainer
+  if (currentCel.forkType && currentCel.forkWhy) {
+    document.getElementById('forkWhyType').textContent = currentCel.forkType;
+    document.getElementById('forkWhyText').textContent = currentCel.forkWhy;
+    document.getElementById('forkWhy').style.display = '';
+  } else {
+    document.getElementById('forkWhy').style.display = 'none';
+  }
+
+  // World event tag
+  const wetag = document.getElementById('worldEventTag');
+  if (currentCel.worldEventLabel) {
+    wetag.textContent = currentCel.worldEventLabel;
+    wetag.style.display = '';
+  } else {
+    wetag.style.display = 'none';
+  }
+
+  // World callout
+  const wc = document.getElementById('worldCallout');
+  if (currentCel.worldEventDesc) {
+    wc.textContent = '// WORLD EVENT CONTEXT: ' + currentCel.worldEventDesc;
+    wc.classList.add('visible');
+  } else {
+    wc.classList.remove('visible');
+  }
+
+  // Reset state
+  forkIdx = -1; pulled = false; butterflyActive = false; butterflyT = 0;
+  altPhysEvents = []; swarm = []; swarmActive = false;
+  hoveredIdx = -1; hoveredAltIdx = -1;
+  bOverlay.classList.remove('active');
+  bCtx.clearRect(0, 0, bOverlay.width, bOverlay.height);
+
+  // Reset pull button
+  const pb = document.getElementById('pullBtn');
+  if (pulledCelebs[key]) {
+    pb.textContent = '✓ STRING PULLED';
+    pb.classList.add('pulled');
+    pb.disabled = true;
+  } else {
+    pb.textContent = '↗ PULL THIS STRING';
+    pb.classList.remove('pulled');
+    pb.disabled = true;
+  }
+
+  document.getElementById('dimBadge').textContent = 'DIMENSION C-137 · PRIME';
+  document.getElementById('dimBadge').classList.remove('alt');
+  document.getElementById('pullHint').innerHTML = 'Click <em>the highlighted node</em> to select the fork point, then pull.';
+  document.getElementById('branchArea').classList.remove('visible');
+  document.getElementById('aiSummary').classList.remove('visible');
+
+  // Year axis
+  buildYearAxis();
+
+  // Resize + rebuild phys
+  resize();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CANVAS / PHYSICS
+// ═══════════════════════════════════════════════════════════════════════════════
+const LEFT_PAD = 44, RIGHT_PAD = 44;
+
+function yearToX(year, W) {
+  const min = currentCel.timelineMin, max = currentCel.timelineMax;
+  return LEFT_PAD + ((year - min) / (max - min)) * (W - LEFT_PAD - RIGHT_PAD);
+}
+
+function yearToY(year, H) {
+  const min = currentCel.timelineMin, max = currentCel.timelineMax;
+  const usableH = H - TOP_PAD_V - BOTTOM_PAD_V;
+  return TOP_PAD_V + ((year - min) / (max - min)) * usableH;
+}
+
+function resize() {
+  if (!currentCel) return;
+  const W = wrap.clientWidth;
+  let H;
+  if (currentLayout === 'vertical') {
+    H = Math.max(currentEvents.length * 70 + 80, 500);
+    canvas.classList.add('layout-vertical');
+    wrap.classList.add('layout-vertical');
+    document.getElementById('yearAxis')?.classList.add('layout-vertical');
+  } else {
+    H = Math.min(340, window.innerHeight * 0.40);
+    canvas.classList.remove('layout-vertical');
+    wrap.classList.remove('layout-vertical');
+    document.getElementById('yearAxis')?.classList.remove('layout-vertical');
+  }
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.height = H + 'px';
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  if (currentLayout === 'vertical') {
+    buildPhysEventsVertical(W, H);
+  } else {
+    buildPhysEvents(W, H);
+  }
+  // Place world event X
+  if (currentCel.worldEventId) {
+    const meta = WORLD_EVENTS_META[currentCel.worldEventId];
+    if (meta) worldPhysX = yearToX(meta.year, W);
+  } else {
+    worldPhysX = null;
+  }
+  if (pulled && currentCel.altNarrative) {
+    buildAltPhysEvents(W, H, currentCel.altNarrative.events);
+  }
+}
+
+function buildPhysEvents(W, H) {
+  physEvents = currentEvents.map((ev, i) => {
+    const x = yearToX(ev.year, W);
+    const cy = H / 2;
+    return { x, baseY:cy, y:cy, vy:0, idx:i };
+  });
+}
+
+function buildPhysEventsVertical(W, H) {
+  const n = currentEvents.length;
+  physEvents = currentEvents.map((ev, i) => {
+    const y = n <= 1 ? H/2 : TOP_PAD_V + (i / (n - 1)) * (H - TOP_PAD_V - BOTTOM_PAD_V);
+    return { x:W/2, baseX:W/2, y, baseY:y, vy:0, vx:0, idx:i };
+  });
+}
+
+function buildAltPhysEvents(W, H, altEvents) {
+  if (currentLayout === 'vertical') {
+    // Space alt events evenly between fork Y and canvas bottom
+    const forkPE = forkIdx >= 0 ? physEvents[forkIdx] : null;
+    const startY = forkPE ? forkPE.y : TOP_PAD_V;
+    const endY = H - BOTTOM_PAD_V;
+    const n = altEvents.length;
+    altPhysEvents = altEvents.map((ev, i) => {
+      const y = n <= 1 ? (startY + endY) / 2 : startY + ((i + 1) / (n + 1)) * (endY - startY);
+      return { x:W/2, baseX:W/2, y, baseY:y, vy:0, vx:0, ev };
+    });
+  } else {
+    altPhysEvents = altEvents.map(ev => {
+      const x = yearToX(ev.year, W);
+      const cy = H / 2;
+      return { x, baseY:cy, y:cy, vy:0, ev };
+    });
+  }
+}
+
+function buildYearAxis() {
+  if (!currentCel) return;
+  const axis = document.getElementById('yearAxis');
+  const min = currentCel.timelineMin, max = currentCel.timelineMax;
+  const span = max - min;
+  const step = span <= 50 ? 5 : 10;
+  const years = [];
+  for (let y = Math.ceil(min/step)*step; y <= max; y += step) years.push(y);
+  axis.innerHTML = years.map(y => `<span>${y}</span>`).join('');
+}
+
+function physTick() {
+  physEvents.forEach(pe => {
+    const dy = pe.y - pe.baseY;
+    pe.vy = (pe.vy||0) + (-0.08 * dy) + (-0.18 * (pe.vy||0));
+    pe.y += pe.vy;
+  });
+}
+
+function getStringY(x, W, H, si, time) {
+  const s = STRANDS[si];
+  const baseAmp = 11 * s.amp;
+  const cx = W / 2;
+  const env = 1 - ((x - cx) / cx) * ((x - cx) / cx);
+  return H/2 + Math.sin((x/W)*Math.PI*2 + time + s.phase) * baseAmp * env;
+}
+
+function getStringX(y, W, H, si, time) {
+  const s = STRANDS[si];
+  const baseAmp = 11 * s.amp;
+  const cy = H / 2;
+  const rel = (H > 0) ? (y - cy) / cy : 0;
+  const env = Math.max(0, 1 - rel * rel);
+  return W/2 + Math.sin((y/(H||1))*Math.PI*2 + time + s.phase) * baseAmp * env;
+}
+
+function physTickVertical() {
+  physEvents.forEach(pe => {
+    const dx = pe.x - pe.baseX;
+    pe.vx = (pe.vx||0) + (-0.08 * dx) + (-0.18 * (pe.vx||0));
+    pe.x += pe.vx;
+  });
+}
+
+function setLayout(layout) {
+  currentLayout = layout;
+  localStorage.setItem('st_layout', layout);
+  const btn = document.getElementById('layoutBtn');
+  if (btn) { btn.textContent = layout === 'vertical' ? '↕' : '⟷'; btn.classList.toggle('active', layout === 'vertical'); }
+  resize();
+  buildYearAxis();
+}
+
+function toggleLayout() {
+  setLayout(currentLayout === 'vertical' ? 'horizontal' : 'vertical');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BUTTERFLY SWARM
+// ═══════════════════════════════════════════════════════════════════════════════
+function resizeOverlay() {
+  bOverlay.width  = window.innerWidth  * devicePixelRatio;
+  bOverlay.height = window.innerHeight * devicePixelRatio;
+  bOverlay.style.width  = window.innerWidth  + 'px';
+  bOverlay.style.height = window.innerHeight + 'px';
+}
+
+function spawnSwarm(originX, originY) {
+  resizeOverlay();
+  swarm = []; swarmActive = true;
+  bCtx.clearRect(0, 0, bOverlay.width, bOverlay.height);
+  bOverlay.classList.add('active');
+  const rect = canvas.getBoundingClientRect();
+  const sx = rect.left + originX, sy = rect.top + originY;
+  for (let i = 0; i < 90; i++) {
+    const angle = Math.random()*Math.PI*2;
+    const speed = 0.8 + Math.random()*3;
+    const pal = BFLY_PALETTES[Math.floor(Math.random()*BFLY_PALETTES.length)];
+    swarm.push({
+      x:sx*devicePixelRatio, y:sy*devicePixelRatio,
+      vx:Math.cos(angle)*speed*devicePixelRatio,
+      vy:Math.sin(angle)*speed*devicePixelRatio - Math.random()*2*devicePixelRatio,
+      scale:(0.4+Math.random()*1.2)*devicePixelRatio,
+      phase:Math.random()*Math.PI*2, phaseSpeed:0.08+Math.random()*0.12,
+      rotation:angle, palette:pal, life:1.0,
+      decay:0.003+Math.random()*0.005, delay:Math.random()*1.0,
+      wobble:(Math.random()-0.5)*0.04, t:0,
+    });
+  }
+}
+
+function drawOneBfly(bx,by,scale,phase,rotation,palette,alpha) {
+  bCtx.save(); bCtx.globalAlpha=alpha;
+  bCtx.translate(bx,by); bCtx.rotate(rotation); bCtx.scale(scale,scale);
+  const fo = Math.abs(Math.sin(phase));
+  const wW = 16*fo, wH = 12;
+  [[wW,wH,palette[1],'right upper'],[wW,wH,palette[2],'right lower'],
+   [-wW,wH,palette[1],'left upper'],[-wW,wH,palette[2],'left lower']].forEach(([sw,sh,fill,side]) => {
+    bCtx.beginPath(); bCtx.moveTo(0,0);
+    if (side==='right upper' || side==='left upper') {
+      bCtx.bezierCurveTo(sw*.3,-sh,sw*.8,-sh*1.1,sw,-sh*.3);
+      bCtx.bezierCurveTo(sw*.7,-sh*.08,sw*.3,0,0,0);
+    } else {
+      bCtx.bezierCurveTo(sw*.25,sh*.6,sw*.5,sh*.75,sw*.7,sh*.2);
+      bCtx.bezierCurveTo(sw*.45,sh*.1,sw*.22,0,0,0);
+    }
+    bCtx.fillStyle=fill; bCtx.fill();
+  });
+  bCtx.beginPath(); bCtx.ellipse(0,0,1.2*devicePixelRatio,6*devicePixelRatio,0,0,Math.PI*2);
+  bCtx.fillStyle=palette[0]; bCtx.fill();
+  bCtx.restore();
+}
+
+function tickSwarm() {
+  if (!swarmActive) return;
+  bCtx.clearRect(0,0,bOverlay.width,bOverlay.height);
+  let anyAlive = false;
+  swarm.forEach(b => {
+    b.t += 0.016;
+    if (b.t < b.delay || b.life > 0) anyAlive = true;
+    if (b.t < b.delay) return;
+    b.phase += b.phaseSpeed; b.rotation += b.wobble;
+    b.vx += (Math.random()-0.5)*0.12*devicePixelRatio;
+    b.vy += -0.018*devicePixelRatio;
+    b.x += b.vx; b.y += b.vy;
+    b.life -= b.decay;
+    if (b.life > 0) drawOneBfly(b.x,b.y,b.scale,b.phase,b.rotation,b.palette,Math.max(0,b.life));
+  });
+  if (!anyAlive) { swarmActive=false; bOverlay.classList.remove('active'); bCtx.clearRect(0,0,bOverlay.width,bOverlay.height); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DRAW
+// ═══════════════════════════════════════════════════════════════════════════════
+function drawVertical() {
+  if (!currentCel) return;
+  const W = canvas.width / devicePixelRatio;
+  const H = canvas.height / devicePixelRatio;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const time = strandPhase;
+
+  // Multi-strands (vertical: loop y, x from getStringX)
+  STRANDS.forEach((s, si) => {
+    ctx.beginPath();
+    for (let y = 0; y <= H; y += 2) {
+      let x = getStringX(y, W, H, si, time);
+      physEvents.forEach(pe => {
+        const dist = Math.abs(y - pe.y);
+        if (dist < 120) {
+          const inf = (1-dist/120)*(1-dist/120);
+          x += (pe.x - pe.baseX)*inf*(si===0?1:0.5);
+        }
+      });
+      if (y === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = s.color; ctx.globalAlpha = s.alpha;
+    ctx.lineWidth = s.thick; ctx.stroke(); ctx.globalAlpha = 1;
+  });
+
+  // Alt string (diverges right after fork Y)
+  if (pulled && altPhysEvents.length > 0 && forkIdx >= 0) {
+    const forkY = physEvents[forkIdx]?.y || 0;
+    const divOffset = W * 0.22;
+    function getAltX(y) {
+      const t = Math.min(1, Math.max(0, (y - forkY) / 200));
+      const ease = t*t*(3-2*t);
+      let x = getStringX(y, W, H, 0, time+0.3) + divOffset*ease;
+      altPhysEvents.forEach(ape => {
+        const dist = Math.abs(y - ape.y);
+        if (dist < 100) { const inf=(1-dist/100)*(1-dist/100); x+=(ape.x-ape.baseX)*inf; }
+      });
+      return x;
+    }
+    // Glow
+    ctx.beginPath(); ctx.setLineDash([5,5]);
+    for (let y=forkY;y<=H;y+=3) { const x=getAltX(y); if(y===forkY)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
+    ctx.strokeStyle='rgba(0,240,255,0.15)'; ctx.lineWidth=7; ctx.stroke(); ctx.setLineDash([]);
+    // Line
+    ctx.beginPath(); ctx.setLineDash([5,5]);
+    for (let y=forkY;y<=H;y+=2) { const x=getAltX(y); if(y===forkY)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
+    ctx.strokeStyle='#00f0ff'; ctx.globalAlpha=0.7; ctx.lineWidth=1.8; ctx.stroke(); ctx.globalAlpha=1; ctx.setLineDash([]);
+    // Label
+    const forkXval = getStringX(forkY, W, H, 0, time);
+    ctx.font='bold 9px Share Tech Mono'; ctx.textAlign='left';
+    ctx.fillStyle='rgba(0,240,255,0.6)';
+    ctx.fillText('// ALT · '+altDim, forkXval+divOffset*0.3+8, forkY+60);
+    // Fork split indicator
+    ctx.beginPath(); ctx.moveTo(forkXval, forkY); ctx.lineTo(forkXval+divOffset*0.25, forkY+20);
+    ctx.strokeStyle='rgba(255,184,0,0.5)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Alt nodes
+    altPhysEvents.forEach((ape, i) => {
+      const isHov = hoveredAltIdx === i;
+      const nodeX = getAltX(ape.y) + (ape.x - ape.baseX);
+      const r = isHov ? 8 : 5;
+      ape._nodeX = nodeX; ape._nodeY = ape.y;
+      if (isHov) {
+        ctx.beginPath(); ctx.arc(nodeX, ape.y, r+8, 0, Math.PI*2);
+        ctx.fillStyle='rgba(0,240,255,0.1)'; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(nodeX, ape.y, r, 0, Math.PI*2);
+      ctx.fillStyle='rgba(0,240,255,0.2)'; ctx.fill();
+      ctx.strokeStyle='#00f0ff'; ctx.lineWidth=1.5; ctx.stroke();
+      const lbl = ape.ev.title.split('—')[0].trim();
+      const short = lbl.length>15 ? lbl.slice(0,13)+'…' : lbl;
+      ctx.font = isHov ? 'bold 9px Share Tech Mono' : '8px Share Tech Mono';
+      ctx.fillStyle = isHov ? '#00f0ff' : 'rgba(0,240,255,0.65)';
+      ctx.textAlign='left';
+      ctx.fillText(short, nodeX+r+6, ape.y-2);
+      ctx.fillStyle='rgba(0,240,255,0.4)'; ctx.font='8px Share Tech Mono';
+      ctx.fillText(String(ape.ev.year), nodeX+r+6, ape.y+10);
+    });
+  }
+
+  // Fork line (horizontal dashes at fork Y)
+  if (forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    if (fpe) {
+      ctx.beginPath(); ctx.moveTo(10, fpe.y); ctx.lineTo(W-10, fpe.y);
+      ctx.strokeStyle='rgba(255,184,0,0.6)'; ctx.lineWidth=1.5; ctx.setLineDash([3,4]);
+      ctx.stroke(); ctx.setLineDash([]);
+      const grad = ctx.createLinearGradient(0, fpe.y, 0, H);
+      grad.addColorStop(0,'rgba(255,184,0,0.05)'); grad.addColorStop(1,'rgba(255,184,0,0)');
+      ctx.fillStyle=grad; ctx.fillRect(0, fpe.y, W, H-fpe.y);
+    }
+  }
+
+  // Prime label when pulled
+  if (pulled && forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    if (fpe) {
+      ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'left';
+      ctx.fillStyle = 'rgba(184,127,255,0.45)';
+      ctx.fillText('// PRIME · C-137', fpe.x + 10, fpe.y + 20);
+    }
+  }
+
+  // Prime event nodes
+  physEvents.forEach((pe, i) => {
+    const ev = currentEvents[pe.idx];
+    if (!ev) return;
+    const col = ev.isWorld ? '#ff6633' : (CAT_COLOR[ev.cat]||'#e8e8e0');
+    const isHov = hoveredIdx === i;
+    const isFork = forkIdx === i;
+    const r = isHov||isFork ? 9 : ev.isFork ? 8 : 6;
+
+    if (ev.isFork && !pulled) {
+      ctx.beginPath(); ctx.arc(pe.x, pe.y, r+10, 0, Math.PI*2);
+      ctx.fillStyle='rgba(255,184,0,0.07)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(pe.x, pe.y, r+5, 0, Math.PI*2);
+      ctx.fillStyle='rgba(255,184,0,0.12)'; ctx.fill();
+    }
+    if (isHov||isFork) {
+      ctx.beginPath(); ctx.arc(pe.x, pe.y, r+8, 0, Math.PI*2);
+      ctx.fillStyle=col+'22'; ctx.fill();
+      ctx.beginPath(); ctx.arc(pe.x, pe.y, r+4, 0, Math.PI*2);
+      ctx.fillStyle=col+'33'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(pe.x, pe.y, r, 0, Math.PI*2);
+    if (ev.locked && !ev.isFuture) {
+      ctx.fillStyle=col; ctx.fill();
+    } else {
+      ctx.strokeStyle=col; ctx.lineWidth=1.5;
+      ctx.setLineDash(ev.isFuture?[3,3]:[]); ctx.stroke(); ctx.setLineDash([]);
+    }
+    if (ev.isRegret) {
+      ctx.font='11px Share Tech Mono'; ctx.fillStyle='#ff2222'; ctx.textAlign='center';
+      ctx.fillText('!', pe.x+r+8, pe.y+4);
+    }
+    // Alternating left/right labels
+    const label = ev.title.split('—')[0].split(':')[0].trim();
+    const short = label.length>16 ? label.slice(0,14)+'…' : label;
+    ctx.font = isFork||isHov ? 'bold 10px Share Tech Mono' : '9px Share Tech Mono';
+    ctx.fillStyle = isFork ? '#ffb800' : isHov ? col : 'rgba(232,232,224,0.5)';
+    if (i%2===0) {
+      ctx.textAlign='right';
+      ctx.fillText(short, pe.x-r-8, pe.y-4);
+      ctx.fillStyle='rgba(255,184,0,0.5)'; ctx.font='8px Share Tech Mono';
+      ctx.fillText(String(ev.year), pe.x-r-8, pe.y+8);
+    } else {
+      ctx.textAlign='left';
+      ctx.fillText(short, pe.x+r+8, pe.y-4);
+      ctx.fillStyle='rgba(255,184,0,0.5)'; ctx.font='8px Share Tech Mono';
+      ctx.fillText(String(ev.year), pe.x+r+8, pe.y+8);
+    }
+  });
+
+  // NOW line (horizontal) — interpolate Y from adjacent event baseY positions
+  const nowYear = new Date().getFullYear();
+  let nowY = null;
+  for (let i = 0; i < currentEvents.length - 1; i++) {
+    const y0 = currentEvents[i].year, y1 = currentEvents[i+1].year;
+    if (nowYear >= y0 && nowYear <= y1) {
+      const t = (nowYear - y0) / (y1 - y0);
+      nowY = physEvents[i].baseY + t * (physEvents[i+1].baseY - physEvents[i].baseY);
+      break;
+    }
+  }
+  if (nowY !== null) {
+    ctx.beginPath(); ctx.moveTo(20, nowY); ctx.lineTo(W-20, nowY);
+    ctx.strokeStyle='rgba(255,184,0,0.15)'; ctx.lineWidth=1; ctx.setLineDash([4,6]);
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(255,184,0,0.3)'; ctx.font='9px Share Tech Mono'; ctx.textAlign='left';
+    ctx.fillText('NOW', 10, nowY-4);
+  }
+
+  strandPhase += 0.008;
+  physTickVertical();
+  if (butterflyActive && butterflyT < 1) butterflyT += 0.025;
+}
+
+function draw() {
+  if (!currentCel) return;
+  if (currentLayout === 'vertical') { drawVertical(); return; }
+  const W = canvas.width / devicePixelRatio;
+  const H = canvas.height / devicePixelRatio;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const time = strandPhase;
+
+  // Multi-strands
+  STRANDS.forEach((s, si) => {
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += 2) {
+      let y = getStringY(x, W, H, si, time);
+      physEvents.forEach(pe => {
+        const dist = Math.abs(x - pe.x);
+        if (dist < 120) {
+          const inf = (1-dist/120)*(1-dist/120);
+          y += (pe.y - pe.baseY)*inf*(si===0?1:0.5);
+        }
+      });
+      if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = s.color; ctx.globalAlpha = s.alpha;
+    ctx.lineWidth = s.thick; ctx.stroke(); ctx.globalAlpha = 1;
+  });
+
+  // World event vertical line
+  if (worldPhysX !== null) {
+    const wy = getStringY(worldPhysX, W, H, 0, time);
+    // Glow column
+    const grad = ctx.createLinearGradient(worldPhysX, 0, worldPhysX, H);
+    grad.addColorStop(0,'rgba(255,102,51,0)');
+    grad.addColorStop(0.5,'rgba(255,102,51,0.08)');
+    grad.addColorStop(1,'rgba(255,102,51,0)');
+    ctx.fillStyle = grad; ctx.fillRect(worldPhysX-12, 0, 24, H);
+    // Tick
+    ctx.beginPath(); ctx.moveTo(worldPhysX, wy-18); ctx.lineTo(worldPhysX, wy+18);
+    ctx.strokeStyle = 'rgba(255,102,51,0.7)'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([]); ctx.stroke();
+    // Diamond
+    ctx.save(); ctx.translate(worldPhysX, wy); ctx.rotate(Math.PI/4);
+    ctx.beginPath(); ctx.rect(-5,-5,10,10);
+    ctx.fillStyle = 'rgba(255,102,51,0.2)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,102,51,0.8)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.restore();
+    // Label
+    ctx.font = 'bold 8px Share Tech Mono'; ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,102,51,0.7)';
+    ctx.fillText('WORLD', worldPhysX, wy - 26);
+  }
+
+  // Prime label when pulled
+  if (pulled && forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    if (fpe) {
+      ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'left';
+      ctx.fillStyle = 'rgba(184,127,255,0.45)';
+      ctx.fillText('// PRIME · C-137', fpe.x + 10, H/2 + 28);
+    }
+  }
+
+  // Alt string
+  if (pulled && altPhysEvents.length > 0 && forkIdx >= 0) {
+    const forkX = physEvents[forkIdx]?.x || 0;
+    const divOffset = H * 0.17;
+    function getAltY(x) {
+      const t = Math.min(1, (x-forkX)/260);
+      const ease = t*t*(3-2*t);
+      let y = getStringY(x,W,H,0,time+0.3) + divOffset*ease;
+      altPhysEvents.forEach(ape => {
+        const dist = Math.abs(x-ape.x);
+        if (dist < 100) { const inf=(1-dist/100)*(1-dist/100); y+=(ape.y-ape.baseY)*inf; }
+      });
+      return y;
+    }
+    // Glow
+    ctx.beginPath(); ctx.setLineDash([5,5]);
+    for (let x=forkX;x<=W;x+=3) { const y=getAltY(x); if(x===forkX)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
+    ctx.strokeStyle='rgba(0,240,255,0.15)'; ctx.lineWidth=7; ctx.stroke(); ctx.setLineDash([]);
+    // Line
+    ctx.beginPath(); ctx.setLineDash([5,5]);
+    for (let x=forkX;x<=W;x+=2) { const y=getAltY(x); if(x===forkX)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
+    ctx.strokeStyle='#00f0ff'; ctx.globalAlpha=0.7; ctx.lineWidth=1.8; ctx.stroke(); ctx.globalAlpha=1; ctx.setLineDash([]);
+    // Label
+    ctx.font='bold 9px Share Tech Mono'; ctx.textAlign='left';
+    ctx.fillStyle='rgba(0,240,255,0.6)';
+    ctx.fillText('// ALT · '+altDim, forkX+14, getAltY(forkX+60)-10);
+    // Fork split indicator
+    const forkYval = getStringY(forkX,W,H,0,time);
+    ctx.beginPath(); ctx.moveTo(forkX,forkYval); ctx.lineTo(forkX+28,forkYval+divOffset*0.25);
+    ctx.strokeStyle='rgba(255,184,0,0.5)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Alt nodes
+    altPhysEvents.forEach((ape, i) => {
+      const isHov = hoveredAltIdx === i;
+      const nodeY = getAltY(ape.x) + (ape.y - ape.baseY);
+      const r = isHov ? 8 : 5;
+      if (isHov) {
+        ctx.beginPath(); ctx.arc(ape.x,nodeY,r+8,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,240,255,0.1)'; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(ape.x,nodeY,r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,240,255,0.2)'; ctx.fill();
+      ctx.strokeStyle='#00f0ff'; ctx.lineWidth=1.5; ctx.stroke();
+      const lbl = ape.ev.title.split('—')[0].trim();
+      const short = lbl.length>15 ? lbl.slice(0,13)+'…' : lbl;
+      ctx.font = isHov ? 'bold 9px Share Tech Mono' : '8px Share Tech Mono';
+      ctx.fillStyle = isHov ? '#00f0ff' : 'rgba(0,240,255,0.65)';
+      ctx.textAlign='center';
+      const above = i%2===0;
+      ctx.fillText(short, ape.x, nodeY+(above?-(r+14):(r+14)));
+      ctx.fillStyle='rgba(0,240,255,0.4)'; ctx.font='8px Share Tech Mono';
+      ctx.fillText(String(ape.ev.year), ape.x, nodeY+(above?-(r+5):(r+24)));
+      ape._nodeY = nodeY;
+    });
+  }
+
+  // Fork line + glow
+  if (forkIdx >= 0) {
+    const fpe = physEvents[forkIdx];
+    if (fpe) {
+      ctx.beginPath(); ctx.moveTo(fpe.x,10); ctx.lineTo(fpe.x,H-10);
+      ctx.strokeStyle='rgba(255,184,0,0.6)'; ctx.lineWidth=1.5; ctx.setLineDash([3,4]);
+      ctx.stroke(); ctx.setLineDash([]);
+      const grad = ctx.createLinearGradient(fpe.x,0,W,0);
+      grad.addColorStop(0,'rgba(255,184,0,0.05)'); grad.addColorStop(1,'rgba(255,184,0,0)');
+      ctx.fillStyle=grad; ctx.fillRect(fpe.x,0,W-fpe.x,H);
+    }
+  }
+
+  // Prime event nodes
+  physEvents.forEach((pe, i) => {
+    const ev = currentEvents[pe.idx];
+    if (!ev) return;
+    const col = ev.isWorld ? '#ff6633' : (CAT_COLOR[ev.cat]||'#e8e8e0');
+    const isHov = hoveredIdx === i;
+    const isFork = forkIdx === i;
+    const r = isHov||isFork ? 9 : ev.isFork ? 8 : 6;
+
+    // Pre-highlight fork event always
+    if (ev.isFork && !pulled) {
+      ctx.beginPath(); ctx.arc(pe.x,pe.y,r+10,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,184,0,0.07)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(pe.x,pe.y,r+5,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,184,0,0.12)'; ctx.fill();
+    }
+
+    if (isHov||isFork) {
+      ctx.beginPath(); ctx.arc(pe.x,pe.y,r+8,0,Math.PI*2);
+      ctx.fillStyle=col+'22'; ctx.fill();
+      ctx.beginPath(); ctx.arc(pe.x,pe.y,r+4,0,Math.PI*2);
+      ctx.fillStyle=col+'33'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(pe.x,pe.y,r,0,Math.PI*2);
+    if (ev.locked && !ev.isFuture) {
+      ctx.fillStyle=col; ctx.fill();
+    } else {
+      ctx.strokeStyle=col; ctx.lineWidth=1.5;
+      ctx.setLineDash(ev.isFuture?[3,3]:[]); ctx.stroke(); ctx.setLineDash([]);
+    }
+    if (ev.isRegret) {
+      ctx.font='11px Share Tech Mono'; ctx.fillStyle='#ff2222'; ctx.textAlign='center';
+      ctx.fillText('!', pe.x, pe.y-r-5);
+    }
+    // Label
+    const labelOff = i%2===0 ? -1 : 1;
+    const label = ev.title.split('—')[0].split(':')[0].trim();
+    const short = label.length>16 ? label.slice(0,14)+'…' : label;
+    ctx.font = isFork||isHov ? 'bold 10px Share Tech Mono' : '9px Share Tech Mono';
+    ctx.fillStyle = isFork ? '#ffb800' : isHov ? col : 'rgba(232,232,224,0.5)';
+    ctx.textAlign='center';
+    ctx.fillText(short, pe.x, pe.y+labelOff*(r+15));
+    ctx.fillText(String(ev.year), pe.x, pe.y+labelOff*(r+25));
+  });
+
+  // NOW line
+  const nowYear = new Date().getFullYear();
+  const nowX = yearToX(nowYear, W);
+  ctx.beginPath(); ctx.moveTo(nowX,20); ctx.lineTo(nowX,H-20);
+  ctx.strokeStyle='rgba(255,184,0,0.15)'; ctx.lineWidth=1; ctx.setLineDash([4,6]);
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,184,0,0.3)'; ctx.font='9px Share Tech Mono'; ctx.textAlign='center';
+  ctx.fillText('NOW', nowX, 15);
+
+  strandPhase += 0.008;
+  physTick();
+  if (butterflyActive && butterflyT < 1) butterflyT += 0.025;
+}
+
+function drawBigButterfly(fpe, progress, W, H) {
+  const fx=fpe.x, fy=fpe.y;
+  const rSpan=Math.min(W-fx,W*0.5)*progress;
+  const lSpan=Math.min(fx,W*0.38)*progress;
+  const vScale=Math.min(H*0.26,80)*progress;
+  ctx.save();
+  // Upper-right (cyan)
+  ctx.beginPath(); ctx.moveTo(fx,fy);
+  ctx.bezierCurveTo(fx+rSpan*.25,fy-vScale*1.1,fx+rSpan*.65,fy-vScale*1.25,fx+rSpan,fy-vScale*.3);
+  ctx.bezierCurveTo(fx+rSpan*.7,fy-vScale*.12,fx+rSpan*.35,fy-vScale*.04,fx,fy);
+  ctx.fillStyle=`rgba(0,240,255,${0.12*progress})`; ctx.fill();
+  ctx.strokeStyle=`rgba(0,240,255,${Math.min(0.8,0.55+progress*.25)})`; ctx.lineWidth=1.8; ctx.stroke();
+  // Lower-right (purple)
+  ctx.beginPath(); ctx.moveTo(fx,fy);
+  ctx.bezierCurveTo(fx+rSpan*.2,fy+vScale*.65,fx+rSpan*.5,fy+vScale*.8,fx+rSpan*.7,fy+vScale*.22);
+  ctx.bezierCurveTo(fx+rSpan*.45,fy+vScale*.12,fx+rSpan*.22,fy+vScale*.04,fx,fy);
+  ctx.fillStyle=`rgba(184,127,255,${0.12*progress})`; ctx.fill();
+  ctx.strokeStyle=`rgba(184,127,255,${Math.min(0.75,0.5+progress*.25)})`; ctx.lineWidth=1.5; ctx.stroke();
+  // Upper-left (amber)
+  ctx.beginPath(); ctx.moveTo(fx,fy);
+  ctx.bezierCurveTo(fx-lSpan*.25,fy-vScale*.85,fx-lSpan*.6,fy-vScale*1.05,fx-lSpan,fy-vScale*.28);
+  ctx.bezierCurveTo(fx-lSpan*.65,fy-vScale*.1,fx-lSpan*.3,fy-vScale*.03,fx,fy);
+  ctx.fillStyle=`rgba(255,184,0,${0.09*progress})`; ctx.fill();
+  ctx.strokeStyle=`rgba(255,184,0,${Math.min(0.65,0.45+progress*.2)})`; ctx.lineWidth=1.2; ctx.stroke();
+  // Lower-left (green)
+  ctx.beginPath(); ctx.moveTo(fx,fy);
+  ctx.bezierCurveTo(fx-lSpan*.18,fy+vScale*.5,fx-lSpan*.45,fy+vScale*.65,fx-lSpan*.6,fy+vScale*.18);
+  ctx.bezierCurveTo(fx-lSpan*.38,fy+vScale*.1,fx-lSpan*.18,fy+vScale*.03,fx,fy);
+  ctx.fillStyle=`rgba(0,255,65,${0.07*progress})`; ctx.fill();
+  ctx.strokeStyle=`rgba(0,255,65,${Math.min(0.6,0.4+progress*.2)})`; ctx.lineWidth=1; ctx.stroke();
+  // Glow
+  const grd=ctx.createRadialGradient(fx,fy,0,fx,fy,20*progress);
+  grd.addColorStop(0,`rgba(255,184,0,${0.7*progress})`);
+  grd.addColorStop(1,'rgba(255,184,0,0)');
+  ctx.beginPath(); ctx.arc(fx,fy,20*progress,0,Math.PI*2);
+  ctx.fillStyle=grd; ctx.fill();
+  ctx.restore();
+}
+
+function loop() {
+  draw();
+  tickSwarm();
+  rafId = requestAnimationFrame(loop);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INTERACTION
+// ═══════════════════════════════════════════════════════════════════════════════
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  let bestDist=999; let bestI=-1;
+  physEvents.forEach((pe,i) => { const d=Math.hypot(pe.x-mx,pe.y-my); if(d<bestDist){bestDist=d;bestI=i;} });
+  let bestAltDist=999; let bestAltI=-1;
+  if (pulled) altPhysEvents.forEach((ape,i) => {
+    const ny = ape._nodeY ?? ape.y;
+    const nx = currentLayout === 'vertical' ? (ape._nodeX ?? ape.x) : ape.x;
+    const d=Math.hypot(nx-mx,ny-my); if(d<bestAltDist){bestAltDist=d;bestAltI=i;}
+  });
+
+  if (bestAltDist < 28 && bestAltDist < bestDist) {
+    hoveredIdx=-1; hoveredAltIdx=bestAltI;
+    const ape=altPhysEvents[bestAltI];
+    if (ape) showTip(ape.ev.year, ape.ev.title, (ape.ev.cat||'alt').toUpperCase()+' · ALT', e.clientX, e.clientY);
+    canvas.style.cursor='pointer';
+  } else if (bestDist < 32) {
+    hoveredIdx=bestI; hoveredAltIdx=-1;
+    const ev=currentEvents[bestI];
+    if (ev) showTip(ev.year, ev.title, ev.cat.toUpperCase(), e.clientX, e.clientY);
+    canvas.style.cursor='pointer';
+  } else {
+    hoveredIdx=-1; hoveredAltIdx=-1;
+    hideTooltip();
+    canvas.style.cursor = isDragging?'grabbing':'crosshair';
+  }
+  if (isDragging) pluckAt(mx, my);
+});
+
+canvas.addEventListener('mousedown', e => {
+  isDragging=true; canvas.style.cursor='grabbing';
+  const rect=canvas.getBoundingClientRect();
+  pluckAt(e.clientX-rect.left, e.clientY-rect.top);
+});
+canvas.addEventListener('mouseup', () => { isDragging=false; canvas.style.cursor='crosshair'; });
+canvas.addEventListener('mouseleave', () => { isDragging=false; hoveredIdx=-1; hoveredAltIdx=-1; hideTooltip(); });
+
+canvas.addEventListener('click', e => {
+  if (isDragging) return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+
+  // If already pulled, no more selection
+  if (pulledCelebs[currentCelKey]) return;
+
+  let bestDist=999; let bestI=-1;
+  physEvents.forEach((pe,i) => { const d=Math.hypot(pe.x-mx,pe.y-my); if(d<bestDist){bestDist=d;bestI=i;} });
+  if (bestDist < 36) setFork(bestI);
+});
+
+function pluckAt(mx, my) {
+  let bestDist=999; let bestI=-1;
+  physEvents.forEach((pe,i) => { const d=Math.hypot(pe.x-mx,pe.y-my); if(d<bestDist){bestDist=d;bestI=i;} });
+  if (bestDist < 60 && bestI >= 0) {
+    if (currentLayout === 'vertical') {
+      physEvents[bestI].vx = (physEvents[bestI].vx||0) + (mx-physEvents[bestI].x)*0.4;
+    } else {
+      physEvents[bestI].vy += (my-physEvents[bestI].y)*0.4;
+    }
+  }
+}
+
+function setFork(i) {
+  if (pulledCelebs[currentCelKey]) return;
+  forkIdx = i;
+  const ev = currentEvents[i];
+  if (currentLayout === 'vertical') {
+    physEvents[i].vx = (physEvents[i].vx||0) - 18;
+  } else {
+    physEvents[i].vy -= 18;
+  }
+  document.getElementById('pullBtn').disabled = false;
+  document.getElementById('pullHint').innerHTML =
+    `<em>${ev.year} · ${ev.title.split('—')[0].trim()}</em> — fork point selected. Ready to pull.`;
+}
+
+function pullString() {
+  if (forkIdx < 0 || pulledCelebs[currentCelKey]) return;
+  pulledCelebs[currentCelKey] = true;
+  pulled = true;
+  butterflyActive = true;
+  butterflyT = 0;
+
+  const fpe = physEvents[forkIdx];
+  if (currentLayout === 'vertical') {
+    fpe.vx = (fpe.vx||0) - 30;
+  } else {
+    fpe.vy -= 30;
+  }
+  spawnSwarm(fpe.x, fpe.y);
+  physEvents.forEach((pe,i) => {
+    if (i > forkIdx) setTimeout(() => {
+      if (currentLayout === 'vertical') {
+        pe.vx = (pe.vx||0) - (Math.random()*7+3)*(i%2===0?-1:1);
+      } else {
+        pe.vy -= (Math.random()*7+3)*(i%2===0?-1:1);
+      }
+    }, (i-forkIdx)*80);
+  });
+
+  const narr = currentCel.altNarrative;
+  altDim = narr.dim;
+
+  const W = canvas.width/devicePixelRatio;
+  const H = canvas.height/devicePixelRatio;
+  buildAltPhysEvents(W, H, narr.events);
+
+  document.getElementById('dimBadge').textContent = 'DIMENSION '+narr.dim;
+  document.getElementById('dimBadge').classList.add('alt');
+
+  const pb = document.getElementById('pullBtn');
+  pb.textContent = '✓ STRING PULLED — LOCKED';
+  pb.classList.add('pulled');
+  pb.disabled = true;
+
+  document.getElementById('pullHint').innerHTML = `<em>↗ String pulled · one per subject</em>`;
+
+  // Update selector button
+  const selBtn = document.getElementById('selbtn-'+currentCelKey);
+  if (selBtn) selBtn.classList.add('pulled');
+
+  // Show branches after delay
+  setTimeout(() => {
+    renderBranches(narr);
+    renderAISummary(narr);
+  }, 600);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RENDER BRANCHES
+// ═══════════════════════════════════════════════════════════════════════════════
+function renderBranches(narr) {
+  const realDiv = document.getElementById('realCards');
+  const altDiv  = document.getElementById('altCards');
+  realDiv.innerHTML = ''; altDiv.innerHTML = '';
+
+  const realEvents = currentEvents.slice(forkIdx+1);
+  realEvents.forEach((ev,i) => {
+    const card = document.createElement('div');
+    card.className = 'event-card real-path';
+    card.innerHTML = `<div class="card-year">${ev.year}</div><div class="card-title">${ev.title}</div><div class="card-desc">${ev.desc}</div>`;
+    realDiv.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 100+i*100);
+  });
+
+  narr.events.forEach((ev,i) => {
+    const card = document.createElement('div');
+    card.className = 'event-card alt-path';
+    card.innerHTML = `<div class="card-year">${ev.year}</div><div class="card-title">${ev.title}</div><div class="card-desc">${ev.desc}</div>${ev.reason?`<div class="card-reason">${ev.reason}</div>`:''}`;
+    altDiv.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 300+i*120);
+  });
+
+  document.getElementById('branchArea').classList.add('visible');
+}
+
+function renderAISummary(narr) {
+  const box = document.getElementById('aiSummary');
+  const tag = document.getElementById('aiDimTag');
+  const txt = document.getElementById('aiText');
+  tag.textContent = '> DIMENSION: '+narr.dim+' · FORK: '+currentCel.forkLabel;
+  txt.textContent = '';
+  box.classList.add('visible');
+
+  const full = narr.summary;
+  let i = 0;
+  const cursor = document.createElement('span');
+  cursor.className = 'ai-cursor'; cursor.textContent = '▊';
+  txt.appendChild(cursor);
+  const iv = setInterval(() => {
+    if (i < full.length) {
+      txt.insertBefore(document.createTextNode(full[i]), cursor);
+      i++;
+    } else { clearInterval(iv); cursor.remove(); }
+  }, 16);
+
+  box.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════════════════════════════
+function showTip(year, title, cat, cx, cy) {
+  const rect = wrap.getBoundingClientRect();
+  document.getElementById('ttYear').textContent = year;
+  document.getElementById('ttTitle').textContent = title;
+  document.getElementById('ttCat').textContent = cat;
+  tooltip.style.left = (cx - rect.left + 12) + 'px';
+  tooltip.style.top  = (cy - rect.top  - 50) + 'px';
+  tooltip.classList.add('visible');
+}
+function hideTooltip() { tooltip.classList.remove('visible'); }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════════
+buildSelector();
+currentCel = CELEBRITY_DATA.taylor;
+currentEvents = currentCel.events;
+document.getElementById('selbtn-taylor')?.classList.add('active');
+document.getElementById('celName').textContent = currentCel.name;
+document.getElementById('celBorn').textContent = currentCel.born;
+document.getElementById('celSummary').textContent = currentCel.summary;
+document.getElementById('forkLabelName').textContent = currentCel.forkLabel;
+
+// Fork-why explainer
+document.getElementById('forkWhyType').textContent = currentCel.forkType || '';
+document.getElementById('forkWhyText').textContent = currentCel.forkWhy  || '';
+
+const wetag = document.getElementById('worldEventTag');
+wetag.textContent = currentCel.worldEventLabel;
+wetag.style.display = '';
+document.getElementById('worldCallout').textContent = '// WORLD EVENT CONTEXT: '+currentCel.worldEventDesc;
+document.getElementById('worldCallout').classList.add('visible');
+
+worldPhysX = null;
+
+// Init layout button state
+{ const btn = document.getElementById('layoutBtn');
+  if (btn) { btn.textContent = currentLayout === 'vertical' ? '↕' : '⟷'; btn.classList.toggle('active', currentLayout === 'vertical'); } }
+
+window.addEventListener('resize', () => { resize(); resizeOverlay(); });
+resize();
+resizeOverlay();
+buildYearAxis();
+loop();
+</script>
+
+<div style="text-align:center;padding:20px 24px;border-top:1px solid rgba(255,255,255,0.06);margin-top:40px;">
+  <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(232,232,224,0.2);">
+    © 2025 DYSTOPIC LABS &nbsp;·&nbsp;
+    <a href="/privacy.html" style="color:rgba(232,232,224,0.35);text-decoration:none;letter-spacing:2px;" onmouseover="this.style.color='#ffb800'" onmouseout="this.style.color='rgba(232,232,224,0.35)'">PRIVACY POLICY</a>
+    &nbsp;·&nbsp;
+    <a href="/contact" style="color:rgba(232,232,224,0.35);text-decoration:none;letter-spacing:2px;" onmouseover="this.style.color='#ffb800'" onmouseout="this.style.color='rgba(232,232,224,0.35)'">CONTACT</a>
+  </span>
+</div>
+</body>
+</html>

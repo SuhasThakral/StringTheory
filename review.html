@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>STRING THEORY — Review Answers — DYSTOPIC LABS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:  #020202;
+  --bg:     #0a0a0f;
+  --amber:  #ffb800;
+  --cyan:   #00f0ff;
+  --green:  #00ff41;
+  --red:    #ff2222;
+  --white:  #e8e8e0;
+  --dim:    rgba(232,232,224,0.4);
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-m: 'Share Tech Mono', monospace;
+  --font-b: 'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-b);
+  cursor: crosshair;
+  min-height: 100vh;
+  padding-bottom: 120px;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
+  pointer-events:none; z-index:9999;
+}
+
+/* HEADER */
+.rv-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(2,2,2,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,184,0,0.1);
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  flex-wrap: wrap;
+}
+.rv-header-left {
+  display: flex; align-items: baseline; gap: 14px;
+}
+.rv-title {
+  font-family: var(--font-m); font-size: 10px; letter-spacing: 3px;
+  color: rgba(255,184,0,0.5); text-transform: uppercase;
+}
+.rv-name {
+  font-family: var(--font-d); font-size: 22px; letter-spacing: 1px;
+  color: var(--amber);
+}
+.rv-meta {
+  font-family: var(--font-m); font-size: 9px; letter-spacing: 1px;
+  color: rgba(232,232,224,0.25);
+}
+.rv-header-actions {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+
+/* CONTENT */
+.rv-body {
+  max-width: 640px; margin: 0 auto; padding: 0 24px;
+}
+
+/* SECTION */
+.rv-section {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 32px 0 8px;
+}
+.rv-section-label {
+  font-family: var(--font-m); font-size: 9px; letter-spacing: 3px;
+  color: rgba(255,184,0,0.3); text-transform: uppercase; margin-bottom: 20px;
+}
+.rv-field { margin-bottom: 28px; }
+.rv-field-label {
+  font-family: var(--font-m); font-size: 9px; letter-spacing: 2px;
+  color: rgba(255,255,255,0.2); text-transform: uppercase; margin-bottom: 8px;
+}
+.rv-hint {
+  font-family: var(--font-b); font-style: italic; font-size: 11px;
+  color: rgba(232,232,224,0.2); margin-bottom: 8px; line-height: 1.6;
+}
+.rv-row { display: flex; gap: 16px; align-items: flex-end; }
+.rv-row .rv-field { flex: 1; margin-bottom: 0; }
+
+/* INPUTS */
+.rv-input {
+  width: 100%;
+  background: transparent;
+  border: none; border-bottom: 1px solid rgba(255,184,0,0.18);
+  padding: 10px 4px;
+  color: var(--white); font-family: var(--font-b); font-size: 15px; line-height: 1.6;
+  outline: none; transition: border-color 0.2s; display: block;
+}
+.rv-input:focus { border-color: rgba(255,184,0,0.55); }
+.rv-input::placeholder { color: rgba(232,232,224,0.15); }
+textarea.rv-input { resize: vertical; min-height: 72px; }
+.rv-input.year { max-width: 120px; text-align: center; }
+
+/* CHOICES */
+.rv-choices {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.rv-choice {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 10px 16px; cursor: crosshair;
+  font-family: var(--font-m); font-size: 11px; letter-spacing: 0.5px;
+  color: rgba(232,232,224,0.45);
+  transition: all 0.15s;
+  user-select: none;
+}
+.rv-choice:hover { border-color: rgba(255,184,0,0.3); color: var(--white); }
+.rv-choice.sel { border-color: var(--amber); color: var(--amber); background: rgba(255,184,0,0.07); }
+
+/* SLIDERS */
+.rv-slider-block { margin-bottom: 32px; }
+.rv-slider-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.rv-slider-name { font-family: var(--font-m); font-size: 10px; letter-spacing: 2px; color: var(--amber); }
+.rv-slider-val { font-family: var(--font-d); font-size: 26px; color: var(--amber); }
+input[type=range].rv-slider {
+  width: 100%; accent-color: var(--amber); cursor: crosshair;
+  -webkit-appearance: none; height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px;
+}
+input[type=range].rv-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--amber); cursor: crosshair; border: none;
+}
+.rv-slider-ends { display: flex; justify-content: space-between; font-family: var(--font-m); font-size: 9px; letter-spacing: 1px; color: rgba(232,232,224,0.2); margin-top: 6px; }
+
+/* BUTTONS */
+.btn-primary {
+  font-family: var(--font-m); font-size: 11px; letter-spacing: 3px;
+  background: var(--amber); color: var(--black); border: none; padding: 14px 28px;
+  cursor: crosshair; transition: all 0.2s; white-space: nowrap;
+}
+.btn-primary:hover { box-shadow: 0 0 20px rgba(255,184,0,0.35); }
+.btn-primary:disabled { opacity: 0.25; cursor: not-allowed; }
+.btn-secondary {
+  font-family: var(--font-m); font-size: 10px; letter-spacing: 2px;
+  background: transparent; color: rgba(0,240,255,0.5);
+  border: 1px solid rgba(0,240,255,0.2); padding: 12px 22px;
+  cursor: crosshair; transition: all 0.2s; white-space: nowrap;
+}
+.btn-secondary:hover { color: var(--cyan); border-color: rgba(0,240,255,0.5); }
+.btn-secondary:disabled { opacity: 0.25; cursor: not-allowed; }
+.btn-ghost {
+  font-family: var(--font-m); font-size: 10px; letter-spacing: 2px;
+  background: transparent; color: rgba(232,232,224,0.25); border: none;
+  padding: 12px 0; cursor: crosshair; text-decoration: underline;
+  text-underline-offset: 4px; transition: color 0.2s;
+}
+.btn-ghost:hover { color: rgba(232,232,224,0.5); }
+
+/* STICKY FOOTER */
+.rv-footer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(2,2,2,0.95);
+  border-top: 1px solid rgba(255,184,0,0.1);
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  justify-content: space-between;
+}
+.rv-footer-left { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.rv-status {
+  font-family: var(--font-m); font-size: 9px; letter-spacing: 2px;
+  color: rgba(255,184,0,0.4); min-width: 180px;
+}
+
+/* NO DATA */
+#noDataMsg {
+  display: none; text-align: center; padding: 80px 24px;
+  font-family: var(--font-m); font-size: 11px; letter-spacing: 2px;
+  color: rgba(255,184,0,0.3); line-height: 2;
+}
+
+@media (max-width: 600px) {
+  .rv-row { flex-direction: column; gap: 0; }
+  .rv-header-actions { gap: 8px; }
+  .rv-footer-left { gap: 8px; }
+  body { padding-bottom: 160px; }
+  .rv-footer { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .rv-footer .btn-primary, .rv-footer .btn-ghost { font-size: 11px; padding: 10px 14px; width: 100%; text-align: center; }
+  .rv-footer-left { flex-direction: column; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="rv-header">
+  <div class="rv-header-left">
+    <span class="rv-title">// REVIEW ANSWERS</span>
+    <span class="rv-name" id="hdr_name">—</span>
+    <span class="rv-meta" id="hdr_meta">—</span>
+  </div>
+  <div class="rv-header-actions">
+    <a href="quiz.html" class="btn-ghost" style="text-decoration:none;padding:0">← BACK TO QUIZ</a>
+  </div>
+</div>
+
+<div id="noDataMsg">
+  // NO TIMELINE DATA FOUND<br>
+  <a href="quiz.html" style="color:var(--amber);text-decoration:none;letter-spacing:1px">← START THE QUIZ</a>
+</div>
+
+<div class="rv-body" id="rvBody">
+
+  <!-- IDENTITY -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 01 — IDENTITY</div>
+    <div class="rv-row">
+      <div class="rv-field">
+        <div class="rv-field-label">First name</div>
+        <input class="rv-input" type="text" id="f_name" placeholder="What people call you" autocomplete="off">
+      </div>
+      <div class="rv-field">
+        <div class="rv-field-label">Birth year</div>
+        <input class="rv-input year" type="number" id="f_birthYear" placeholder="e.g. 1990" min="1940" max="2006">
+      </div>
+    </div>
+    <div class="rv-field">
+      <div class="rv-field-label">Current city</div>
+      <input class="rv-input" type="text" id="f_city" placeholder="Where you live now" autocomplete="off">
+    </div>
+    <div class="rv-field">
+      <div class="rv-field-label">Birth city <span style="opacity:0.4;font-size:9px">(optional)</span></div>
+      <input class="rv-input" type="text" id="f_birthCity" placeholder="Where you grew up" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- LIFE RIGHT NOW -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 02 — LIFE RIGHT NOW</div>
+    <div class="rv-field">
+      <div class="rv-field-label">Life sentence — where are you right now?</div>
+      <div class="rv-hint">One sentence. No filter.</div>
+      <textarea class="rv-input" id="f_lifeSentence" rows="3" placeholder="I'm in a city I can't leave, doing work I don't hate enough to quit..."></textarea>
+    </div>
+    <div class="rv-field">
+      <div class="rv-field-label">Age bracket</div>
+      <div class="rv-choices" id="ch_age">
+        <div class="rv-choice" data-v="early20s" onclick="pick('ch_age',this,'ageBracket')">Early 20s</div>
+        <div class="rv-choice" data-v="late20s"  onclick="pick('ch_age',this,'ageBracket')">Late 20s</div>
+        <div class="rv-choice" data-v="early30s" onclick="pick('ch_age',this,'ageBracket')">Early 30s</div>
+        <div class="rv-choice" data-v="mid30s"   onclick="pick('ch_age',this,'ageBracket')">Mid 30s</div>
+        <div class="rv-choice" data-v="40s"      onclick="pick('ch_age',this,'ageBracket')">40s</div>
+        <div class="rv-choice" data-v="50s+"     onclick="pick('ch_age',this,'ageBracket')">50s+</div>
+      </div>
+    </div>
+    <div class="rv-field">
+      <div class="rv-field-label">How does it feel?</div>
+      <div class="rv-choices" id="ch_emotion">
+        <div class="rv-choice" data-v="restless"   onclick="pick('ch_emotion',this,'emotion')">Restless</div>
+        <div class="rv-choice" data-v="stuck"      onclick="pick('ch_emotion',this,'emotion')">Stuck</div>
+        <div class="rv-choice" data-v="curious"    onclick="pick('ch_emotion',this,'emotion')">Curious</div>
+        <div class="rv-choice" data-v="regretful"  onclick="pick('ch_emotion',this,'emotion')">Regretful</div>
+        <div class="rv-choice" data-v="rebuilding" onclick="pick('ch_emotion',this,'emotion')">Rebuilding</div>
+        <div class="rv-choice" data-v="settled"    onclick="pick('ch_emotion',this,'emotion')">Settled</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q1 ANCHOR -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 03 — ANCHOR</div>
+    <div class="rv-field">
+      <div class="rv-field-label">What's keeping you where you are?</div>
+      <div class="rv-hint">City, job, relationship — whatever holds the centre.</div>
+      <textarea class="rv-input" id="f_anchor" rows="3" placeholder="My job. My relationship. The lease that doesn't end till March..."></textarea>
+    </div>
+  </div>
+
+  <!-- Q2 FORK -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 04 — THE FORK</div>
+    <div class="rv-field">
+      <div class="rv-field-label">The thing you most nearly did differently</div>
+      <div class="rv-hint">The fork you still think about.</div>
+      <textarea class="rv-input" id="f_fork" rows="3" placeholder="Almost moved to Berlin. Almost left the relationship. Almost said yes..."></textarea>
+    </div>
+    <div class="rv-field">
+      <div class="rv-field-label">Year <span style="opacity:0.4;font-size:9px">(optional)</span></div>
+      <input class="rv-input year" type="number" id="f_forkYear" placeholder="e.g. 2019" min="1970" max="2026">
+    </div>
+  </div>
+
+  <!-- Q3 RELATIONSHIP -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 05 — RELATIONSHIPS</div>
+    <div class="rv-field">
+      <div class="rv-field-label">Relationship situation</div>
+      <textarea class="rv-input" id="f_relationship" rows="3" placeholder="What's the shape of your love life right now..."></textarea>
+    </div>
+  </div>
+
+  <!-- Q4 HEALTH -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 06 — HEALTH</div>
+    <div class="rv-field">
+      <div class="rv-field-label">How are you treating your health?</div>
+      <div class="rv-hint">The gym you joined, the weight you gained, the sleep you sacrificed.</div>
+      <textarea class="rv-input" id="f_health" rows="3" placeholder="Running 3x a week but eating badly. Sleep is the real problem..."></textarea>
+    </div>
+  </div>
+
+  <!-- Q5 SECRET -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 07 — SECRET AMBITION</div>
+    <div class="rv-field">
+      <div class="rv-field-label">What would make you genuinely happier?</div>
+      <div class="rv-hint">The real answer, not the polite one.</div>
+      <textarea class="rv-input" id="f_secret" rows="3" placeholder="Quit my job and open a small restaurant. Move to the coast. Just stop..."></textarea>
+    </div>
+  </div>
+
+  <!-- Q6 CITY -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 08 — ELSEWHERE</div>
+    <div class="rv-field">
+      <div class="rv-field-label">A city you've seriously thought about living in</div>
+      <input class="rv-input" type="text" id="f_altCity" placeholder="Lisbon, Berlin, Tokyo, anywhere..." autocomplete="off">
+    </div>
+  </div>
+
+  <!-- Q7 HOBBY -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 09 — OUTSIDE WORK</div>
+    <div class="rv-field">
+      <div class="rv-field-label">What do you do that has nothing to do with work?</div>
+      <textarea class="rv-input" id="f_hobby" rows="2" placeholder="Climbing, ceramics, DJing badly on weekends..."></textarea>
+    </div>
+  </div>
+
+  <!-- Q8 MONEY -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 10 — MONEY</div>
+    <div class="rv-field">
+      <div class="rv-field-label">Financially — where are you versus where you expected?</div>
+      <div class="rv-choices" id="ch_money">
+        <div class="rv-choice" data-v="behind"      onclick="pick('ch_money',this,'money')">Behind</div>
+        <div class="rv-choice" data-v="ontrack"     onclick="pick('ch_money',this,'money')">On track</div>
+        <div class="rv-choice" data-v="ahead"       onclick="pick('ch_money',this,'money')">Ahead</div>
+        <div class="rv-choice" data-v="complicated" onclick="pick('ch_money',this,'money')">It's complicated</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI FOLLOW-UP QUESTIONS -->
+  <div class="rv-section" id="fuSection">
+    <div class="rv-section-label">// 11 — AI QUESTIONS &amp; TIMELINE DEPTH</div>
+    <div class="rv-hint" style="margin-bottom:20px">These questions were generated by AI specifically for you. Your answers place more precise nodes on your timeline. Add a year wherever you can.</div>
+
+    <div id="fuExistingWrap"></div>
+
+    <div id="fuGenerating" style="display:none;font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:rgba(255,184,0,0.4);margin-bottom:20px">// GENERATING QUESTIONS…</div>
+
+    <div id="fuNewWrap" style="display:none"></div>
+
+    <button class="btn-secondary" id="fuEnrichBtn" onclick="enrichTimeline()" style="margin-top:8px">
+      ✦ ENRICH YOUR TIMELINE — generate more questions
+    </button>
+    <div style="font-family:var(--font-b);font-style:italic;font-size:10px;color:rgba(232,232,224,0.2);margin-top:8px;line-height:1.6">
+      Each new round adds 5 targeted questions. The more you answer, the more nodes appear on your timeline.
+    </div>
+  </div>
+
+  <!-- SLIDERS -->
+  <div class="rv-section">
+    <div class="rv-section-label">// 12 — CALIBRATION</div>
+    <div class="rv-slider-block">
+      <div class="rv-slider-head">
+        <span class="rv-slider-name">CREATIVITY</span>
+        <span class="rv-slider-val" id="val_creativity">50</span>
+      </div>
+      <input type="range" class="rv-slider" id="sl_creativity" min="0" max="100" value="50"
+        oninput="document.getElementById('val_creativity').textContent=this.value">
+      <div class="rv-slider-ends"><span>Realistic</span><span>Ridiculous</span></div>
+    </div>
+    <div class="rv-slider-block">
+      <div class="rv-slider-head">
+        <span class="rv-slider-name">OPTIMISM</span>
+        <span class="rv-slider-val" id="val_optimism">0</span>
+      </div>
+      <input type="range" class="rv-slider" id="sl_optimism" min="-2" max="2" value="0" step="1"
+        oninput="document.getElementById('val_optimism').textContent=this.value">
+      <div class="rv-slider-ends"><span>Brutally honest</span><span>Dream version</span></div>
+    </div>
+  </div>
+
+</div><!-- /rv-body -->
+
+<div id="rvBody" style="display:none"></div><!-- placeholder -->
+
+<!-- STICKY FOOTER -->
+<div class="rv-footer">
+  <div class="rv-footer-left">
+    <button class="btn-primary" onclick="saveAndGoViz()">SAVE &amp; OPEN VIZ →</button>
+    <button class="btn-secondary" id="reEnrichBtn" onclick="saveAndReEnrich()">↺ SAVE &amp; RE-ENRICH</button>
+  </div>
+  <span class="rv-status" id="rvStatus"></span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// LOAD DATA
+// ═══════════════════════════════════════════════════════
+let DATA = null;
+const picks = {};  // tracks current selected value per choice group key
+
+(function init() {
+  try {
+    const raw = localStorage.getItem('st_timeline_data');
+    if (!raw) { showNoData(); return; }
+    DATA = JSON.parse(raw);
+    if (!DATA || !DATA.name) { showNoData(); return; }
+  } catch { showNoData(); return; }
+  fillForm();
+})();
+
+function showNoData() {
+  document.getElementById('noDataMsg').style.display = 'block';
+  document.getElementById('rvBody').style.display    = 'none';
+  document.querySelector('.rv-footer').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════
+// FOLLOW-UP Q HELPERS
+// ═══════════════════════════════════════════════════════
+let _newFuQuestions = []; // questions generated this session
+
+function renderExistingFollowUps() {
+  const wrap = document.getElementById('fuExistingWrap');
+  const questions = (DATA.ai && DATA.ai.followUpQuestions) || [];
+  const answers   = (DATA.ai && DATA.ai.followUpAnswers)   || {};
+  if (questions.length === 0) {
+    wrap.innerHTML = '<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(232,232,224,0.2);margin-bottom:16px">// No AI questions yet — click ENRICH to generate them</div>';
+    return;
+  }
+  wrap.innerHTML = questions.map((q, i) => {
+    const key = q.key || ('q' + i);
+    const existing = answers[key] || '';
+    const existingYr = answers[key + '_year'] || '';
+    return `
+      <div class="rv-field" style="border-left:2px solid rgba(255,184,0,0.15);padding-left:14px">
+        <div class="rv-field-label">${String(i+1).padStart(2,'0')} — ${q.question || q}</div>
+        ${q.hint ? `<div class="rv-hint">${q.hint}</div>` : ''}
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <textarea class="rv-input" id="efu_ans_${i}" rows="2" style="flex:1"
+            placeholder="Your answer…">${existing}</textarea>
+          <div style="flex:0 0 96px;padding-top:2px">
+            <div class="rv-field-label">// YEAR</div>
+            <input class="rv-input year" type="number" id="efu_yr_${i}"
+              placeholder="e.g. 2019" min="1970" max="2026" value="${existingYr}">
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function enrichTimeline() {
+  const btn      = document.getElementById('fuEnrichBtn');
+  const genEl    = document.getElementById('fuGenerating');
+  const newWrap  = document.getElementById('fuNewWrap');
+  btn.disabled   = true;
+  genEl.style.display = 'block';
+
+  // First save any edits to existing follow-up answers
+  const existingQs = (DATA.ai && DATA.ai.followUpQuestions) || [];
+  const answers = (DATA.ai && DATA.ai.followUpAnswers) || {};
+  existingQs.forEach((q, i) => {
+    const ans = (document.getElementById('efu_ans_' + i) || {}).value || '';
+    const yr  = (document.getElementById('efu_yr_'  + i) || {}).value || '';
+    if (ans.trim()) {
+      answers[q.key] = yr.trim() ? ans.trim() + ' (' + yr.trim() + ')' : ans.trim();
+      if (yr.trim()) answers[q.key + '_year'] = yr.trim();
+    }
+  });
+
+  const key = (DATA.ai && DATA.ai.key) || localStorage.getItem('st_api_key') || '';
+  const a = DATA.answers     || {};
+  const b = DATA.bonusAnswers|| {};
+  const alreadyAsked = [...existingQs, ..._newFuQuestions].map(q => q.question || q).join(' | ');
+
+  const ctx = [
+    `Person: ${DATA.name||'?'}, born ${DATA.birthYear||'?'}, lives in ${DATA.city||'?'}.`,
+    DATA.lifeSentence ? `In their own words: "${DATA.lifeSentence}"` : '',
+    b.anchor          ? `Anchor: "${b.anchor}"` : '',
+    a.forkMoment      ? `Fork moment: "${a.forkMoment}"${a.forkYear ? ` (~${a.forkYear})` : ''}` : '',
+    b.relationship    ? `Relationship: "${b.relationship}"` : '',
+    b.health          ? `Health: "${b.health}"` : '',
+    b.happinessWish   ? `Ambition: "${b.happinessWish}"` : '',
+    b.hobby           ? `Hobby: "${b.hobby}"` : '',
+    b.money           ? `Financial: ${b.money}` : '',
+    Object.keys(answers).length ? `Already answered: ${JSON.stringify(answers)}` : '',
+    alreadyAsked ? `Already asked: ${alreadyAsked}` : '',
+  ].filter(Boolean).join('\n');
+
+  const prompt = `You are helping build a precise personal timeline. Generate 5 NEW follow-up questions for this person that will add MORE nodes to their timeline — career milestones, relationship moments, financial decisions, health turning points, identity shifts.
+
+PERSON:
+${ctx}
+
+Rules:
+- Questions must be SPECIFIC to this person's story — reference their actual words
+- Every question should invite a YEAR (ask "when" or "what year")
+- Do NOT repeat questions already asked
+- Go deeper — childhood, first job, a specific move, a financial decision, a health chapter
+- Tone: direct, warm, like a smart interviewer
+
+Return ONLY a valid JSON array:
+[{"key":"uniqueCamelKey","question":"Your specific question?","hint":"Why this adds a node to your timeline"}, ...]`;
+
+  try {
+    const raw = await callAI([{role:'user', content:prompt}], key);
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (match) {
+      const parsed = JSON.parse(match[0]);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        _newFuQuestions = [..._newFuQuestions, ...parsed.slice(0, 5)];
+        genEl.style.display = 'none';
+        newWrap.style.display = 'block';
+        newWrap.innerHTML += parsed.slice(0, 5).map((q, i) => {
+          const idx = existingQs.length + _newFuQuestions.length - parsed.slice(0,5).length + i;
+          return `
+          <div class="rv-field" style="border-left:2px solid rgba(0,240,255,0.2);padding-left:14px">
+            <div class="rv-field-label" style="color:rgba(0,240,255,0.5)">${String(idx+1).padStart(2,'0')} — ${q.question}</div>
+            ${q.hint ? `<div class="rv-hint" style="color:rgba(0,240,255,0.2)">${q.hint}</div>` : ''}
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <textarea class="rv-input" id="nfu_ans_${idx}" rows="2" style="flex:1"
+                placeholder="Your answer…"></textarea>
+              <div style="flex:0 0 96px;padding-top:2px">
+                <div class="rv-field-label">// YEAR</div>
+                <input class="rv-input year" type="number" id="nfu_yr_${idx}"
+                  placeholder="e.g. 2019" min="1970" max="2026">
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+        btn.disabled = false;
+        return;
+      }
+    }
+  } catch(e) { console.warn('[enrich-fu]', e); }
+
+  genEl.style.display = 'none';
+  genEl.textContent = '// error generating — check API key';
+  btn.disabled = false;
+}
+
+function collectFollowUpAnswers() {
+  if (!DATA.ai) DATA.ai = {};
+  const answers = DATA.ai.followUpAnswers || {};
+
+  // Existing questions
+  const existingQs = DATA.ai.followUpQuestions || [];
+  existingQs.forEach((q, i) => {
+    const ans = (document.getElementById('efu_ans_' + i) || {}).value || '';
+    const yr  = (document.getElementById('efu_yr_'  + i) || {}).value || '';
+    if (ans.trim()) {
+      answers[q.key] = yr.trim() ? ans.trim() + ' (' + yr.trim() + ')' : ans.trim();
+      if (yr.trim()) answers[q.key + '_year'] = yr.trim();
+    }
+  });
+
+  // New questions generated this session
+  const offset = existingQs.length;
+  _newFuQuestions.forEach((q, i) => {
+    const idx = offset + i;
+    const ans = (document.getElementById('nfu_ans_' + idx) || {}).value || '';
+    const yr  = (document.getElementById('nfu_yr_'  + idx) || {}).value || '';
+    if (ans.trim()) {
+      answers[q.key] = yr.trim() ? ans.trim() + ' (' + yr.trim() + ')' : ans.trim();
+      if (yr.trim()) answers[q.key + '_year'] = yr.trim();
+    }
+  });
+
+  // Merge new questions into the stored list
+  if (_newFuQuestions.length > 0) {
+    DATA.ai.followUpQuestions = [...existingQs, ..._newFuQuestions];
+  }
+  DATA.ai.followUpAnswers = answers;
+}
+
+function fillForm() {
+  const a = DATA.answers     || {};
+  const b = DATA.bonusAnswers|| {};
+
+  // Header
+  document.getElementById('hdr_name').textContent = DATA.name || '—';
+  document.getElementById('hdr_meta').textContent =
+    (DATA.city || '—') + ' · born ' + (DATA.birthYear || '—');
+
+  // Identity
+  setV('f_name',      DATA.name);
+  setV('f_birthYear', DATA.birthYear);
+  setV('f_city',      DATA.city);
+  setV('f_birthCity', DATA.birthCity || DATA.city);
+
+  // Life now
+  setV('f_lifeSentence', DATA.lifeSentence);
+  selChoice('ch_age',     DATA.ageBracket,       'ageBracket');
+  selChoice('ch_emotion', b.emotion,             'emotion');
+
+  // Questions
+  setV('f_anchor',       b.anchor       || a.anchor      || '');
+  setV('f_fork',         a.forkMoment   || b.almostDid   || '');
+  setV('f_forkYear',     a.forkYear     || '');
+  setV('f_relationship', b.relationship || '');
+  setV('f_health',       b.health       || '');
+  setV('f_secret',       b.happinessWish|| '');
+  setV('f_altCity',      a.altCityPath  || '');
+  setV('f_hobby',        b.hobby        || '');
+  selChoice('ch_money', b.money,               'money');
+
+  // Sliders
+  const sc = document.getElementById('sl_creativity');
+  const so = document.getElementById('sl_optimism');
+  if (sc) { sc.value = DATA.creativity ?? 50; document.getElementById('val_creativity').textContent = sc.value; }
+  if (so) { so.value = DATA.optimism   ?? 0;  document.getElementById('val_optimism').textContent  = so.value; }
+
+  // Render existing AI follow-up questions
+  renderExistingFollowUps();
+}
+
+function setV(id, val) {
+  const el = document.getElementById(id);
+  if (el && val !== undefined && val !== null) el.value = val;
+}
+
+function selChoice(groupId, val, key) {
+  if (!val) return;
+  picks[key] = val;
+  document.querySelectorAll('#' + groupId + ' .rv-choice').forEach(c => {
+    c.classList.toggle('sel', c.dataset.v === val);
+  });
+}
+
+function pick(groupId, el, key) {
+  document.querySelectorAll('#' + groupId + ' .rv-choice').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  picks[key] = el.dataset.v;
+}
+
+// ═══════════════════════════════════════════════════════
+// COLLECT & SAVE
+// ═══════════════════════════════════════════════════════
+function collectAndSave() {
+  if (!DATA) return;
+  if (!DATA.answers)     DATA.answers     = {};
+  if (!DATA.bonusAnswers) DATA.bonusAnswers = {};
+
+  const a = DATA.answers;
+  const b = DATA.bonusAnswers;
+
+  DATA.name      = g('f_name')      || DATA.name;
+  DATA.birthYear = parseInt(g('f_birthYear')) || DATA.birthYear;
+  DATA.city      = g('f_city')      || DATA.city;
+  DATA.birthCity = g('f_birthCity') || DATA.birthCity || DATA.city;
+  DATA.lifeSentence = g('f_lifeSentence') || DATA.lifeSentence;
+  DATA.ageBracket   = picks.ageBracket   || DATA.ageBracket;
+  DATA.segment      = ['40s','50s+'].includes(DATA.ageBracket) ? 'reassessing' : 'establishing';
+  DATA.creativity   = parseInt(document.getElementById('sl_creativity').value) ?? DATA.creativity;
+  DATA.optimism     = parseInt(document.getElementById('sl_optimism').value)   ?? DATA.optimism;
+
+  b.emotion       = picks.emotion       || b.emotion;
+  b.anchor        = g('f_anchor')       || b.anchor;
+  b.relationship  = g('f_relationship') || b.relationship;
+  b.health        = g('f_health')       || b.health;
+  b.happinessWish = g('f_secret')       || b.happinessWish;
+  b.hobby         = g('f_hobby')        || b.hobby;
+  b.money         = picks.money         || b.money;
+  b.almostDid     = g('f_fork')         || b.almostDid;
+
+  a.forkMoment  = g('f_fork')      || a.forkMoment;
+  a.forkYear    = parseInt(g('f_forkYear')) || a.forkYear || null;
+  a.altCityPath = g('f_altCity')   || a.altCityPath;
+  a.anchor      = b.anchor;
+
+  // Ensure AI key is preserved
+  if (!DATA.ai) DATA.ai = {};
+  const storedKey = localStorage.getItem('st_api_key');
+  if (storedKey && !DATA.ai.key) DATA.ai.key = storedKey;
+
+  DATA.savedAt = new Date().toISOString();
+  localStorage.setItem('st_timeline_data', JSON.stringify(DATA));
+}
+
+function g(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+// ═══════════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════════
+function saveAndGoViz() {
+  collectAndSave();
+  collectFollowUpAnswers();
+  window.location.href = 'viz.html';
+}
+
+async function saveAndReEnrich() {
+  collectAndSave();
+  collectFollowUpAnswers();
+  const btn = document.getElementById('reEnrichBtn');
+  const status = document.getElementById('rvStatus');
+  btn.disabled = true;
+  btn.textContent = '↺ ENRICHING…';
+
+  const key = (DATA.ai && DATA.ai.key) || localStorage.getItem('st_api_key') || '';
+  const by   = DATA.birthYear || 1990;
+  const name = DATA.name      || 'unknown';
+  const city = DATA.city      || 'unknown';
+  const a    = DATA.answers      || {};
+  const b    = DATA.bonusAnswers || {};
+
+  // Pass 1 — custom events
+  try {
+    status.textContent = '// enriching timeline…';
+    const ctx = [
+      `Person: ${name}, born ${by}, lives in ${city}.`,
+      DATA.lifeSentence   ? `In their own words: "${DATA.lifeSentence}"` : '',
+      b.anchor            ? `Anchor: "${b.anchor}"` : '',
+      a.forkMoment        ? `Fork moment: "${a.forkMoment}"${a.forkYear ? ` (${a.forkYear})` : ''}` : '',
+      b.relationship      ? `Relationship: "${b.relationship}"` : '',
+      b.health            ? `Health: "${b.health}"` : '',
+      b.happinessWish     ? `Ambition: "${b.happinessWish}"` : '',
+      b.hobby             ? `Hobby: "${b.hobby}"` : '',
+      b.money             ? `Financial: ${b.money}` : '',
+    ].filter(Boolean).join('\n');
+
+    const p1 = `You are building a life timeline. Infer 3-5 SPECIFIC personal events implied by this person's story.\n\nCONTEXT:\n${ctx}\n\nRules:\n- Specific to this person (use their actual words, city, hints)\n- Spread across different years\n- Categories: career, relationship, location, identity, finance, health\n- Birth year is ${by}\n- Respond ONLY with a valid JSON array:\n[{"year":2019,"cat":"career","title":"Title","desc":"One sentence."}, ...]`;
+
+    const r1 = await callAI([{role:'user',content:p1}], key);
+    const m1 = r1.match(/\[[\s\S]*\]/);
+    if (m1) {
+      const evs = JSON.parse(m1[0])
+        .filter(e => e.year && e.title && e.year > 1940 && e.year < 2035)
+        .map(e => ({year:parseInt(e.year),cat:e.cat||'identity',title:String(e.title).slice(0,60),desc:e.desc?String(e.desc).slice(0,150):'',isEnriched:true}));
+      DATA.customEvents = evs;
+      localStorage.setItem('st_timeline_data', JSON.stringify(DATA));
+    }
+  } catch(e) { console.warn('[enrich pass1]', e); }
+
+  // Pass 2 — biographer
+  try {
+    status.textContent = '// writing your story…';
+    const ctx2 = [
+      DATA.lifeSentence   ? `Life right now: "${DATA.lifeSentence}"` : '',
+      b.anchor            ? `Anchor: "${b.anchor}"` : '',
+      b.relationship      ? `Relationship: "${b.relationship}"` : '',
+      b.health            ? `Health: "${b.health}"` : '',
+      b.hobby             ? `Hobbies: "${b.hobby}"` : '',
+      b.happinessWish     ? `Secret ambition: "${b.happinessWish}"` : '',
+      a.forkMoment        ? `Fork: "${a.forkMoment}" (~${a.forkYear||'?'})` : '',
+      a.cityHistory       ? `Cities: ${a.cityHistory}` : '',
+      a.careerField       ? `Career: ${a.careerField}` : '',
+    ].filter(Boolean).join('\n');
+
+    const p2 = `You are writing the life timeline of a real person as a precise biographer. Every event must be SPECIFIC — real years, real decisions.\n\nPERSON: ${name}, born ${by}, lives in ${city}.\n\nSTORY:\n${ctx2}\n\nGenerate 12-16 life events. Return raw JSON only:\n[{"year":${by},"cat":"identity","title":"Born — ${city}","desc":"One causal sentence."}, ...]`;
+
+    const r2 = await callAI([{role:'user',content:p2}], key);
+    const m2 = r2.match(/\[[\s\S]*\]/);
+    if (m2) {
+      const evs2 = JSON.parse(m2[0])
+        .filter(e => e.year && e.title && e.year > 1930 && e.year < 2035)
+        .map(e => ({year:parseInt(e.year),cat:e.cat||'identity',title:String(e.title).slice(0,80),desc:e.desc?String(e.desc).slice(0,200):''}));
+      if (evs2.length >= 5) {
+        DATA.biographerEvents = evs2;
+        localStorage.setItem('st_timeline_data', JSON.stringify(DATA));
+      }
+    }
+  } catch(e) { console.warn('[enrich pass2]', e); }
+
+  status.textContent = '// done ✓ — opening viz…';
+  btn.disabled = false;
+  btn.textContent = '↺ SAVE & RE-ENRICH';
+  setTimeout(() => { window.location.href = 'viz.html'; }, 800);
+}
+
+// ═══════════════════════════════════════════════════════
+// AI CALL
+// ═══════════════════════════════════════════════════════
+async function callAI(messages) {
+  // Proxied through /api/ai — key stays server-side
+  const res = await fetch('/api/ai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'openai/gpt-oss-120b', messages, max_tokens: 1200, temperature: 0.7 }),
+  });
+  const d = await res.json();
+  if (d.error) throw new Error(d.error.message || d.error);
+  return d.choices?.[0]?.message?.content || '';
+}
+</script>
+<div style="text-align:center;padding:16px 24px;border-top:1px solid rgba(255,255,255,0.05);margin-top:20px;">
+  <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(232,232,224,0.2);">
+    © 2025 DYSTOPIC LABS &nbsp;·&nbsp;
+    <a href="/privacy.html" target="_blank" style="color:rgba(232,232,224,0.35);text-decoration:none;" onmouseover="this.style.color='#ffb800'" onmouseout="this.style.color='rgba(232,232,224,0.35)'">PRIVACY POLICY</a>
+    &nbsp;·&nbsp;
+    <a href="/contact" style="color:rgba(232,232,224,0.35);text-decoration:none;" onmouseover="this.style.color='#ffb800'" onmouseout="this.style.color='rgba(232,232,224,0.35)'">CONTACT</a>
+  </span>
+</div>
+</body>
+</html>

@@ -1160,10 +1160,12 @@ ${ctx}
 
 Rules:
 - Each question must be SPECIFIC to this person's actual answers — reference their exact words
-- Every question should invite a YEAR as part of the answer
-- Focus on the biggest gaps: undated career start, undated relationship moment, undated fork or move
+- Every question should ask for BOTH a year AND context/reason — not just "when" but "when and why" or "when and what changed"
+- Example of bad question: "What year did you move to Spain?" — only asks for a year
+- Example of good question: "You almost moved to Spain — what year were you closest to going, and what was the thing that finally stopped you?" — asks for year + the real reason
+- Focus on the biggest gaps: undated career events, relationship turning points, the fork moment and what was really behind it
 - Do NOT ask what they already answered
-- Tone: direct, like a smart friend who read everything and spotted the gaps
+- Tone: direct, like a smart friend who read everything and spotted what's missing
 - Exactly 3 questions — no more, no less
 
 Return ONLY a valid JSON array, no markdown:
@@ -1224,7 +1226,7 @@ function renderFollowUps(qEl, btnsEl, loadEl, subEl) {
       ${q.hint ? `<div style="font-family:var(--font-b);font-style:italic;font-size:11px;color:rgba(232,232,224,0.25);margin-bottom:8px">${q.hint}</div>` : ''}
       <div style="display:flex;gap:12px;align-items:flex-end">
         <textarea class="q-input" id="fu_ans_${i}" rows="2" style="margin-bottom:0;flex:1"
-          placeholder="Your answer…"></textarea>
+          placeholder="Your answer — include the year and what was behind it…"></textarea>
         <div style="flex:0 0 96px">
           <div class="q-field-label" style="margin-bottom:4px">// YEAR</div>
           <input class="q-input year sm" type="number" id="fu_yr_${i}"
@@ -1666,8 +1668,8 @@ Generate a JSON array of 12-16 life events. RULES:
 async function callAI(messages) {
   const firstContent = messages[0]?.content || '';
   const model = (firstContent.includes('biographer') || firstContent.includes('timeline') || firstContent.includes('TIMELINE'))
-    ? 'llama-3.3-70b-versatile'
-    : 'llama-3.1-8b-instant';
+    ? 'openai/gpt-oss-120b'
+    : 'openai/gpt-oss-20b';
   const res = await fetch('/api/ai', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

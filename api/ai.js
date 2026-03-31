@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: model || 'llama-3.3-70b-versatile',
+        model: model || 'openai/gpt-oss-120b',
         messages,
         max_tokens: max_tokens || 1200,
         temperature: temperature ?? 0.4,

@@ -1,7 +1,5 @@
 import { neon } from '@neondatabase/serverless';
 
-export const config = { runtime: 'edge' };
-
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;   // your real inbox
 const FROM_EMAIL   = process.env.FROM_EMAIL;      // e.g. noreply@dystopic.co (Resend verified domain)
 const RESEND_KEY   = process.env.RESEND_API_KEY;

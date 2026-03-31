@@ -1,7 +1,5 @@
 import { neon } from '@neondatabase/serverless';
 
-export const config = { runtime: 'edge' };
-
 function generateToken() {
   const chars = 'abcdefghijkmnpqrstuvwxyz23456789';
   let token = '';

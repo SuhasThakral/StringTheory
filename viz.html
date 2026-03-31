@@ -695,6 +695,7 @@ body::before {
     <span class="topbar-badge badge-opt-neu" id="optimismBadge" style="display:none"></span>
     <button class="btn-topbar btn-layout" id="layoutBtn" onclick="toggleLayout()" title="Toggle mobile/desktop layout">⬦ MOBILE VIEW</button>
     <button class="btn-topbar btn-hide" id="hideBtn" onclick="toggleHidePrime()">◎ HIDE PRIME</button>
+    <button class="btn-topbar" onclick="openSaveModal()" style="color:rgba(0,255,65,0.8);border-color:rgba(0,255,65,0.25);">↓ SAVE</button>
     <button class="btn-topbar btn-export" onclick="exportJSON()">↓ JSON</button>
     <button class="btn-topbar btn-export" onclick="document.getElementById('vizJsonUpload').click()" title="Load a saved timeline JSON">↑ LOAD</button>
     <input type="file" id="vizJsonUpload" accept=".json,application/json" style="display:none" onchange="handleVizJsonUpload(this)">

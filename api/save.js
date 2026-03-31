@@ -8,44 +8,27 @@ function generateToken() {
   return token;
 }
 
-export default async function handler(req) {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders() });
-  }
-  if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  let body;
-  try { body = await req.json(); } catch {
-    return new Response('Invalid JSON', { status: 400 });
-  }
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, data, consent } = body;
-  if (!email || !data) {
-    return new Response(JSON.stringify({ error: 'email and data required' }), {
-      status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
-  }
-  if (!consent) {
-    return new Response(JSON.stringify({ error: 'consent required' }), {
-      status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
-  }
+  const { email, data, consent } = req.body || {};
+
+  if (!email || !data) return res.status(400).json({ error: 'email and data required' });
+  if (!consent) return res.status(400).json({ error: 'consent required' });
 
   const normalizedEmail = email.toLowerCase().trim();
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null;
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || null;
 
   try {
     const sql = neon(process.env.DATABASE_URL);
 
-    // Check if a token already exists for this email — reuse it
-    const existing = await sql`
-      SELECT token FROM timelines WHERE email = ${normalizedEmail} LIMIT 1
-    `;
-    const token = existing.length > 0 && existing[0].token
-      ? existing[0].token
-      : generateToken();
+    const existing = await sql`SELECT token FROM timelines WHERE email = ${normalizedEmail} LIMIT 1`;
+    const token = existing.length > 0 && existing[0].token ? existing[0].token : generateToken();
 
     await sql`
       INSERT INTO timelines (email, data, updated_at, consent_at, consent_ip, token)
@@ -59,20 +42,8 @@ export default async function handler(req) {
         consent_ip = COALESCE(timelines.consent_ip, ${ip})
     `;
 
-    return new Response(JSON.stringify({ ok: true, token }), {
-      status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
+    return res.status(200).json({ ok: true, token });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
+    return res.status(500).json({ error: err.message });
   }
-}
-
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
 }

@@ -1,44 +1,30 @@
 import { neon } from '@neondatabase/serverless';
 
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;   // your real inbox
-const FROM_EMAIL   = process.env.FROM_EMAIL;      // e.g. noreply@dystopic.co (Resend verified domain)
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
+const FROM_EMAIL   = process.env.FROM_EMAIL;
 const RESEND_KEY   = process.env.RESEND_API_KEY;
 
-export default async function handler(req) {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders() });
-  }
-  if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  let body;
-  try { body = await req.json(); } catch {
-    return new Response('Invalid JSON', { status: 400 });
-  }
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { type, name, email, message } = body;
-  if (!type || !email || !message) {
-    return new Response(JSON.stringify({ error: 'type, email, and message are required' }), {
-      status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
-  }
+  const { type, name, email, message } = req.body || {};
+
+  if (!type || !email || !message) return res.status(400).json({ error: 'type, email, and message are required' });
 
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    // 1. Save request to DB
-    await sql`
-      INSERT INTO contact_requests (name, email, type, message)
-      VALUES (${name || null}, ${email.toLowerCase().trim()}, ${type}, ${message})
-    `;
+    await sql`INSERT INTO contact_requests (name, email, type, message) VALUES (${name || null}, ${email.toLowerCase().trim()}, ${type}, ${message})`;
 
-    // 2. If deletion request — auto-delete timeline immediately
     if (type === 'deletion') {
       await sql`DELETE FROM timelines WHERE email = ${email.toLowerCase().trim()}`;
     }
 
-    // 3. Notify you via Resend
     if (RESEND_KEY && NOTIFY_EMAIL && FROM_EMAIL) {
       const subject = type === 'deletion'
         ? `[STRING THEORY] Data deletion request from ${email}`
@@ -59,44 +45,19 @@ export default async function handler(req) {
             <p style="color:rgba(232,232,224,0.5);font-size:11px;margin-bottom:8px;">MESSAGE</p>
             <p style="color:#e8e8e0;line-height:1.6;">${message.replace(/\n/g, '<br>')}</p>
           </div>
-          <p style="margin-top:16px;color:rgba(232,232,224,0.3);font-size:11px;">
-            Received: ${new Date().toUTCString()}<br>
-            Reply directly to this email to respond to the user.
-          </p>
+          <p style="margin-top:16px;color:rgba(232,232,224,0.3);font-size:11px;">Received: ${new Date().toUTCString()}</p>
         </div>
       `;
 
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: FROM_EMAIL,
-          to: NOTIFY_EMAIL,
-          reply_to: email,
-          subject,
-          html,
-        }),
+        headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: FROM_EMAIL, to: NOTIFY_EMAIL, reply_to: email, subject, html }),
       });
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
-
+    return res.status(200).json({ ok: true });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
+    return res.status(500).json({ error: err.message });
   }
-}
-
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
 }

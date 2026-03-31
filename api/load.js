@@ -1,22 +1,16 @@
 import { neon } from '@neondatabase/serverless';
 
-export default async function handler(req) {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders() });
-  }
-  if (req.method !== 'GET') {
-    return new Response('Method not allowed', { status: 405 });
-  }
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const url   = new URL(req.url);
-  const token = url.searchParams.get('token');
-  const email = url.searchParams.get('email');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!token && !email) {
-    return new Response(JSON.stringify({ error: 'token or email required' }), {
-      status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
-  }
+  const { token, email } = req.query;
+
+  if (!token && !email) return res.status(400).json({ error: 'token or email required' });
 
   try {
     const sql = neon(process.env.DATABASE_URL);
@@ -25,25 +19,9 @@ export default async function handler(req) {
       ? await sql`SELECT data, updated_at FROM timelines WHERE token = ${token} LIMIT 1`
       : await sql`SELECT data, updated_at FROM timelines WHERE email = ${email.toLowerCase().trim()} LIMIT 1`;
 
-    if (rows.length === 0) {
-      return new Response(JSON.stringify({ found: false }), {
-        status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-      });
-    }
-    return new Response(JSON.stringify({ found: true, data: rows[0].data, updated_at: rows[0].updated_at }), {
-      status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
+    if (rows.length === 0) return res.status(200).json({ found: false });
+    return res.status(200).json({ found: true, data: rows[0].data, updated_at: rows[0].updated_at });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() }
-    });
+    return res.status(500).json({ error: err.message });
   }
-}
-
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
 }

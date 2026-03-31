@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
   if (isRateLimited(ip)) return res.status(429).json({ error: 'Too many requests — please wait a moment' });
 
-  const { messages, model, max_tokens, temperature } = req.body || {};
+  const { messages, model, max_tokens, temperature, stream } = req.body || {};
 
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: 'Missing messages' });
 
@@ -47,12 +47,26 @@ export default async function handler(req, res) {
         messages,
         max_tokens: max_tokens || 1200,
         temperature: temperature ?? 0.4,
-        stream: false,
+        stream: stream || false,
       }),
     });
 
+    if (!groqRes.ok) {
+      const data = await groqRes.json();
+      return res.status(groqRes.status).json({ error: data.error || 'Groq error' });
+    }
+
+    if (stream) {
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      groqRes.body.pipeTo(new WritableStream({
+        write(chunk) { res.write(chunk); },
+        close() { res.end(); },
+      }));
+      return;
+    }
+
     const data = await groqRes.json();
-    if (!groqRes.ok) return res.status(groqRes.status).json({ error: data.error || 'Groq error' });
     return res.status(200).json(data);
   } catch (err) {
     return res.status(502).json({ error: err.message });
